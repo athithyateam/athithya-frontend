@@ -1,5 +1,5 @@
 /**
- * Feature-specific types for experiences.
+ * Types for experiences macro-component.
  */
 
 import type { BaseEntity } from "@/types/common";
