@@ -353,3 +353,4 @@ export function BookingWidget({ post }: { post: any }) {
     </>
   );
 }
+

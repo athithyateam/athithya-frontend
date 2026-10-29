@@ -91,3 +91,4 @@ export async function verifyPhoneOtpApi(
 ): Promise<NormalizedApiResponse> {
   return apiRequest(ENDPOINTS.VERIFY_PHONE_OTP, { method: "POST", body: { phone, otp } });
 }
+
