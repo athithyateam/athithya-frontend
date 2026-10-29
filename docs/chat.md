@@ -22,12 +22,15 @@ Branch: `feat/chat`
 ## 2. Chat UI Components (`src/app/chat/page.tsx` & `src/components/chat/`)
 
 * **`src/app/chat/page.tsx`**:
-  * 2-pane responsive chat layout with conversation search, **New Group** button, and automatic `?userId=` deep-link handling.
-* **`src/components/chat/chat-group-modal.tsx`**:
-  * Searchable modal to select travelers (`getGuestsApi`), name a group expedition, and create a group chat.
+  * 2-pane responsive chat layout with conversation search and automatic `?userId=` deep-link handling.
+  * **Find Friends (Guests only)**: The former "New Group" button is renamed to **Find Friends** for guests and completely hidden for host accounts. Clicking opens the traveler connect directory.
+* **`src/components/chat/chat-group-modal.tsx` ("Find Friends Modal")**:
+  * Displays travelers directory with lazy pagination loading **8 guests at a time** with a "Show More" trigger.
+  * Right-side **Connect** action matching profile friendship request logic with instant visual pending/connected states.
 * **`src/components/chat/chat-message-window.tsx`**:
+  * **Branding & Roles**: Default header displays **Athithya** with the **Administrator** badge (replacing "Concierge" / "Verified Support").
+  * **Official Welcome Message**: Displays the auto-generated welcoming onboarding message matching `onboardingHelper.js` on backend.
   * Active chat header with **Clear Messages** and **Leave Group** controls.
-  * **Collaborative Trip Pins Bar**: Displays pinned destinations for the conversation and lets members pin/unpin stops in real time.
-  * Message feed supporting text, location pins, and S3 image attachments.
-  * Input bar with S3 photo upload (`getPresignedUrl` + `uploadFileToS3`), one-click GPS location sharing, and text input.
+  * **Message Scroll Feed**: Dedicated scrollable container with smooth auto-scroll to the latest message.
+  * Input bar with S3 photo upload (`getPresignedUrl` + `uploadFileToS3`) and text input.
 

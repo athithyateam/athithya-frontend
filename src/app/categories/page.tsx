@@ -78,8 +78,10 @@ export const CATEGORIES_DATA = [
 export default function CategoriesPage() {
   const router = useRouter();
   const [categoryActivity, setCategoryActivity] = useState<any[]>([]);
+  const [now, setNow] = useState(0);
 
   useEffect(() => {
+    setNow(Date.now());
     getCategoryActivity()
       .then((res) => {
         if (res?.success && Array.isArray(res?.data)) setCategoryActivity(res.data);
@@ -94,7 +96,6 @@ export default function CategoriesPage() {
       if (item?.category) activityMap.set(String(item.category).toLowerCase(), item);
     });
     const DAY_MS = 24 * 60 * 60 * 1000;
-    const now = Date.now();
 
     const mapped = CATEGORIES_DATA.map((cat) => {
       let maxTime = 0;
@@ -106,13 +107,13 @@ export default function CategoriesPage() {
           totalCount += val?.count || 0;
         }
       }
-      return { ...cat, isNew: maxTime > 0 && now - maxTime < DAY_MS, experienceCount: totalCount };
+      return { ...cat, isNew: now > 0 && maxTime > 0 && now - maxTime < DAY_MS, experienceCount: totalCount };
     });
 
     const mainCats = mapped.filter((c) => c.id !== "other").sort((a, b) => b.experienceCount - a.experienceCount);
     const otherCat = mapped.find((c) => c.id === "other");
     return otherCat ? [...mainCats, otherCat] : mainCats;
-  }, [categoryActivity]);
+  }, [categoryActivity, now]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col font-sans transition-colors">

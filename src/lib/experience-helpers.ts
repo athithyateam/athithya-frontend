@@ -179,8 +179,7 @@ export const extractExperienceCardMeta = (data: Record<string, any> | null | und
     ? getOptimizedImage(rawImg, { width: compact ? 400 : 500 })
     : "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800";
 
-  const ts = data?.approvedAt || data?.createdAt;
-  const isNew = Boolean(ts && !isNaN(new Date(ts).getTime()) && Date.now() - new Date(ts).getTime() < 24 * 60 * 60 * 1000);
+  const isNew = Boolean(data?.isNew);
 
   let displayDuration = "1 Day";
   if (data?.duration) displayDuration = formatExperienceDuration(data.duration, data?.price?.period);
