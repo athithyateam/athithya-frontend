@@ -150,10 +150,10 @@ export function LoginForm({ onSwitchToRegister, onClose }: LoginFormProps) {
               <GoogleIcon className="w-4 h-4" /><span>Login with Google</span>
             </button>
             <div className="text-center text-gray-400 text-sm">OR</div>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required className="w-full border rounded-lg p-2 focus:outline-none dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required className="w-full border rounded-lg p-2 focus:outline-none bg-white text-neutral-900 placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
             <div>
               <div className="relative">
-                <input type={showPwd ? "text" : "password"} value={pwd} onChange={(e) => setPwd(e.target.value)} placeholder="Password" required className="w-full border rounded-lg p-2 pr-10 focus:outline-none dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
+                <input type={showPwd ? "text" : "password"} value={pwd} onChange={(e) => setPwd(e.target.value)} placeholder="Password" required className="w-full border rounded-lg p-2 pr-10 focus:outline-none bg-white text-neutral-900 placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
                 <button type="button" className="absolute right-3 top-2.5 cursor-pointer" style={{ color: GOLD }} onClick={() => setShowPwd((v) => !v)} aria-label="Toggle password">
                   {showPwd ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -177,7 +177,7 @@ export function LoginForm({ onSwitchToRegister, onClose }: LoginFormProps) {
           </div>
           <p className="text-gray-600 text-sm mb-4 dark:text-neutral-400">Enter your email address to reset your password.</p>
           <form onSubmit={handleForgotEmailSubmit} className="space-y-4">
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" required className="w-full border rounded-lg p-2 focus:outline-none dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" required className="w-full border rounded-lg p-2 focus:outline-none bg-white text-neutral-900 placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
             <button type="submit" disabled={loading} className="cursor-pointer w-full text-white py-2 rounded-lg disabled:opacity-70 transition font-medium" style={{ backgroundColor: GOLD }}>
               {loading ? "Sending..." : "Send OTP"}
             </button>
@@ -194,14 +194,14 @@ export function LoginForm({ onSwitchToRegister, onClose }: LoginFormProps) {
           <form onSubmit={handleResetPasswordSubmit} className="space-y-4">
             <div>
               <label className="block text-sm text-gray-600 mb-1 dark:text-neutral-400">OTP Code</label>
-              <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="Enter 6-digit OTP" required className="w-full border rounded-lg p-2 focus:outline-none dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
+              <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="Enter 6-digit OTP" required className="w-full border rounded-lg p-2 focus:outline-none bg-white text-neutral-900 placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
             </div>
             <div className="relative">
-              <input type={showPwd ? "text" : "password"} value={pwd} onChange={(e) => setPwd(e.target.value)} placeholder="New Password" required className="w-full border rounded-lg p-2 pr-10 focus:outline-none dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
+              <input type={showPwd ? "text" : "password"} value={pwd} onChange={(e) => setPwd(e.target.value)} placeholder="New Password" required className="w-full border rounded-lg p-2 pr-10 focus:outline-none bg-white text-neutral-900 placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
               <button type="button" className="absolute right-3 top-2.5 cursor-pointer" style={{ color: GOLD }} onClick={() => setShowPwd((v) => !v)}>{showPwd ? <EyeOff size={18} /> : <Eye size={18} />}</button>
             </div>
             <div className="relative">
-              <input type={showConfirmPwd ? "text" : "password"} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} placeholder="Confirm New Password" required className="w-full border rounded-lg p-2 pr-10 focus:outline-none dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
+              <input type={showConfirmPwd ? "text" : "password"} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} placeholder="Confirm New Password" required className="w-full border rounded-lg p-2 pr-10 focus:outline-none bg-white text-neutral-900 placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-neutral-100" style={{ borderColor: GOLD }} />
               <button type="button" className="absolute right-3 top-2.5 cursor-pointer" style={{ color: GOLD }} onClick={() => setShowConfirmPwd((v) => !v)}>{showConfirmPwd ? <EyeOff size={18} /> : <Eye size={18} />}</button>
             </div>
             <button type="submit" disabled={loading} className="cursor-pointer w-full text-white py-2 rounded-lg disabled:opacity-70 transition font-medium" style={{ backgroundColor: GOLD }}>

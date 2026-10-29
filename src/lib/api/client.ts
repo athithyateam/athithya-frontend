@@ -104,37 +104,28 @@ export async function uploadFileToS3(
   file: File | Blob,
   options: { onUploadProgress?: (percent: number) => void } = {}
 ): Promise<boolean> {
-  const maxRetries = 2;
-  const retryDelays = [1500, 3000];
-
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    if (attempt > 0) {
-      await new Promise((r) => setTimeout(r, retryDelays[attempt - 1]));
-    }
-    try {
-      await new Promise<void>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("PUT", uploadUrl, true);
-        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-        xhr.timeout = 180_000;
-        xhr.upload.onprogress = (evt) => {
-          if (evt.lengthComputable && options.onUploadProgress) {
-            options.onUploadProgress(Math.round((evt.loaded * 100) / evt.total));
-          }
-        };
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) resolve();
-          else reject(new Error(`S3 upload status ${xhr.status}`));
-        };
-        xhr.onerror = () => reject(new Error("S3 network error"));
-        xhr.ontimeout = () => reject(new Error("S3 upload timeout"));
-        xhr.send(file);
-      });
-      return true;
-    } catch (err) {
-      if (attempt === maxRetries) throw err;
-    }
-  }
-  return false;
+  // Directly upload via server-side proxy route to eliminate browser CORS preflight blocks completely
+  const proxyUrl = `/api/s3-upload?uploadUrl=${encodeURIComponent(uploadUrl)}`;
+  return new Promise<boolean>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", proxyUrl, true);
+    xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+    xhr.timeout = 180_000;
+    xhr.upload.onprogress = (evt) => {
+      if (evt.lengthComputable && options.onUploadProgress) {
+        options.onUploadProgress(Math.round((evt.loaded * 100) / evt.total));
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(true);
+      } else {
+        reject(new Error(`S3 upload failed with status ${xhr.status}`));
+      }
+    };
+    xhr.onerror = () => reject(new Error("S3 upload proxy network error"));
+    xhr.ontimeout = () => reject(new Error("S3 upload proxy timeout"));
+    xhr.send(file);
+  });
 }
 
