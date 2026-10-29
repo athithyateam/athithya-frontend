@@ -203,4 +203,3 @@ export function ProfileGridTab({ hostId, isOwnProfile }: ProfileGridTabProps) {
     </div>
   );
 }
-

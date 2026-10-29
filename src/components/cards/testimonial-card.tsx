@@ -32,4 +32,3 @@ export function TestimonialCard({ image, name, trip, text }: TestimonialCardProp
 }
 
 export default TestimonialCard;
-

@@ -153,4 +153,3 @@ export const ENDPOINTS = {
   ADMIN_HOST_HISTORY: "/api/admin/host-history",
   ADMIN_CHAT_ACTIVITY: "/api/admin/chat-activity",
 } as const;
-

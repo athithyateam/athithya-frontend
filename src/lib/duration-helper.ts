@@ -76,4 +76,3 @@ export const formatExperienceDuration = (
 
   return "1 Day";
 };
-

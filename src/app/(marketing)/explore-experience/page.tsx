@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { LatestExperiencesView } from "@/components/explore/section-views";
+import { ExplorePageView } from "@/components/explore/explore-page-view";
 
 export const metadata: Metadata = {
-  title: "Travel Experiences | Explore with Athithya",
-  description:
-    "Explore Uttarakhand on Athithya and discover different travel experiences hosted by local hosts. From trekking, rafting and camping to bungee jumping, paragliding, safaris and much more, all in one place.",
-  alternates: { canonical: "https://athithya.in/explore-experience" },
-  openGraph: {
-    title: "Travel Experiences | Explore with Athithya",
-    description: "Explore recent and new travel experiences in Uttarakhand with local hosts.",
-    url: "https://athithya.in/explore-experience",
-    type: "website",
-  },
+  title: "Explore Travel Experiences with Athithya",
+  description: "Explore recent and new travel experiences in Uttarakhand with local hosts.",
 };
 
 export default function ExploreExperiencePage() {
-  return <LatestExperiencesView />;
+  return (
+    <ExplorePageView
+      type="explore-experience"
+      breadcrumb="Explore Experiences"
+      title="Explore Travel Experiences with"
+      highlight="Athithya"
+      subtitle="Explore recent and new experiences"
+    />
+  );
 }

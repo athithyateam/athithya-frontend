@@ -128,4 +128,3 @@ export function MapPicker({ value, onChange }: MapPickerProps) {
     </div>
   );
 }
-

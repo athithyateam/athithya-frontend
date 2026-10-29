@@ -125,4 +125,3 @@ export const compressImage = async (
     img.src = url;
   });
 };
-

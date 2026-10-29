@@ -159,4 +159,3 @@ export async function geocodeSearchApi(q: string) {
   const res = await apiRequest(ENDPOINTS.GEOCODE_SEARCH, { params: { q } });
   return res.data;
 }
-

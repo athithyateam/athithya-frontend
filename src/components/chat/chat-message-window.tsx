@@ -258,4 +258,3 @@ export function ChatMessageWindow() {
     </section>
   );
 }
-

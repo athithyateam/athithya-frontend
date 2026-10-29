@@ -135,4 +135,3 @@ export async function getGuestsApi({ search = "", page = 1, limit = 10 } = {}) {
   });
   return res.data;
 }
-

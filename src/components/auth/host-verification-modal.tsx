@@ -274,4 +274,3 @@ export function HostVerificationModal({ onClose, onSuccess }: { onClose: () => v
 }
 
 export default HostVerificationModal;
-

@@ -42,4 +42,3 @@ export function RatingStars({ average = 0, count = 0 }: RatingStarsProps) {
     </div>
   );
 }
-

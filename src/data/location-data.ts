@@ -69,4 +69,3 @@ export const CITY_MAPPING: Record<string, string[]> = {
   "Kullu": ["Manali", "Kullu", "Kasol", "Other"],
   "Other": ["Other"],
 };
-

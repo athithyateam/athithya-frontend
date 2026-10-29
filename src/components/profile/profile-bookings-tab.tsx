@@ -210,4 +210,3 @@ export function ProfileBookingsTab({ isHost, mode = "bookings" }: ProfileBooking
     </div>
   );
 }
-

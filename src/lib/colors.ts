@@ -16,4 +16,3 @@ export const stringToGradient = (str = "Athithya"): string => {
   const h2 = h1 - 10;
   return `linear-gradient(135deg, hsl(${h1}, 80%, 60%) 0%, hsl(${h2}, 85%, 45%) 100%)`;
 };
-

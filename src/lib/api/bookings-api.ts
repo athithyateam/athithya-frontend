@@ -192,4 +192,3 @@ export async function checkReviewEligibilityApi(postId: string) {
   const res = await apiRequest(ENDPOINTS.REVIEW_ELIGIBILITY, { params: { postId } });
   return res.data;
 }
-

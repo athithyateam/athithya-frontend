@@ -129,4 +129,3 @@ export async function getAdminTrafficAnalyticsApi() {
   const res = await apiRequest(ENDPOINTS.ADMIN_ANALYTICS);
   return res.data;
 }
-
