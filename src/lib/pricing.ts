@@ -21,3 +21,4 @@ export const formatPrice = (amount: number): string => {
     maximumFractionDigits: 2,
   })}`;
 };
+

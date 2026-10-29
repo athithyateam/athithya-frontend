@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { ExplorePageView } from "@/components/explore/explore-page-view";
+import { TopRatedExperiencesView } from "@/components/explore/section-views";
 
 export const metadata: Metadata = {
   title: "Top Rated Experiences | Explore with Athithya",
-  description: "Explore top rated travel experiences in Uttarakhand with local hosts.",
+  description:
+    "Explore highest rated travel experiences, treks, and mountain adventures in Uttarakhand with local hosts.",
+  alternates: { canonical: "https://athithya.in/top-rated-experience" },
+  openGraph: {
+    title: "Top Rated Experiences | Explore with Athithya",
+    description: "Explore top rated travel experiences in Uttarakhand with local hosts.",
+    url: "https://athithya.in/top-rated-experience",
+    type: "website",
+  },
 };
 
 export default function TopRatedExperiencePage() {
-  return (
-    <ExplorePageView
-      type="top-rated-experience"
-      breadcrumb="Top Rated Experiences"
-      title="Top Rated"
-      highlight="Experiences"
-      subtitle="Explore top rated experiences"
-    />
-  );
+  return <TopRatedExperiencesView />;
 }

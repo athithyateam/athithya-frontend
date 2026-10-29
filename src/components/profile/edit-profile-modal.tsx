@@ -224,3 +224,4 @@ export function EditProfileModal({ open, onClose, user, onSaved }: EditProfileMo
     </div>
   );
 }
+

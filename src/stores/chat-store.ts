@@ -175,3 +175,4 @@ export const useChatStore = create<ChatState>((set, get) => ({
     if (updated) set({ activeConversation: updated });
   },
 }));
+
