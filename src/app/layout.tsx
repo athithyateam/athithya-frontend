@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Playfair_Display, Outfit } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { ToastContainer } from "@/components/ui/toast-container";
-import { BackToTop } from "@/components/ui/back-to-top";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -38,11 +36,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">
-        <ThemeProvider>
-          {children}
-          <ToastContainer />
-          <BackToTop />
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

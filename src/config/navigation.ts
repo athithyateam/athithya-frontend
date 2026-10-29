@@ -1,6 +1,10 @@
+/**
+ * Route definitions and navigation menu configuration.
+ * Import from here instead of hardcoding paths in components.
+ */
+
 export const routes = {
   home: "/",
-  categories: "/categories",
   experiences: "/experiences",
   experienceDetail: (slug: string) => `/experiences/${slug}` as const,
   exploreExperience: "/explore-experience",
@@ -9,11 +13,7 @@ export const routes = {
   mostLovedExperience: "/most-loved-experience",
   nearbyExperience: "/nearby-experience",
   topRatedHost: "/top-rated-host",
-  post: "/post",
   postDetail: (id: string) => `/post/${id}` as const,
-  placeDetail: (city: string) => `/place/${encodeURIComponent(city)}` as const,
-  bookingDetail: (id: string) => `/bookings/${id}` as const,
-  connect: "/connect",
   howItWorks: "/how-it-works",
   host: "/host",
   about: "/about",
@@ -26,16 +26,7 @@ export const routes = {
   chat: "/chat",
   auth: "/auth",
   profile: "/profile",
-  profileById: (id: string) => `/profile/${id}` as const,
   admin: "/admin",
   dev: "/dev",
-  guides: {
-    bestSeason: "/guides/best-season-to-visit-uttarakhand",
-    topTreks: "/guides/top-7-himalayan-treks",
-    bestTreks: "/guides/best-treks-uttarakhand",
-    itineraries: "/guides/uttarakhand-itineraries",
-    travelCost: "/guides/uttarakhand-travel-cost",
-    packingList: "/guides/uttarakhand-packing-list",
-    travelTips: "/guides/uttarakhand-travel-tips",
-  },
 } as const;
+
