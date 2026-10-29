@@ -1,5 +1,6 @@
 "use client";
 
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, MessageSquare, User } from "lucide-react";
@@ -11,7 +12,7 @@ const navItems = [
   { name: "Profile", href: routes.profile, icon: User },
 ];
 
-export function MobileFooter() {
+function MobileFooterContent() {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -45,5 +46,13 @@ export function MobileFooter() {
         })}
       </div>
     </div>
+  );
+}
+
+export function MobileFooter() {
+  return (
+    <Suspense fallback={null}>
+      <MobileFooterContent />
+    </Suspense>
   );
 }

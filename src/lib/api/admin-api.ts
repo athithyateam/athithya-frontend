@@ -55,11 +55,14 @@ export async function getAdminPendingExperiencesApi() {
 
 export async function updateAdminExperienceStatusApi(
   id: string,
-  payload: { status: string; adminComment?: string; rejectionReason?: string }
+  payload: { status: string; remarks?: string; adminComment?: string; rejectionReason?: string }
 ) {
   const res = await apiRequest(ENDPOINTS.ADMIN_UPDATE_POST_STATUS(id), {
     method: "PATCH",
-    body: payload,
+    body: {
+      status: payload.status,
+      remarks: payload.remarks || payload.adminComment || payload.rejectionReason || "",
+    },
   });
   return res.data;
 }

@@ -18,11 +18,13 @@ interface ChatState {
   conversations: any[];
   activeConversation: any | null;
   messages: any[];
+  totalUnread: number;
   loading: boolean;
   sending: boolean;
   fetchConversations: () => Promise<void>;
   selectConversation: (conv: any) => Promise<void>;
   openDirectChat: (recipientId: string) => Promise<void>;
+  startConversation: (recipientId: string) => Promise<void>;
   sendText: (text: string) => Promise<void>;
   sendLocation: (lat: number, lng: number, address?: string) => Promise<void>;
   sendAttachment: (fileUrl: string, text?: string) => Promise<void>;
@@ -36,6 +38,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   conversations: [],
   activeConversation: null,
   messages: [],
+  totalUnread: 0,
   loading: false,
   sending: false,
 
@@ -81,6 +84,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
     } catch {
       // ignore
     }
+  },
+
+  startConversation: async (recipientId: string) => {
+    await get().openDirectChat(recipientId);
   },
 
   sendText: async (text: string) => {
