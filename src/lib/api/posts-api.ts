@@ -1,5 +1,7 @@
-import { apiRequest } from "./client";
+import { apiRequest, uploadFileToS3 } from "./client";
 import { ENDPOINTS } from "./endpoints";
+
+export { uploadFileToS3 };
 
 export async function getPresignedUrl(
   filename: string,
