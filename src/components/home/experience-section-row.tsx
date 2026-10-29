@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { ExperienceCard } from "@/components/cards/experience-card";
 import { ExperienceCardPlaceholder, type ExperienceItemPreview } from "./experience-card-placeholder";
 
 interface ExperienceSectionRowProps {
@@ -10,7 +11,8 @@ interface ExperienceSectionRowProps {
   highlight?: string;
   subtitle?: string;
   viewAllHref?: string;
-  items: ExperienceItemPreview[];
+  items: any[];
+  placeholderItems?: ExperienceItemPreview[];
 }
 
 export function ExperienceSectionRow({
@@ -19,6 +21,7 @@ export function ExperienceSectionRow({
   subtitle,
   viewAllHref,
   items,
+  placeholderItems = [],
 }: ExperienceSectionRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +34,8 @@ export function ExperienceSectionRow({
       });
     }
   };
+
+  const hasRealItems = Array.isArray(items) && items.length > 0 && Boolean(items[0]?._id || (items[0]?.id && !String(items[0].id).startsWith("slot-")));
 
   return (
     <section className="py-6 md:py-10 relative z-10 bg-white dark:bg-neutral-950 transition-colors">
@@ -73,9 +78,15 @@ export function ExperienceSectionRow({
           ref={scrollRef}
           className="flex gap-4 overflow-x-auto w-full pt-3 pb-6 scrollbar-hide snap-x snap-mandatory px-1"
         >
-          {items.map((item) => (
-            <ExperienceCardPlaceholder key={item.id} item={item} />
-          ))}
+          {hasRealItems
+            ? items.map((item) => (
+                <div key={item._id || item.id} className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start">
+                  <ExperienceCard data={item} showBookmark />
+                </div>
+              ))
+            : (placeholderItems.length > 0 ? placeholderItems : items).map((item: any, idx: number) => (
+                <ExperienceCardPlaceholder key={item?.id || idx} item={item} />
+              ))}
         </div>
 
         <button

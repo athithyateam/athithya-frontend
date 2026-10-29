@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SlidersHorizontal, X } from "lucide-react";
 import { routes } from "@/config/navigation";
+import { useExploreStore } from "@/stores/explore-store";
 
 interface ExploreFilterSidebarProps {
   currentType: string;
@@ -42,7 +43,14 @@ const budgetRanges = [
 ];
 
 const durationOptions = [
-  "1 Day", "2 Days", "3 Days", "4 Days", "5 Days", "6 Days", "7 Days", "8+ Days"
+  { id: "1day", label: "1 Day" },
+  { id: "2days", label: "2 Days" },
+  { id: "3days", label: "3 Days" },
+  { id: "4days", label: "4 Days" },
+  { id: "5days", label: "5 Days" },
+  { id: "6days", label: "6 Days" },
+  { id: "7days", label: "7 Days" },
+  { id: "8+days", label: "8+ Days" },
 ];
 
 const ratings = [
@@ -59,6 +67,20 @@ export function ExploreFilterSidebar({
   isOpenMobile,
   onCloseMobile,
 }: ExploreFilterSidebarProps) {
+  const {
+    selectedCategories,
+    selectedLocation,
+    priceRange,
+    selectedDurations,
+    selectedRating,
+    categoryCounts,
+    availableLocations,
+    toggleCategory,
+    toggleDuration,
+    setFilter,
+    resetFilters,
+  } = useExploreStore();
+
   return (
     <aside
       className={`lg:col-span-1 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-5 sm:p-6 shadow-xs space-y-5 lg:sticky lg:top-28 max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-hide text-left ${
@@ -73,6 +95,7 @@ export function ExploreFilterSidebar({
         <div className="flex items-center gap-2">
           <button
             type="button"
+            onClick={() => resetFilters()}
             className="text-xs font-extrabold text-[#C59A2F] hover:underline cursor-pointer"
           >
             Reset All
@@ -88,30 +111,62 @@ export function ExploreFilterSidebar({
         </div>
       </div>
 
-      {/* Activity Filter */}
       {!isHostDiscovery && (
         <div>
           <h3 className="text-xs font-extrabold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 mb-2.5">
             Activity
           </h3>
           <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-            {activityCategories.map((cat) => (
-              <label
-                key={cat}
-                className="flex items-center justify-between text-xs font-bold text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-[#C59A2F] transition-colors select-none py-0.5"
-              >
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-[#C59A2F] rounded" />
-                  <span>{cat}</span>
-                </div>
-                <span className="text-[11px] font-extrabold text-neutral-400 dark:text-neutral-500">(0)</span>
-              </label>
-            ))}
+            {activityCategories.map((cat) => {
+              const checked = selectedCategories.some((c) => c.toLowerCase() === cat.toLowerCase());
+              const count = categoryCounts[cat.toLowerCase()] ?? 0;
+              return (
+                <label
+                  key={cat}
+                  className="flex items-center justify-between text-xs font-bold text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-[#C59A2F] transition-colors select-none py-0.5"
+                >
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => toggleCategory(cat)}
+                      className="accent-[#C59A2F] rounded"
+                    />
+                    <span>{cat}</span>
+                  </div>
+                  <span className="text-[11px] font-extrabold text-neutral-400 dark:text-neutral-500">
+                    ({count})
+                  </span>
+                </label>
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Collections */}
+      {availableLocations.length > 0 && (
+        <div className="border-t border-neutral-200/80 dark:border-neutral-800 pt-4">
+          <h3 className="text-xs font-extrabold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 mb-2.5">
+            Location
+          </h3>
+          <select
+            value={selectedLocation}
+            onChange={(e) => {
+              setFilter("selectedLocation", e.target.value);
+              setFilter("page", 1);
+            }}
+            className="w-full bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 dark:text-neutral-200 focus:outline-none focus:border-[#C59A2F]"
+          >
+            <option value="all">All Locations</option>
+            {availableLocations.map((loc) => (
+              <option key={loc} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {!isHostDiscovery && (
         <div className="border-t border-neutral-200/80 dark:border-neutral-800 pt-4">
           <h3 className="text-xs font-extrabold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 mb-2.5">
@@ -123,17 +178,10 @@ export function ExploreFilterSidebar({
                 key={col.id}
                 href={col.href}
                 className={`flex items-center gap-2 text-xs font-bold transition-colors py-0.5 ${
-                  currentType === col.id
-                    ? "text-[#C59A2F] font-black"
-                    : "text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F]"
+                  currentType === col.id ? "text-[#C59A2F] font-black" : "text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F]"
                 }`}
               >
-                <input
-                  type="radio"
-                  readOnly
-                  checked={currentType === col.id}
-                  className="accent-[#C59A2F]"
-                />
+                <input type="radio" readOnly checked={currentType === col.id} className="accent-[#C59A2F]" />
                 <span>{col.label}</span>
               </Link>
             ))}
@@ -141,7 +189,6 @@ export function ExploreFilterSidebar({
         </div>
       )}
 
-      {/* Budget */}
       {!isHostDiscovery && (
         <div className="border-t border-neutral-200/80 dark:border-neutral-800 pt-4">
           <h3 className="text-xs font-extrabold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 mb-2.5">
@@ -149,11 +196,17 @@ export function ExploreFilterSidebar({
           </h3>
           <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
             {budgetRanges.map((b) => (
-              <label
-                key={b.id}
-                className="flex items-center gap-2 text-xs font-bold text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-[#C59A2F] transition-colors select-none py-0.5"
-              >
-                <input type="radio" name="budget" defaultChecked={b.id === "all"} className="accent-[#C59A2F]" />
+              <label key={b.id} className="flex items-center gap-2 text-xs font-bold text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-[#C59A2F] transition-colors select-none py-0.5">
+                <input
+                  type="radio"
+                  name="budget"
+                  checked={priceRange === b.id}
+                  onChange={() => {
+                    setFilter("priceRange", b.id);
+                    setFilter("page", 1);
+                  }}
+                  className="accent-[#C59A2F]"
+                />
                 <span>{b.label}</span>
               </label>
             ))}
@@ -161,7 +214,6 @@ export function ExploreFilterSidebar({
         </div>
       )}
 
-      {/* Duration */}
       {!isHostDiscovery && (
         <div className="border-t border-neutral-200/80 dark:border-neutral-800 pt-4">
           <h3 className="text-xs font-extrabold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 mb-2.5">
@@ -169,30 +221,37 @@ export function ExploreFilterSidebar({
           </h3>
           <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
             {durationOptions.map((dur) => (
-              <label
-                key={dur}
-                className="flex items-center gap-2 text-xs font-bold text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-[#C59A2F] transition-colors select-none py-0.5"
-              >
-                <input type="checkbox" className="accent-[#C59A2F] rounded" />
-                <span>{dur}</span>
+              <label key={dur.id} className="flex items-center gap-2 text-xs font-bold text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-[#C59A2F] transition-colors select-none py-0.5">
+                <input
+                  type="checkbox"
+                  checked={selectedDurations.includes(dur.id)}
+                  onChange={() => toggleDuration(dur.id)}
+                  className="accent-[#C59A2F] rounded"
+                />
+                <span>{dur.label}</span>
               </label>
             ))}
           </div>
         </div>
       )}
 
-      {/* Rating */}
       <div className="border-t border-neutral-200/80 dark:border-neutral-800 pt-4">
         <h3 className="text-xs font-extrabold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 mb-2.5">
           {isHostDiscovery ? "Host Rating" : "Rating"}
         </h3>
         <div className="space-y-1.5">
           {ratings.map((r) => (
-            <label
-              key={r.id}
-              className="flex items-center gap-2 text-xs font-bold text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-[#C59A2F] transition-colors select-none py-0.5"
-            >
-              <input type="radio" name="rating" defaultChecked={r.id === "all"} className="accent-[#C59A2F]" />
+            <label key={r.id} className="flex items-center gap-2 text-xs font-bold text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-[#C59A2F] transition-colors select-none py-0.5">
+              <input
+                type="radio"
+                name="rating"
+                checked={selectedRating === r.id}
+                onChange={() => {
+                  setFilter("selectedRating", r.id);
+                  setFilter("page", 1);
+                }}
+                className="accent-[#C59A2F]"
+              />
               <span>{r.label}</span>
             </label>
           ))}
