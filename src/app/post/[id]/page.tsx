@@ -1,412 +1,299 @@
-"use client";
-
-import React, { useState, useEffect, use } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import Link from "next/link";
 import {
   MapPin,
-  ChevronDown,
-  FileText,
-  Shield,
-  CheckCircle2,
+  Share2,
+  Heart,
   Star,
+  Clock,
+  Users,
+  ShieldCheck,
+  Check,
+  X,
+  Calendar,
+  ChevronRight,
 } from "lucide-react";
-import {
-  getPost,
-  getService,
-  getItinerary,
-  listPosts,
-  savePostApi,
-  unsavePostApi,
-  saveItineraryApi,
-  unsaveItineraryApi,
-} from "@/lib/api/posts-api";
-import { useAuthStore } from "@/stores/auth-store";
-import { useFeedbackStore } from "@/stores/feedback-store";
-import { Navbar } from "@/components/navigation/navbar";
-import { Footer } from "@/components/navigation/footer";
-import { MobileFooter } from "@/components/navigation/mobile-footer";
-import { PostHeroGallery } from "@/components/post/post-hero-gallery";
-import { BookingWidget } from "@/components/post/booking-widget";
-import { HostReviewsSection } from "@/components/post/host-reviews-section";
-import { MapViewer } from "@/components/ui/map-viewer";
-import { ExperienceCard } from "@/components/cards/experience-card";
+import { routes } from "@/config/navigation";
+
+export const metadata: Metadata = {
+  title: "Experience Details | Athithya",
+  description: "Authentic local Uttarakhand travel experience on Athithya.",
+};
+
+async function PostDetailContent({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  return (
+    <main className="min-h-screen pt-24 pb-20 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-8">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400 mb-4 overflow-x-auto whitespace-nowrap">
+          <Link href={routes.home} className="hover:text-[#C59A2F] transition-colors">
+            Home
+          </Link>
+          <ChevronRight size={13} className="shrink-0 opacity-40" />
+          <Link
+            href="/explore-experience"
+            className="hover:text-[#C59A2F] transition-colors"
+          >
+            Explore
+          </Link>
+          <ChevronRight size={13} className="shrink-0 opacity-40" />
+          <span className="text-neutral-800 dark:text-neutral-200 font-bold">
+            No title
+          </span>
+        </nav>
+
+        {/* Header Title & Actions */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-neutral-900 dark:text-neutral-100">
+              No title
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 mt-2 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 font-medium">
+              <span className="flex items-center gap-1 font-bold text-neutral-900 dark:text-neutral-100">
+                <Star size={15} className="fill-[#C59A2F] text-[#C59A2F]" />
+                <span>No rating</span>
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                <MapPin size={15} className="text-[#C59A2F]" />
+                <span>No location</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900 text-xs font-bold transition cursor-pointer"
+            >
+              <Share2 size={15} />
+              <span>Share</span>
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900 text-xs font-bold transition cursor-pointer"
+            >
+              <Heart size={15} />
+              <span>Save</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Gallery Grid */}
+        <section aria-label="Experience photo gallery" className="mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 h-[320px] sm:h-[420px] md:h-[480px] rounded-3xl overflow-hidden">
+            <div className="md:col-span-2 md:row-span-2 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 flex items-center justify-center p-6 text-center">
+              <span className="text-sm font-bold text-neutral-400 uppercase tracking-widest">
+                No image
+              </span>
+            </div>
+            <div className="hidden md:flex bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 items-center justify-center p-4">
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
+                No image
+              </span>
+            </div>
+            <div className="hidden md:flex bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 items-center justify-center p-4">
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
+                No image
+              </span>
+            </div>
+            <div className="hidden md:flex bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 items-center justify-center p-4">
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
+                No image
+              </span>
+            </div>
+            <div className="hidden md:flex bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 items-center justify-center p-4">
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
+                No image
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* Main Content Layout with Sticky Booking Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          {/* Left Column: Details */}
+          <div className="lg:col-span-8 space-y-10">
+            {/* Host Overview Header */}
+            <div className="flex items-center justify-between pb-6 border-b border-neutral-200 dark:border-neutral-800">
+              <div>
+                <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
+                  Hosted by No host
+                </h2>
+                <div className="flex items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                  <span className="flex items-center gap-1">
+                    <Clock size={14} /> No duration
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    <Users size={14} /> Guided experience
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1 text-[#C59A2F] font-semibold">
+                    <ShieldCheck size={14} /> Verified Host
+                  </span>
+                </div>
+              </div>
+              <div className="w-14 h-14 rounded-full bg-[#C59A2F] text-white flex items-center justify-center font-black text-xl shadow-xs">
+                H
+              </div>
+            </div>
+
+            {/* Description Section */}
+            <section className="space-y-4">
+              <h3 className="text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
+                About this experience
+              </h3>
+              <p className="text-sm sm:text-base leading-relaxed text-neutral-500 dark:text-neutral-400">
+                No description
+              </p>
+            </section>
+
+            {/* What's included & Not included */}
+            <section className="space-y-4 pt-6 border-t border-neutral-200 dark:border-neutral-800">
+              <h3 className="text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
+                What&apos;s included
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-neutral-600 dark:text-neutral-400">
+                <div className="flex items-center gap-2.5">
+                  <Check size={18} className="text-[#C59A2F] shrink-0" />
+                  <span>No details provided</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <X size={18} className="text-red-400 shrink-0" />
+                  <span>Personal expenses not included</span>
+                </div>
+              </div>
+            </section>
+
+            {/* Itinerary */}
+            <section className="space-y-4 pt-6 border-t border-neutral-200 dark:border-neutral-800">
+              <h3 className="text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
+                Itinerary & Details
+              </h3>
+              <div className="p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-400">
+                No description
+              </div>
+            </section>
+
+            {/* Host Section */}
+            <section className="space-y-4 pt-6 border-t border-neutral-200 dark:border-neutral-800">
+              <h3 className="text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
+                Meet your host
+              </h3>
+              <div className="p-6 rounded-3xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                <div className="w-16 h-16 rounded-full bg-[#C59A2F] text-white flex items-center justify-center font-black text-2xl shadow-sm">
+                  H
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-base text-neutral-900 dark:text-neutral-100">
+                    Hosted by No host
+                  </h4>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                    Verified Uttarakhand Local Guide
+                  </p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+                    No description
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          {/* Right Column: Sticky Booking Card */}
+          <div className="lg:col-span-4">
+            <div className="sticky top-28 p-6 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl space-y-5">
+              <div className="flex items-baseline justify-between pb-4 border-b border-neutral-100 dark:border-neutral-800">
+                <div>
+                  <span className="text-2xl font-black text-neutral-900 dark:text-neutral-100">
+                    ₹ No price
+                  </span>
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400 ml-1">
+                    / person
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 text-xs font-bold">
+                  <Star size={14} className="fill-[#C59A2F] text-[#C59A2F]" />
+                  <span>No rating</span>
+                </div>
+              </div>
+
+              {/* Booking Date & Guest Box */}
+              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden divide-y divide-neutral-200 dark:divide-neutral-800">
+                <div className="p-3 bg-neutral-50 dark:bg-neutral-800/50 flex items-center justify-between text-xs">
+                  <span className="font-bold text-neutral-500 dark:text-neutral-400">
+                    DATE
+                  </span>
+                  <span className="font-semibold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
+                    <Calendar size={14} className="text-[#C59A2F]" /> Select date
+                  </span>
+                </div>
+                <div className="p-3 bg-neutral-50 dark:bg-neutral-800/50 flex items-center justify-between text-xs">
+                  <span className="font-bold text-neutral-500 dark:text-neutral-400">
+                    GUESTS
+                  </span>
+                  <span className="font-semibold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
+                    <Users size={14} className="text-[#C59A2F]" /> 1 Guest
+                  </span>
+                </div>
+              </div>
+
+              {/* Reserve Button */}
+              <button
+                type="button"
+                className="w-full py-3.5 rounded-full bg-[#C59A2F] hover:bg-[#A67F26] text-white font-black text-sm uppercase tracking-wider transition shadow-md cursor-pointer active:scale-98"
+              >
+                Reserve Experience
+              </button>
+
+              <p className="text-center text-[11px] text-neutral-400">
+                You won&apos;t be charged yet
+              </p>
+
+              {/* Cost Summary Breakdown */}
+              <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 space-y-2 text-xs text-neutral-500 dark:text-neutral-400">
+                <div className="flex justify-between">
+                  <span>₹ No price × 1 guest</span>
+                  <span>₹ No price</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Athithya service fee</span>
+                  <span>₹ 0</span>
+                </div>
+                <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800 flex justify-between font-bold text-sm text-neutral-900 dark:text-neutral-100">
+                  <span>Total</span>
+                  <span>₹ No price</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
 
 export default function PostDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id: postId } = use(params);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { user: currentUser, fetchUser, openAuthModal } = useAuthStore();
-  const { showToast } = useFeedbackStore();
-
-  const [post, setPost] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
-  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
-  const [activeNavTab, setActiveNavTab] = useState("overview");
-  const [relatedPosts, setRelatedPosts] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (currentUser?.savedPosts) {
-      const saved = currentUser.savedPosts.some((item: any) => {
-        const idStr = typeof item === "object" ? item._id || item.id : item;
-        return String(idStr) === String(postId);
-      });
-      setIsSaved(saved);
-    } else {
-      setIsSaved(false);
-    }
-  }, [currentUser, postId]);
-
-  useEffect(() => {
-    let isMounted = true;
-    const loadPost = async () => {
-      setLoading(true);
-      try {
-        const currentType = searchParams.get("type") || "experience";
-        let res: any;
-        if (currentType === "service") {
-          res = await getService(postId);
-        } else if (currentType === "plan") {
-          res = await getItinerary(postId);
-        } else {
-          res = await getPost(postId);
-        }
-
-        const data =
-          res?.experience ||
-          res?.service ||
-          res?.post ||
-          res?.trek ||
-          res?.itinerary ||
-          res?.data ||
-          res;
-
-        if (isMounted && data?._id) {
-          setPost(data);
-          const cats = data.categories || [];
-          if (cats.length > 0) {
-            listPosts({ categories: cats.join(","), limit: 8 })
-              .then((r: any) => {
-                const list = (r?.posts || r?.data || []).filter(
-                  (p: any) => p._id !== postId
-                );
-                if (isMounted) setRelatedPosts(list.slice(0, 4));
-              })
-              .catch(() => {});
-          }
-        } else if (isMounted) {
-          setError("Experience not found");
-        }
-      } catch {
-        if (isMounted) setError("Failed to load experience details");
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-    loadPost();
-    return () => {
-      isMounted = false;
-    };
-  }, [postId, searchParams]);
-
-  const handleToggleSave = async () => {
-    if (!currentUser) {
-      openAuthModal("login");
-      return;
-    }
-    if (currentUser.role === "host") {
-      showToast(
-        "Hosts cannot engage with another host's experience. Only guests can.",
-        "error"
-      );
-      return;
-    }
-    try {
-      const isPlan =
-        (searchParams.get("type") || post?.postType) === "plan";
-      if (!isSaved) {
-        if (isPlan) await saveItineraryApi(postId);
-        else await savePostApi(postId);
-        showToast("Experience saved to your profile!", "success");
-      } else {
-        if (isPlan) await unsaveItineraryApi(postId);
-        else await unsavePostApi(postId);
-        showToast("Experience removed from saved", "success");
-      }
-      await fetchUser();
-    } catch {
-      showToast("Failed to save experience", "error");
-    }
-  };
-
-  const scrollToSection = (tabId: string) => {
-    setActiveNavTab(tabId);
-    const el = document.getElementById(`section-${tabId}`);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-neutral-950">
-        <div className="w-10 h-10 border-4 border-[#C59A2F]/20 border-t-[#C59A2F] rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (error || !post) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-white dark:bg-neutral-950">
-        <h2 className="text-xl font-black uppercase mb-4">
-          {error || "Not Found"}
-        </h2>
-        <button
-          onClick={() => router.back()}
-          className="px-8 py-3 bg-neutral-900 text-white rounded-full font-black text-xs uppercase cursor-pointer"
-        >
-          Go Back
-        </button>
-      </div>
-    );
-  }
-
-  const locationText = [
-    post.location?.city,
-    post.location?.state,
-    post.location?.country,
-  ]
-    .filter(Boolean)
-    .join(", ");
-
-  const navTabs = [
-    { id: "overview", label: "Overview", icon: <FileText size={14} />, show: true },
-    {
-      id: "rules",
-      label: "Rules",
-      icon: <Shield size={14} />,
-      show: Boolean(post?.privacyPolicy?.length),
-    },
-    {
-      id: "amenities",
-      label: "Amenities",
-      icon: <CheckCircle2 size={14} />,
-      show: Boolean(post?.amenities?.length),
-    },
-    {
-      id: "location",
-      label: "Location",
-      icon: <MapPin size={14} />,
-      show: Boolean(post?.location?.coordinates?.coordinates),
-    },
-    { id: "reviews", label: "Reviews", icon: <Star size={14} />, show: true },
-  ].filter((t) => t.show);
-
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
-      <Navbar />
-
-      <main className="flex-1 max-w-[1320px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28 pb-16 space-y-6">
-        <PostHeroGallery
-          post={post}
-          onBack={() => router.back()}
-          isSaved={isSaved}
-          onToggleSave={handleToggleSave}
-        />
-
-        <div className="text-left space-y-3">
-          <div className="flex flex-wrap items-center gap-2">
-            {post.categories?.length > 0 ? (
-              post.categories.map((cat: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="bg-[#C59A2F]/10 text-[#C59A2F] border border-[#C59A2F]/20 px-3 py-1 rounded-full text-[10px] md:text-[11px] font-black uppercase tracking-wider"
-                >
-                  {cat}
-                </span>
-              ))
-            ) : (
-              <span className="bg-[#C59A2F]/10 text-[#C59A2F] border border-[#C59A2F]/20 px-3 py-1 rounded-full text-[10px] md:text-[11px] font-black uppercase tracking-wider">
-                {post.postType || "Experience"}
-              </span>
-            )}
-          </div>
-
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
-            {post.title}
-          </h1>
-
-          {locationText && (
-            <div className="flex items-center gap-1.5 text-xs md:text-sm font-semibold text-neutral-700 dark:text-neutral-300 pb-2">
-              <MapPin className="text-[#C59A2F] shrink-0" size={14} />
-              <span>{locationText}</span>
-            </div>
-          )}
+    <Suspense
+      fallback={
+        <div className="min-h-screen pt-28 text-center text-sm text-neutral-400">
+          Loading experience...
         </div>
-
-        <div className="sticky top-16 md:top-20 z-20 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md py-2 border-b border-neutral-200/60 dark:border-neutral-800/80">
-          <div className="flex items-center overflow-x-auto bg-neutral-100/90 dark:bg-neutral-900 rounded-2xl p-1.5 border border-neutral-200/80 dark:border-neutral-800 gap-1">
-            {navTabs.map((tab) => {
-              const active = activeNavTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => scrollToSection(tab.id)}
-                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-all shrink-0 cursor-pointer z-10 ${
-                    active
-                      ? "text-white"
-                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900"
-                  }`}
-                >
-                  {active && (
-                    <motion.div
-                      layoutId="experienceTabIndicator"
-                      className="absolute inset-0 rounded-xl -z-10 bg-[#C59A2F]"
-                    />
-                  )}
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 pt-4">
-          <div className="lg:col-span-7 xl:col-span-8 space-y-8 min-w-0">
-            <div id="section-overview" className="scroll-mt-32 space-y-4">
-              <h3 className="text-base md:text-xl font-black uppercase tracking-tight">
-                Overview
-              </h3>
-              <div className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base leading-relaxed whitespace-pre-wrap font-medium">
-                {post.description}
-              </div>
-
-              {post.longDescription && (
-                <div className="border border-neutral-200/80 dark:border-neutral-800 rounded-2xl overflow-hidden bg-neutral-50/50 dark:bg-neutral-900/40">
-                  <button
-                    type="button"
-                    onClick={() => setIsDescriptionOpen((p) => !p)}
-                    className="w-full p-4 md:p-5 flex items-center justify-between text-left cursor-pointer"
-                  >
-                    <span className="text-sm md:text-base font-black">
-                      Description
-                    </span>
-                    <ChevronDown
-                      className={`transition-transform ${
-                        isDescriptionOpen ? "rotate-180 text-[#C59A2F]" : ""
-                      }`}
-                    />
-                  </button>
-                  {isDescriptionOpen && (
-                    <div className="px-4 pb-5 md:px-5 pt-1 text-sm md:text-base leading-relaxed whitespace-pre-wrap border-t border-neutral-200/60 dark:border-neutral-800/60">
-                      {post.longDescription}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {post.privacyPolicy?.length > 0 && (
-              <div id="section-rules" className="scroll-mt-32">
-                <h3 className="text-base md:text-xl font-black uppercase tracking-tight mb-4">
-                  Rules
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {post.privacyPolicy.map((rule: string, i: number) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3.5 p-3.5 bg-neutral-50 dark:bg-neutral-900/60 rounded-2xl border border-neutral-100 dark:border-neutral-800"
-                    >
-                      <CheckCircle2
-                        size={14}
-                        className="text-[#C59A2F] shrink-0"
-                      />
-                      <span className="text-xs md:text-sm font-semibold">
-                        {rule}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {post.amenities?.length > 0 && (
-              <div id="section-amenities" className="scroll-mt-32">
-                <h3 className="text-base md:text-xl font-black uppercase tracking-tight mb-4">
-                  Amenities
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {post.amenities.map((amenity: string, i: number) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3.5 p-3.5 bg-neutral-50 dark:bg-neutral-900/60 rounded-2xl border border-neutral-100 dark:border-neutral-800"
-                    >
-                      <CheckCircle2
-                        size={14}
-                        className="text-emerald-500 shrink-0"
-                      />
-                      <span className="text-xs md:text-sm font-semibold">
-                        {amenity}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {post.location?.coordinates?.coordinates && (
-              <div id="section-location" className="scroll-mt-32 space-y-4">
-                <h3 className="text-base md:text-xl font-black uppercase tracking-tight">
-                  Pinned Location
-                </h3>
-                <div className="rounded-3xl overflow-hidden border border-neutral-200/80 dark:border-neutral-800">
-                  <MapViewer
-                    lat={post.location.coordinates.coordinates[1]}
-                    lng={post.location.coordinates.coordinates[0]}
-                    city={post.location.city}
-                    state={post.location.state}
-                    address={post.location.address}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="lg:col-span-5 xl:col-span-4 w-full">
-            <div className="lg:sticky lg:top-28 z-20">
-              <BookingWidget post={post} />
-            </div>
-          </div>
-        </div>
-
-        <HostReviewsSection
-          host={post?.user}
-          hostId={post?.user?._id || post?.user?.id}
-          postId={postId}
-        />
-
-        {relatedPosts.length > 0 && (
-          <div className="mt-16 pt-8 border-t border-neutral-100 dark:border-neutral-800">
-            <h3 className="text-xl font-black uppercase tracking-tight mb-6">
-              Similar <span className="text-[#C59A2F]">Experiences</span>
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-              {relatedPosts.map((item) => (
-                <ExperienceCard key={item._id || item.id} data={item} />
-              ))}
-            </div>
-          </div>
-        )}
-      </main>
-
-      <Footer />
-      <MobileFooter />
-    </div>
+      }
+    >
+      <PostDetailContent params={params} />
+    </Suspense>
   );
 }
