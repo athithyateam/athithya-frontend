@@ -18,7 +18,7 @@ All HTTP communication is centralized in `src/lib/api/` so UI components never c
 
 | File | Responsibility |
 | :--- | :--- |
-| `client.ts` | Core `apiRequest<T>()` wrapper (attaches `Authorization: Bearer <token>`, credentials, query params, and dispatches `auth:unauthorized` on 401) + `uploadFileToS3()` with XHR progress & automatic retries. |
+| `client.ts` | Core `apiRequest<T>()` wrapper (attaches `Authorization: Bearer <token>`, credentials, query params, and dispatches `auth:unauthorized` on 401) + `uploadFileToS3()` with local server proxy fallback (`/api/s3-upload`) to bypass browser cross-origin CORS limitations. |
 | `endpoints.ts` | Single source of truth for all backend REST route paths (`ENDPOINTS`). |
 | `auth-api.ts` | Signup initiate/complete, signin, Google OAuth, forgot/reset password, `/me` session fetch, host verification, and phone OTP endpoints. |
 | `users-api.ts` | Public/complete profiles, profile updates, saved posts, host grid media, personal media upload/pin/delete, community posts, friendships, and guest directory. |
@@ -47,8 +47,8 @@ All reusable components strictly adhere to the $\le 130\text{--}150$ line limit:
 * `src/components/ui/button.tsx`: Configurable button with variant, size, and loading state props.
 * `src/components/ui/badge.tsx`: Configurable status and category badges.
 * `src/components/ui/skeleton.tsx`: Shimmer skeleton loaders for cards and lists.
-* `src/components/ui/toast-container.tsx`: Global toast notifications powered by `useFeedbackStore`.
-* `src/components/ui/modal.tsx`: `ConfirmModal` and `DiscountInfoModal`.
+* `src/components/ui/toast-container.tsx`: Global toast notifications and Athithya branded `showConfirm` modal dialog powered by `useFeedbackStore`.
+* `src/components/ui/modal.tsx`: `ConfirmModal`, `SuccessModal`, and `DiscountInfoModal`.
 * `src/components/ui/rating-stars.tsx`: Interactive and read-only star rating component.
 * `src/components/ui/media-lightbox.tsx`: Fullscreen image/video lightbox viewer.
 * `src/components/ui/map-picker.tsx` & `map-viewer.tsx`: Interactive coordinate selector and OpenStreetMap viewer.

@@ -80,32 +80,4 @@ export function SuccessModal({ isOpen, onClose, title = "Success!", message }: {
   );
 }
 
-export function DiscountInfoModal({
-  isOpen, onClose, discounts = [], basePrice = 0,
-}: {
-  isOpen: boolean; onClose: () => void; discounts: Array<{ minPeople?: number; percentage?: number; discount?: number; label?: string }>; basePrice?: number;
-}) {
-  const totalBase = calculateTotalPrice(basePrice);
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Group & Special Discounts" maxWidthClass="max-w-sm">
-      <div className="space-y-3">
-        {discounts.map((d, idx) => {
-          const pct = Number(d.percentage || d.discount || 0);
-          const discounted = Math.round(totalBase * (1 - pct / 100));
-          return (
-            <div key={idx} className="flex items-center justify-between p-3.5 rounded-2xl bg-amber-50/60 dark:bg-neutral-800 border border-[#C59A2F]/30">
-              <div className="flex items-center gap-2.5">
-                <Tag size={16} className="text-[#C59A2F]" />
-                <div>
-                  <p className="text-xs font-extrabold text-neutral-900 dark:text-neutral-100">{d.label || `${d.minPeople || 2}+ Travelers`}</p>
-                  <p className="text-[11px] text-[#C59A2F] font-bold">{pct}% OFF per person</p>
-                </div>
-              </div>
-              {basePrice > 0 && <span className="text-sm font-black text-neutral-900 dark:text-neutral-100">{formatPrice(discounted)}</span>}
-            </div>
-          );
-        })}
-      </div>
-    </Modal>
-  );
-}
+export { DiscountInfoModal } from "./discount-info-modal";

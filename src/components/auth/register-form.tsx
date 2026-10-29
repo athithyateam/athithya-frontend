@@ -133,7 +133,7 @@ export function RegisterForm({ onSwitchToLogin, onClose }: RegisterFormProps) {
             placeholder="Enter OTP"
             value={otp}
             onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-            className="w-full border rounded-lg p-2 dark:bg-neutral-800 dark:text-neutral-100 tracking-widest text-center text-lg font-bold"
+            className="w-full border rounded-lg p-2 bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 tracking-widest text-center text-lg font-bold"
             required
             style={{ borderColor: GOLD }}
           />
@@ -168,12 +168,12 @@ export function RegisterForm({ onSwitchToLogin, onClose }: RegisterFormProps) {
           <GoogleIcon className="w-4 h-4" /><span>Sign up with Google</span>
         </button>
         <div className="grid grid-cols-2 gap-3">
-          <input type="text" placeholder="First name" value={firstname} onChange={(e) => setFirstname(e.target.value)} className="border rounded-lg p-2 border-gray-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none" required />
-          <input type="text" placeholder="Last name" value={lastname} onChange={(e) => setLastname(e.target.value)} className="border rounded-lg p-2 border-gray-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none" required />
+          <input type="text" placeholder="First name" value={firstname} onChange={(e) => setFirstname(e.target.value)} className="border rounded-lg p-2 border-gray-300 bg-white text-neutral-900 placeholder:text-neutral-400 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none" required />
+          <input type="text" placeholder="Last name" value={lastname} onChange={(e) => setLastname(e.target.value)} className="border rounded-lg p-2 border-gray-300 bg-white text-neutral-900 placeholder:text-neutral-400 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none" required />
         </div>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border rounded-lg p-2 border-gray-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none" required />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border rounded-lg p-2 border-gray-300 bg-white text-neutral-900 placeholder:text-neutral-400 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none" required />
         <div className="relative">
-          <input type={showPwd ? "text" : "password"} placeholder="Password" value={pwd} onChange={(e) => setPwd(e.target.value)} className="w-full border rounded-lg p-2 border-gray-300 pr-10 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none" required minLength={6} />
+          <input type={showPwd ? "text" : "password"} placeholder="Password" value={pwd} onChange={(e) => setPwd(e.target.value)} className="w-full border rounded-lg p-2 border-gray-300 pr-10 bg-white text-neutral-900 placeholder:text-neutral-400 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none" required minLength={6} />
           <button type="button" className="absolute right-3 top-2.5 cursor-pointer" style={{ color: GOLD }} onClick={() => setShowPwd((v) => !v)}>{showPwd ? <EyeOff size={18} /> : <Eye size={18} />}</button>
         </div>
         <button type="submit" disabled={loading} className="w-full cursor-pointer text-white py-2 rounded-lg disabled:opacity-70 transition font-medium" style={{ backgroundColor: GOLD }}>

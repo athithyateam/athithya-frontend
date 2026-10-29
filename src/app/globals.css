@@ -41,14 +41,25 @@ body {
   scrollbar-width: none;
 }
 
-/* Chrome/Safari Autofill Dark Inset Fix */
+/* Chrome/Safari Autofill - Theme Adaptive */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #121215 inset !important;
-  box-shadow: 0 0 0 1000px #121215 inset !important;
-  -webkit-text-fill-color: #ffffff !important;
-  caret-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #171717 !important;
+  caret-color: #171717 !important;
+  transition: background-color 5000000s ease-in-out 0s !important;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #262626 inset !important;
+  box-shadow: 0 0 0 1000px #262626 inset !important;
+  -webkit-text-fill-color: #ededed !important;
+  caret-color: #ededed !important;
   transition: background-color 5000000s ease-in-out 0s !important;
 }

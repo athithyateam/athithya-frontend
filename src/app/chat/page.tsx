@@ -2,11 +2,14 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { MessageSquare, Search, Users } from "lucide-react";
+import { MessageSquare, Search, UserPlus } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 import { useChatStore } from "@/stores/chat-store";
 import { ChatMessageWindow } from "@/components/chat/chat-message-window";
-import { ChatGroupModal } from "@/components/chat/chat-group-modal";
+import { FindFriendsModal } from "@/components/chat/chat-group-modal";
+import { Navbar } from "@/components/navigation/navbar";
+import { Footer } from "@/components/navigation/footer";
+import { MobileFooter } from "@/components/navigation/mobile-footer";
 
 function ChatContent() {
   const searchParams = useSearchParams();
@@ -21,7 +24,7 @@ function ChatContent() {
   } = useChatStore();
 
   const [search, setSearch] = useState("");
-  const [showGroupModal, setShowGroupModal] = useState(false);
+  const [showFindFriendsModal, setShowFindFriendsModal] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -73,17 +76,19 @@ function ChatContent() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="h-[75vh] min-h-[540px] rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 overflow-hidden shadow-xl grid grid-cols-1 md:grid-cols-12">
           {/* Left: Conversation List */}
-          <aside className="md:col-span-4 border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col bg-white dark:bg-neutral-900/60">
+          <aside className="md:col-span-4 h-full min-h-0 border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col bg-white dark:bg-neutral-900/60 overflow-hidden">
             <div className="p-4 border-b border-neutral-200/80 dark:border-neutral-800 space-y-3">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-black">Messages</h2>
-                <button
-                  type="button"
-                  onClick={() => setShowGroupModal(true)}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#C59A2F]/15 text-[#C59A2F] text-xs font-bold hover:bg-[#C59A2F] hover:text-white transition"
-                >
-                  <Users size={13} /> New Group
-                </button>
+                {user?.role === "guest" && (
+                  <button
+                    type="button"
+                    onClick={() => setShowFindFriendsModal(true)}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#C59A2F]/15 text-[#C59A2F] text-xs font-black uppercase tracking-wider hover:bg-[#C59A2F] hover:text-white transition cursor-pointer"
+                  >
+                    <UserPlus size={13} /> Find Friends
+                  </button>
+                )}
               </div>
               <div className="relative">
                 <input
@@ -150,15 +155,20 @@ function ChatContent() {
         </div>
       </div>
 
-      <ChatGroupModal open={showGroupModal} onClose={() => setShowGroupModal(false)} />
+      <FindFriendsModal open={showFindFriendsModal} onClose={() => setShowFindFriendsModal(false)} />
     </main>
   );
 }
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen pt-28 text-center text-sm text-neutral-400">Loading messages...</div>}>
-      <ChatContent />
-    </Suspense>
+    <>
+      <Navbar />
+      <Suspense fallback={<div className="min-h-screen pt-28 text-center text-sm text-neutral-400">Loading messages...</div>}>
+        <ChatContent />
+      </Suspense>
+      <Footer />
+      <MobileFooter />
+    </>
   );
 }

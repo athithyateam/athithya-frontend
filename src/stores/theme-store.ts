@@ -12,14 +12,14 @@ export const useThemeStore = create<ThemeState>((set) => ({
     set((state) => {
       const next = state.theme === "light" ? "dark" : "light";
       if (typeof window !== "undefined") {
-        localStorage.setItem("athithya-theme", next);
+        localStorage.setItem("athithya-theme-pref", next);
         document.documentElement.classList.toggle("dark", next === "dark");
       }
       return { theme: next };
     }),
   setTheme: (theme) => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("athithya-theme", theme);
+      localStorage.setItem("athithya-theme-pref", theme);
       document.documentElement.classList.toggle("dark", theme === "dark");
     }
     set({ theme });

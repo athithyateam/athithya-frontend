@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -32,7 +32,7 @@ import { HostReviewsSection } from "@/components/post/host-reviews-section";
 import { MapViewer } from "@/components/ui/map-viewer";
 import { ExperienceCard } from "@/components/cards/experience-card";
 
-export default function PostDetailPage({
+function PostDetailContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -408,5 +408,23 @@ export default function PostDetailPage({
       <Footer />
       <MobileFooter />
     </div>
+  );
+}
+
+export default function PostDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen pt-28 text-center text-sm text-neutral-400">
+          Loading experience...
+        </div>
+      }
+    >
+      <PostDetailContent params={params} />
+    </Suspense>
   );
 }

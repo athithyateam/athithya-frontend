@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 import { useExploreStore } from "@/stores/explore-store";
@@ -37,6 +37,11 @@ const categories: Category[] = [
 export function HomeCategoriesSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { categoryActivity } = useExploreStore();
+  const [now, setNow] = useState(0);
+
+  useEffect(() => {
+    setNow(Date.now());
+  }, []);
 
   const visibleCategories = useMemo(() => {
     const activityMap = new Map<string, any>();
@@ -46,7 +51,6 @@ export function HomeCategoriesSection() {
         if (item?.category) activityMap.set(String(item.category).toLowerCase(), item);
       });
     }
-    const now = Date.now();
     const DAY_MS = 24 * 60 * 60 * 1000;
     const mapped = categories.map((cat) => {
       let latestApprovedTime = 0;
@@ -57,13 +61,13 @@ export function HomeCategoriesSection() {
           if (t > latestApprovedTime) latestApprovedTime = t;
         }
       }
-      const isNew = latestApprovedTime > 0 && now - latestApprovedTime <= DAY_MS;
+      const isNew = now > 0 && latestApprovedTime > 0 && now - latestApprovedTime <= DAY_MS;
       return { ...cat, latestApprovedTime, isNew };
     });
     const newCats = mapped.filter((c) => c.isNew).sort((a, b) => b.latestApprovedTime - a.latestApprovedTime);
     const regCats = mapped.filter((c) => !c.isNew);
     return [...newCats, ...regCats];
-  }, [categoryActivity]);
+  }, [categoryActivity, now]);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {

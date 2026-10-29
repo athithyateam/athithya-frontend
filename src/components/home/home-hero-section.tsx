@@ -99,18 +99,18 @@ export function HomeHeroSection() {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 onFocus={() => hasResults && setShowSuggestions(true)}
-                placeholder="Search experiences, hosts, friends by name or location..."
+                placeholder="Search Experiences, Hosts, Plans and People"
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 className="bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-100 font-bold text-xs sm:text-sm w-full placeholder:text-neutral-400 placeholder:font-normal"
               />
               <button
                 type="button"
                 onClick={handleUseLocation}
-                className="text-[#C59A2F] text-[9px] md:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap ml-1.5 sm:ml-2 hover:bg-yellow-50 dark:hover:bg-neutral-800 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full transition border border-yellow-200 dark:border-[#C59A2F]/30 shrink-0 flex items-center gap-1 cursor-pointer"
+                className="text-[#C59A2F] text-[10px] md:text-xs font-bold whitespace-nowrap ml-1.5 sm:ml-2 hover:underline px-2.5 py-1.5 rounded-full transition shrink-0 flex items-center gap-1 cursor-pointer"
                 title="Detect location"
               >
-                <MapPin className="w-3 h-3 shrink-0" />
-                <span>{locationLoading ? "Detecting..." : "Current Location"}</span>
+                <MapPin className="w-3.5 h-3.5 shrink-0" />
+                <span>{locationLoading ? "Detecting..." : "Use current location"}</span>
               </button>
             </div>
             <button

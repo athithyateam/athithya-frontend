@@ -22,13 +22,15 @@ export interface ExperienceCardProps {
   onDeleteSuccess?: () => void;
   onImageLoad?: () => void;
   scheduledDate?: string;
+  onEditSchedule?: (e: any) => void;
+  onDeleteSchedule?: (e: any) => void;
   isThemed?: boolean;
 }
 
 export const ExperienceCard = memo(function ExperienceCard({
   data, className = "", defaultType, priority = false, compact = false,
   showBookmark = false, onUnsave, showActions = false, onDeleteSuccess,
-  onImageLoad, scheduledDate, isThemed = false,
+  onImageLoad, scheduledDate, onEditSchedule, onDeleteSchedule, isThemed = false,
 }: ExperienceCardProps) {
   const router = useRouter();
   const { user, openAuthModal } = useAuthStore();
@@ -109,7 +111,15 @@ export const ExperienceCard = memo(function ExperienceCard({
                 <button onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center"><Trash2 size={13} /></button>
               </div>
             )}
-            {showBookmark && !showActions && (
+            {onDeleteSchedule && (
+              <div className="flex gap-1.5">
+                {onEditSchedule && (
+                  <button onClick={onEditSchedule} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center"><Edit size={13} /></button>
+                )}
+                <button onClick={onDeleteSchedule} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center"><Trash2 size={13} /></button>
+              </div>
+            )}
+            {showBookmark && !showActions && !onDeleteSchedule && (
               <button onClick={handleSave} className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 shadow-md flex items-center justify-center">
                 <Bookmark size={14} className={isSaved ? "fill-[#C59A2F] text-[#C59A2F]" : "text-neutral-500 dark:text-neutral-300 group-hover:text-[#C59A2F]"} />
               </button>

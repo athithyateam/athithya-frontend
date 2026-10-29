@@ -27,7 +27,11 @@ Supports Experience posts, Host Services (`?type=service`), and Traveler Plans/I
 * **`form-primitives.tsx`**: Reusable form inputs, tag selectors, S3 media dropzones, and discount tier builders.
 * **`host-service-form.tsx`**:
   * Used by verified Hosts to create or edit Experiences and Services (`createService`, `updateService`, `createPost`, `updatePost`).
-  * Uploads photos and videos directly to AWS S3 using `getPresignedUrl` (`GET /api/posts/presigned-url`) + `uploadFileToS3`.
+  * **Interactive Map Picker (`map-picker.tsx`)**: Leaflet map integrated with Uttarakhand official boundary GeoJSON (`uttarakhand-boundary.json`), forward Nominatim location search, click-to-pin coordinate positioning with boundary validation, and automatic reverse geocoding to address.
+  * **Route Details with Suggestions**: Starting Point and Ending Point inputs with dropdown suggestions covering all major Uttarakhand hubs (*Dehradun, Haridwar, Rishikesh, Haldwani, Nainital, Mussoorie, Almora, Pithoragarh, Uttarkashi, Srinagar, Joshimath, Chopta, Kedarnath, Badrinath, Roorkee, Rudrapur*).
+  * **Dual-Tier Group Discounting**: Step 2 features dual tiers (`Group of 2` and `Group of 3`) matching `athithya-app`, with synchronized dual-direction inputs (Discounted Price ₹ and Percentage %), live savings tags, and real-time validation.
+  * **Host Rules**: Custom policy input (`PolicyAdder` style) where hosts manually add rules and delete them, with preset suggestion pills removed.
+  * **S3 Upload Proxy Architecture**: Uploads photos and videos via `uploadFileToS3`, using a transparent local Next.js server proxy (`/api/s3-upload`) to bypass browser cross-origin preflight restrictions on localhost and avoid console CORS errors.
 * **`traveller-plan-form.tsx`**:
   * Used by Guests/Travelers to publish or edit public/collaborative Travel Plans (`createItinerary`, `updateItinerary`).
 
