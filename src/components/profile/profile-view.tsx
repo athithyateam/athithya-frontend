@@ -1,87 +1,179 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  User,
   MapPin,
   Calendar,
   ShieldCheck,
   Edit3,
-  Bookmark,
-  Compass,
-  MessageSquare,
   Plus,
-  Star,
+  UserPlus,
+  UserCheck,
+  MessageSquare,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
-
-function ProfileExperienceCardPlaceholder() {
-  return (
-    <div className="flex flex-col bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs overflow-hidden text-left">
-      <div className="aspect-[4/3] w-full bg-neutral-100 dark:bg-neutral-800/80 flex items-center justify-center border-b border-neutral-200/60 dark:border-neutral-800">
-        <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
-          No image
-        </span>
-      </div>
-      <div className="p-4 space-y-2">
-        <h4 className="font-bold text-sm text-neutral-900 dark:text-neutral-100">
-          No title
-        </h4>
-        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-          No description
-        </p>
-        <div className="flex items-center justify-between pt-2 border-t border-neutral-100 dark:border-neutral-800 text-xs">
-          <span className="font-bold text-neutral-800 dark:text-neutral-200">
-            ₹ No price
-          </span>
-          <span className="flex items-center gap-1 font-semibold text-neutral-500">
-            <Star size={12} className="text-[#C59A2F] fill-[#C59A2F]" /> No rating
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useFeedbackStore } from "@/stores/feedback-store";
+import {
+  getProfileByIdApi,
+  getSavedPostsApi,
+  friendRequestApi,
+  acceptFriendRequestApi,
+  unfriendUserApi,
+} from "@/lib/api/users-api";
+import { PROFILE_THEMES } from "@/data/profile-themes";
+import { ExperienceCard } from "@/components/cards/experience-card";
+import { EditProfileModal } from "./edit-profile-modal";
+import { ProfileGridTab } from "./profile-grid-tab";
+import { CommunityPostsTab } from "./community-posts-tab";
+import { ProfileBookingsTab } from "./profile-bookings-tab";
+import { HostReviewsSection } from "@/components/post/host-reviews-section";
 
 interface ProfileViewProps {
   userId?: string;
 }
 
 export function ProfileView({ userId }: ProfileViewProps) {
-  const { user: currentUser, openAuthModal } = useAuthStore();
-  const [activeTab, setActiveTab] = useState<string>("experiences");
+  const router = useRouter();
+  const { user: currentUser, openAuthModal, fetchUser } = useAuthStore();
+  const { showToast } = useFeedbackStore();
 
-  const displayUser =
-    currentUser || {
-      id: userId || "guest-1",
-      firstname: "Traveler",
-      lastname: "",
-      email: "guest@athithya.in",
-      role: "guest" as const,
-      hostStatus: "approved" as const,
-    };
+  const targetUserId = userId || currentUser?.id || (currentUser as any)?._id || "";
+  const isOwnProfile = Boolean(
+    currentUser && (!userId || String(userId) === String(currentUser.id || (currentUser as any)?._id))
+  );
+
+  const [profileUser, setProfileUser] = useState<Record<string, any> | null>(null);
+  const [experiences, setExperiences] = useState<any[]>([]);
+  const [savedPosts, setSavedPosts] = useState<any[]>([]);
+  const [friendStatus, setFriendStatus] = useState<"none" | "pending" | "received" | "friends">("none");
+  const [activeTab, setActiveTab] = useState<string>("experiences");
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const loadProfile = useCallback(async () => {
+    if (!targetUserId) return;
+    try {
+      const res = await getProfileByIdApi(targetUserId);
+      const data = res?.data || res || {};
+      const fetchedUser = data.user || data.profile || data;
+      if (fetchedUser && (fetchedUser._id || fetchedUser.id || fetchedUser.firstname)) {
+        setProfileUser(fetchedUser);
+      }
+      const posts = data.posts || data.experiences || data.services || fetchedUser?.posts || [];
+      setExperiences(Array.isArray(posts) ? posts : []);
+      if (data.friendStatus) setFriendStatus(data.friendStatus);
+    } catch {
+      // Fallback to current user
+    }
+
+    if (isOwnProfile) {
+      try {
+        const savedRes = await getSavedPostsApi();
+        const list = savedRes?.savedPosts || savedRes?.data?.savedPosts || (Array.isArray(savedRes) ? savedRes : []);
+        setSavedPosts(list);
+      } catch {
+        setSavedPosts([]);
+      }
+    }
+  }, [targetUserId, isOwnProfile]);
+
+  useEffect(() => {
+    loadProfile();
+  }, [loadProfile]);
+
+  const displayUser: Record<string, any> = profileUser || currentUser || {
+    id: targetUserId || "guest-1",
+    firstname: "Traveler",
+    lastname: "",
+    role: "guest",
+    bio: "Welcome to Athithya profile. Exploring authentic traditions, cultural trails, and mountain life across Uttarakhand.",
+  };
 
   const isHost = displayUser.role === "host" || displayUser.role === "admin";
+  const themeObj =
+    PROFILE_THEMES.find((t) => t.key === (displayUser.profileTheme || "mountain")) || PROFILE_THEMES[0];
+
+  const handleFriendAction = async () => {
+    if (!currentUser) return openAuthModal("login");
+    try {
+      if (friendStatus === "none") {
+        await friendRequestApi(targetUserId);
+        setFriendStatus("pending");
+        showToast("Friend request sent!", "success");
+      } else if (friendStatus === "received") {
+        await acceptFriendRequestApi(targetUserId);
+        setFriendStatus("friends");
+        showToast("Friend request accepted!", "success");
+      } else if (friendStatus === "friends") {
+        await unfriendUserApi(targetUserId);
+        setFriendStatus("none");
+        showToast("Removed from friends", "info");
+      }
+    } catch (err: any) {
+      showToast(err?.message || "Could not update friendship", "error");
+    }
+  };
+
+  const tabs = isHost
+    ? [
+        { id: "experiences", label: "Hosted Experiences" },
+        { id: "grid", label: "Media Grid" },
+        { id: "posts", label: "Community Stories" },
+        ...(isOwnProfile ? [{ id: "bookings", label: "Booking Requests" }] : []),
+        { id: "reviews", label: "Reviews & Ratings" },
+      ]
+    : [
+        { id: "experiences", label: isOwnProfile ? "Saved Experiences" : "Travel Plans" },
+        { id: "posts", label: "Community Stories" },
+        ...(isOwnProfile
+          ? [
+              { id: "bookings", label: "My Bookings" },
+              { id: "schedules", label: "Scheduled Trips" },
+            ]
+          : []),
+      ];
+
+  const avatarSrc = displayUser.avatar?.url || (typeof displayUser.avatar === "string" ? displayUser.avatar : "");
+  const locationLabel =
+    displayUser.location?.city
+      ? `${displayUser.location.city}, ${displayUser.location.state || "Uttarakhand"}`
+      : "Uttarakhand, India";
 
   return (
-    <main className="min-h-screen pt-24 pb-20 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
+    <main className="min-h-screen pt-24 pb-20 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8">
-        {/* Profile Card Header */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-xs mb-8">
+        {/* Themed Profile Header */}
+        <div
+          className="relative p-6 sm:p-8 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs mb-8 overflow-hidden bg-neutral-50 dark:bg-neutral-900"
+          style={
+            themeObj?.image
+              ? {
+                  backgroundImage: `${themeObj.overlay}, url(${themeObj.image})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  color: themeObj.textColor || "#fff",
+                }
+              : undefined
+          }
+        >
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#C59A2F] text-white flex items-center justify-center font-black text-3xl sm:text-4xl shadow-md shrink-0">
-              {(displayUser.firstname?.charAt(0) || "U").toUpperCase()}
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#C59A2F] text-white flex items-center justify-center font-black text-3xl sm:text-4xl shadow-md shrink-0 overflow-hidden border-2 border-white/30">
+              {avatarSrc ? (
+                <img src={avatarSrc} alt={displayUser.firstname} className="w-full h-full object-cover" />
+              ) : (
+                (displayUser.firstname?.charAt(0) || "U").toUpperCase()
+              )}
             </div>
 
             <div className="flex-1 text-center sm:text-left">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-neutral-100 capitalize">
+                  <h1 className="text-2xl sm:text-3xl font-black capitalize">
                     {displayUser.firstname} {displayUser.lastname}
                   </h1>
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-1.5">
-                    <span className="px-3 py-0.5 rounded-full bg-[#C59A2F]/15 text-[#C59A2F] text-xs font-black uppercase tracking-wider">
+                    <span className="px-3 py-0.5 rounded-full bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider">
                       {displayUser.role || "Traveler"}
                     </span>
                     <span className="flex items-center gap-1 text-xs text-[#C59A2F] font-bold">
@@ -90,208 +182,163 @@ export function ProfileView({ userId }: ProfileViewProps) {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-2">
-                  {currentUser ? (
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  {isOwnProfile ? (
                     <button
                       type="button"
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-bold transition cursor-pointer"
+                      onClick={() => setShowEditModal(true)}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-black/40 backdrop-blur-xs border border-white/25 text-white hover:bg-black/60 text-xs font-bold transition cursor-pointer"
                     >
                       <Edit3 size={14} />
                       <span>Edit Profile</span>
                     </button>
+                  ) : currentUser ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleFriendAction}
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#C59A2F] text-white text-xs font-bold hover:bg-[#A67F26] transition"
+                      >
+                        {friendStatus === "friends" ? <UserCheck size={14} /> : <UserPlus size={14} />}
+                        <span>
+                          {friendStatus === "friends"
+                            ? "Friends"
+                            : friendStatus === "pending"
+                            ? "Requested"
+                            : friendStatus === "received"
+                            ? "Accept Request"
+                            : "Connect"}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => router.push(`/chat?userId=${targetUserId}`)}
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-black/45 text-white border border-white/25 text-xs font-bold"
+                      >
+                        <MessageSquare size={14} /> Message
+                      </button>
+                    </>
                   ) : (
                     <button
                       type="button"
                       onClick={() => openAuthModal("login")}
-                      className="px-5 py-2 rounded-full bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-xs cursor-pointer"
+                      className="px-5 py-2 rounded-full bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider"
                     >
-                      Login to Manage
+                      Login to Connect
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Bio & Meta */}
-              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-4 max-w-2xl leading-relaxed">
-                Welcome to Athithya profile. Exploring authentic traditions, cultural trails, and mountain life across Uttarakhand.
+              <p className="text-xs sm:text-sm opacity-90 mt-4 max-w-2xl leading-relaxed">
+                {displayUser.bio ||
+                  "Exploring authentic traditions, cultural trails, and mountain life across Uttarakhand."}
               </p>
 
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 mt-4 text-xs text-neutral-500 dark:text-neutral-400">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 mt-4 text-xs opacity-85">
                 <span className="flex items-center gap-1">
-                  <MapPin size={13} className="text-[#C59A2F]" /> Uttarakhand, India
+                  <MapPin size={13} className="text-[#C59A2F]" /> {locationLabel}
                 </span>
-                <span>•</span>
-                <span className="flex items-center gap-1">
-                  <Calendar size={13} className="text-[#C59A2F]" /> Member on Athithya
-                </span>
+                {displayUser.experienceYears ? (
+                  <>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <Calendar size={13} className="text-[#C59A2F]" /> {displayUser.experienceYears}+ Years Hosting
+                    </span>
+                  </>
+                ) : null}
               </div>
 
-              {/* Stats Counters */}
-              <div className="flex items-center justify-center sm:justify-start gap-6 mt-6 pt-6 border-t border-neutral-200/60 dark:border-neutral-800">
-                <div className="text-center sm:text-left">
-                  <span className="block font-black text-lg text-neutral-900 dark:text-neutral-100">
-                    0
-                  </span>
-                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-                    {isHost ? "Experiences" : "Trips Booked"}
+              <div className="flex items-center justify-center sm:justify-start gap-6 mt-6 pt-5 border-t border-white/15">
+                <div>
+                  <span className="block font-black text-lg">{experiences.length}</span>
+                  <span className="text-[11px] font-bold opacity-75 uppercase tracking-wider">
+                    {isHost ? "Experiences" : "Plans"}
                   </span>
                 </div>
-                <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800" />
-                <div className="text-center sm:text-left">
-                  <span className="block font-black text-lg text-neutral-900 dark:text-neutral-100">
-                    0
-                  </span>
-                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-                    Followers
-                  </span>
-                </div>
-                <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800" />
-                <div className="text-center sm:text-left">
-                  <span className="block font-black text-lg text-neutral-900 dark:text-neutral-100">
-                    0
-                  </span>
-                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-                    Following
-                  </span>
+                <div className="h-6 w-px bg-white/20" />
+                <div>
+                  <span className="block font-black text-lg">{displayUser.friends?.length || displayUser.followersCount || 0}</span>
+                  <span className="text-[11px] font-bold opacity-75 uppercase tracking-wider">Connections</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Tab Navigation */}
+        {/* Tabs */}
         <div className="flex border-b border-neutral-200 dark:border-neutral-800 mb-8 overflow-x-auto">
-          {isHost ? (
-            <>
-              <button
-                type="button"
-                onClick={() => setActiveTab("experiences")}
-                className={`pb-3 px-4 text-sm font-extrabold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                  activeTab === "experiences"
-                    ? "border-[#C59A2F] text-[#C59A2F]"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                }`}
-              >
-                Hosted Experiences
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("bookings")}
-                className={`pb-3 px-4 text-sm font-extrabold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                  activeTab === "bookings"
-                    ? "border-[#C59A2F] text-[#C59A2F]"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                }`}
-              >
-                Booking Requests
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("reviews")}
-                className={`pb-3 px-4 text-sm font-extrabold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                  activeTab === "reviews"
-                    ? "border-[#C59A2F] text-[#C59A2F]"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                }`}
-              >
-                Reviews & Ratings
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={() => setActiveTab("experiences")}
-                className={`pb-3 px-4 text-sm font-extrabold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                  activeTab === "experiences"
-                    ? "border-[#C59A2F] text-[#C59A2F]"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                }`}
-              >
-                Saved Experiences
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("bookings")}
-                className={`pb-3 px-4 text-sm font-extrabold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                  activeTab === "bookings"
-                    ? "border-[#C59A2F] text-[#C59A2F]"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                }`}
-              >
-                My Bookings
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("posts")}
-                className={`pb-3 px-4 text-sm font-extrabold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                  activeTab === "posts"
-                    ? "border-[#C59A2F] text-[#C59A2F]"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                }`}
-              >
-                Community Posts
-              </button>
-            </>
-          )}
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={`pb-3 px-4 text-sm font-extrabold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
+                activeTab === tab.id
+                  ? "border-[#C59A2F] text-[#C59A2F]"
+                  : "border-transparent text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* Tab Content Display */}
         {activeTab === "experiences" && (
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-black text-neutral-900 dark:text-neutral-100">
-                {isHost ? "Hosted Experiences" : "Saved Experiences"}
+              <h2 className="text-xl font-black">
+                {isHost ? "Hosted Experiences" : isOwnProfile ? "Saved Experiences & Plans" : "Travel Plans"}
               </h2>
-              {isHost && (
+              {isOwnProfile && (
                 <Link
                   href="/post"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#C59A2F] text-white text-xs font-bold hover:bg-[#A67F26] transition shadow-xs"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#C59A2F] text-white text-xs font-bold hover:bg-[#A67F26]"
                 >
-                  <Plus size={14} /> Add Experience
+                  <Plus size={14} /> {isHost ? "Add Experience" : "Create Travel Plan"}
                 </Link>
               )}
             </div>
-
-            {/* Neutral placeholders as requested */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map((i) => (
-                <ProfileExperienceCardPlaceholder key={i} />
-              ))}
-            </div>
+            {(() => {
+              const items = isHost ? experiences : isOwnProfile && savedPosts.length > 0 ? savedPosts : experiences;
+              return items.length === 0 ? (
+                <div className="p-12 text-center rounded-3xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800">
+                  <p className="text-sm font-bold text-neutral-500">No experiences to display yet.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {items.map((item: any, idx: number) => (
+                    <ExperienceCard
+                      key={item._id || item.id || idx}
+                      data={item}
+                      className="w-full"
+                      showActions={isOwnProfile && isHost}
+                      showBookmark={!isHost}
+                      onDeleteSuccess={loadProfile}
+                    />
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         )}
 
-        {activeTab === "bookings" && (
-          <div className="p-12 text-center rounded-3xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800">
-            <Compass size={36} className="mx-auto text-neutral-400 mb-3" />
-            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
-              No active bookings found
-            </h3>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-sm mx-auto">
-              When you reserve an authentic experience in Uttarakhand, your tickets and itinerary details will appear here.
-            </p>
-            <Link
-              href="/explore-experience"
-              className="inline-block mt-4 px-5 py-2.5 rounded-full bg-[#C59A2F] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#A67F26] transition shadow-xs"
-            >
-              Explore Experiences
-            </Link>
-          </div>
-        )}
-
-        {(activeTab === "reviews" || activeTab === "posts") && (
-          <div className="p-12 text-center rounded-3xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800">
-            <MessageSquare size={36} className="mx-auto text-neutral-400 mb-3" />
-            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
-              No entries to display
-            </h3>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-sm mx-auto">
-              Feedbacks, reviews, and community memories will be displayed in this section.
-            </p>
-          </div>
-        )}
+        {activeTab === "grid" && <ProfileGridTab hostId={targetUserId} isOwnProfile={isOwnProfile} />}
+        {activeTab === "posts" && <CommunityPostsTab userId={targetUserId} isOwnProfile={isOwnProfile} />}
+        {activeTab === "bookings" && <ProfileBookingsTab isHost={isHost} mode="bookings" />}
+        {activeTab === "schedules" && <ProfileBookingsTab isHost={false} mode="schedules" />}
+        {activeTab === "reviews" && <HostReviewsSection host={displayUser} hostId={targetUserId} />}
       </div>
+
+      <EditProfileModal
+        open={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        user={displayUser}
+        onSaved={(updated) => {
+          setProfileUser(updated);
+          fetchUser();
+        }}
+      />
     </main>
   );
 }
