@@ -224,3 +224,4 @@ export function CommunityPostsTab({ userId, isOwnProfile }: CommunityPostsTabPro
     </div>
   );
 }
+

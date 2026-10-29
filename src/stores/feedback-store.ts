@@ -30,3 +30,4 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
   dismissToast: (id) =>
     set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 }));
+

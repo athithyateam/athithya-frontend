@@ -134,3 +134,4 @@ export function ChatGroupModal({ open, onClose }: ChatGroupModalProps) {
     </div>
   );
 }
+

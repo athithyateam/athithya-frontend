@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { ExplorePageView } from "@/components/explore/explore-page-view";
+import { NearbyExperiencesView } from "@/components/explore/section-views";
 
 export const metadata: Metadata = {
   title: "Nearby Experiences | Explore with Athithya",
-  description: "Explore travel experiences near you in Uttarakhand with local hosts.",
+  description:
+    "Discover authentic travel experiences, treks, and outdoor activities near your current location in Uttarakhand.",
+  alternates: { canonical: "https://athithya.in/nearby-experience" },
+  openGraph: {
+    title: "Nearby Experiences | Explore with Athithya",
+    description: "Explore travel experiences near you in Uttarakhand with local hosts.",
+    url: "https://athithya.in/nearby-experience",
+    type: "website",
+  },
 };
 
 export default function NearbyExperiencePage() {
-  return (
-    <ExplorePageView
-      type="nearby-experience"
-      breadcrumb="Nearby Experiences"
-      title="Nearby"
-      highlight="Experiences"
-      subtitle="Explore experiences near you"
-    />
-  );
+  return <NearbyExperiencesView />;
 }

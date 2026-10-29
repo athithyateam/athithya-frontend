@@ -230,3 +230,4 @@ export const placesData: PlaceEntry[] = [
     mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13834.618641944885",
   },
 ];
+

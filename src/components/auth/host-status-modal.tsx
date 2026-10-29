@@ -74,3 +74,4 @@ export function HostStatusModal({ status = "pending_verification", onClose, onAc
 }
 
 export default HostStatusModal;
+
