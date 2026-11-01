@@ -83,7 +83,7 @@ export default function SafetyPage() {
       </section>
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-10 md:space-y-16">
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs ">
           <div className="mb-6 md:mb-8 text-center max-w-2xl mx-auto">
             <h2 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-tight tracking-wide">
               Our Safety <span className="text-[#C59A2F]">Standards</span>
@@ -121,7 +121,7 @@ export default function SafetyPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs ">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-left">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-neutral-800 border border-amber-200 text-[#C59A2F] flex items-center justify-center shrink-0 mt-0.5">

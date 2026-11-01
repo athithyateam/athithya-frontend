@@ -57,7 +57,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
 
   selectConversation: async (conv) => {
-    if (!conv) return;
+    if (!conv) {
+      set({ activeConversation: null, messages: [] });
+      return;
+    }
     const convId = conv._id || conv.id;
     set({ activeConversation: conv, messages: [] });
     try {
@@ -182,4 +185,3 @@ export const useChatStore = create<ChatState>((set, get) => ({
     if (updated) set({ activeConversation: updated });
   },
 }));
-

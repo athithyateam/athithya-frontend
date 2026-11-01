@@ -91,7 +91,7 @@ export default function HostPage() {
       {/* Main Content */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-10 md:space-y-16">
         {/* Why Host Section */}
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs ">
           <div className="mb-6 md:mb-8 text-center max-w-2xl mx-auto">
             <h2 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-tight tracking-wide">
               Why Host on <span className="text-[#C59A2F]">Athithya?</span>
@@ -125,7 +125,7 @@ export default function HostPage() {
         </section>
 
         {/* What Can You Host Section */}
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs ">
           <div className="mb-6 md:mb-8 text-center max-w-2xl mx-auto">
             <h2 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-tight tracking-wide">
               What Can You <span className="text-[#C59A2F]">Host?</span>

@@ -72,19 +72,23 @@ function ChatContent() {
   });
 
   return (
-    <main className="min-h-screen pt-24 pb-16 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="h-[75vh] min-h-[540px] rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 overflow-hidden shadow-xl grid grid-cols-1 md:grid-cols-12">
+    <main className="min-h-screen pt-20 md:pt-24 pb-16 md:pb-16 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6">
+        <div className="h-[calc(100dvh-130px)] md:h-[78vh] min-h-[480px] md:min-h-[560px] rounded-2xl md:rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 overflow-hidden shadow-xl flex flex-col md:flex-row">
           {/* Left: Conversation List */}
-          <aside className="md:col-span-4 h-full min-h-0 border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col bg-white dark:bg-neutral-900/60 overflow-hidden">
-            <div className="p-4 border-b border-neutral-200/80 dark:border-neutral-800 space-y-3">
+          <aside
+            className={`w-full md:w-80 lg:w-96 md:shrink-0 h-full min-h-0 border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col bg-white dark:bg-neutral-900/60 overflow-hidden ${
+              activeConversation ? "hidden md:flex" : "flex"
+            }`}
+          >
+            <div className="p-3.5 sm:p-4 border-b border-neutral-200/80 dark:border-neutral-800 space-y-3">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-black">Messages</h2>
+                <h2 className="text-base sm:text-lg font-black">Messages</h2>
                 {user?.role === "guest" && (
                   <button
                     type="button"
                     onClick={() => setShowFindFriendsModal(true)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#C59A2F]/15 text-[#C59A2F] text-xs font-black uppercase tracking-wider hover:bg-[#C59A2F] hover:text-white transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#C59A2F]/15 text-[#C59A2F] text-[11px] sm:text-xs font-black uppercase tracking-wider hover:bg-[#C59A2F] hover:text-white transition cursor-pointer"
                   >
                     <UserPlus size={13} /> Find Friends
                   </button>
@@ -130,7 +134,7 @@ function ChatContent() {
                       key={id}
                       type="button"
                       onClick={() => selectConversation(conv)}
-                      className={`w-full p-4 flex items-center gap-3 text-left transition ${
+                      className={`w-full p-3.5 sm:p-4 flex items-center gap-3 text-left transition ${
                         isSelected ? "bg-[#C59A2F]/10" : "hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
                       }`}
                     >
@@ -151,7 +155,11 @@ function ChatContent() {
           </aside>
 
           {/* Right: Active Chat Window */}
-          <ChatMessageWindow />
+          <ChatMessageWindow
+            className={`w-full md:flex-1 h-full min-h-0 ${
+              !activeConversation ? "hidden md:flex" : "flex"
+            }`}
+          />
         </div>
       </div>
 

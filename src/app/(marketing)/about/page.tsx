@@ -150,7 +150,7 @@ export default function AboutPage() {
       </section>
 
       <div className="max-w-[1300px] mx-auto px-3.5 sm:px-6 md:px-8">
-        <div className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-4 sm:p-7 md:p-10 lg:p-12 shadow-xs backdrop-blur-sm">
+        <div className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-4 sm:p-7 md:p-10 lg:p-12 shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
             {/* Left Circle Image Cluster */}
             <div className="lg:col-span-5 flex items-center justify-center">

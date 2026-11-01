@@ -54,7 +54,7 @@ export default function CreatorsPage() {
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-8 md:space-y-12">
         {/* Storytelling & Spotlight */}
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs ">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-5 order-2 lg:order-1 flex items-center justify-center gap-3 sm:gap-4 py-3 sm:py-6">
               <PolaroidCard
@@ -101,7 +101,7 @@ export default function CreatorsPage() {
         </section>
 
         {/* Philosophy */}
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs ">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 text-left space-y-4">
               <div className="flex items-center gap-3.5 mb-2">
@@ -144,7 +144,7 @@ export default function CreatorsPage() {
         </section>
 
         {/* Community Banner */}
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm text-center">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs  text-center">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 mb-2">
             Join our Growing Creator Community
           </h3>

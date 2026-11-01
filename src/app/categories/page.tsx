@@ -149,7 +149,7 @@ export default function CategoriesPage() {
             >
               {cat.isCollage && Array.isArray(cat.images) ? (
                 <div className="w-full h-full relative overflow-hidden group-hover:scale-105 transition-transform duration-700 ease-out">
-                  <div className="w-full h-full flex overflow-hidden filter blur-[2.5px] scale-110 opacity-70 group-hover:opacity-90 group-hover:blur-[1px] transition-all duration-700">
+                  <div className="w-full h-full flex overflow-hidden opacity-80 group-hover:opacity-95 transition-all duration-700">
                     <div className="w-1/2 h-full overflow-hidden relative border-r border-white/30">
                       <img src={cat.images[0]} alt="Rock Climbing" loading="lazy" className="w-full h-full object-cover" />
                     </div>

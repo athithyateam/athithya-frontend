@@ -79,7 +79,20 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [longDescription, setLongDescription] = useState("");
-  const [selectedType, setSelectedType] = useState<string>("Trek");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(["Trek"]);
+
+  const toggleCategory = (type: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(type)
+        ? prev.length > 1
+          ? prev.filter((t) => t !== type)
+          : prev
+        : [...prev, type]
+    );
+    if (errors.selectedCategories) {
+      setErrors((prev) => ({ ...prev, selectedCategories: null }));
+    }
+  };
 
   // Step 2: Location & Pricing
   const [latitude, setLatitude] = useState<number | null>(null);
@@ -194,8 +207,10 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
           setTitle(s.title || "");
           setDescription(s.description || "");
           setLongDescription(s.longDescription || "");
-          if (s.categories && s.categories.length > 0) {
-            setSelectedType(s.categories[0]);
+          if (s.categories && Array.isArray(s.categories) && s.categories.length > 0) {
+            setSelectedCategories(s.categories);
+          } else if (s.category) {
+            setSelectedCategories([s.category]);
           }
           setPrice(String(s.price?.perPerson || ""));
           setPeriod(
@@ -257,7 +272,8 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
       if (!description.trim()) err.description = "Short description is required";
       if (!longDescription.trim())
         err.longDescription = "Full description is required";
-      if (!selectedType) err.selectedType = "Please select an Experience Type";
+      if (!selectedCategories || selectedCategories.length === 0)
+        err.selectedCategories = "Please select at least one Experience Type";
     } else if (step === 2) {
       if (!latitude || !longitude)
         err.location = "Please pin your location on the map";
@@ -396,7 +412,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                 }
               : undefined,
         },
-        categories: [selectedType],
+        categories: selectedCategories,
         amenities,
         privacyPolicy: privacyPolicies,
         photos: [...existingPhotos, ...uploadedPhotos],
@@ -537,35 +553,37 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                 <ErrorMsg error={errors.longDescription} />
               </div>
 
-              {/* Experience Type */}
+              {/* Experience Categories */}
               <div className="pt-2">
-                <label className="text-xs font-black uppercase tracking-wider text-[#C59A2F] block mb-2.5">
-                  Experience Type *
-                </label>
+                <div className="flex items-center justify-between mb-2.5">
+                  <label className="text-xs font-black uppercase tracking-wider text-[#C59A2F]">
+                    Experience Categories * (Select one or multiple)
+                  </label>
+                  <span className="text-[11px] font-bold text-neutral-400">
+                    {selectedCategories.length} selected
+                  </span>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {EXPERIENCE_TYPES.map((type) => {
-                    const isSelected = selectedType === type;
+                    const isSelected = selectedCategories.includes(type);
                     return (
                       <button
                         key={type}
                         type="button"
-                        onClick={() => {
-                          setSelectedType(type);
-                          if (errors.selectedType)
-                            setErrors((prev) => ({ ...prev, selectedType: null }));
-                        }}
-                        className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        onClick={() => toggleCategory(type)}
+                        className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                           isSelected
-                            ? "bg-[#C59A2F] text-white shadow-sm"
+                            ? "bg-[#C59A2F] text-white shadow-sm ring-2 ring-[#C59A2F]/30"
                             : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                         }`}
                       >
-                        {type}
+                        <span>{type}</span>
+                        {isSelected && <FiCheckCircle size={14} className="text-white" />}
                       </button>
                     );
                   })}
                 </div>
-                <ErrorMsg error={errors.selectedType} />
+                <ErrorMsg error={errors.selectedCategories} />
               </div>
             </div>
           </FormSection>

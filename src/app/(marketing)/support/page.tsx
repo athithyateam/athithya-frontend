@@ -44,7 +44,7 @@ export default function SupportPage() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           {/* Form Card (7 Cols) */}
-          <div className="lg:col-span-7 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm flex flex-col justify-between text-left">
+          <div className="lg:col-span-7 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs  flex flex-col justify-between text-left">
             <div>
               <div className="flex items-center justify-between gap-4 mb-5">
                 <span className="px-3 py-1 rounded-full bg-amber-50 dark:bg-neutral-800 border border-amber-200 text-xs font-bold uppercase tracking-wider text-[#C59A2F]">
@@ -179,7 +179,7 @@ export default function SupportPage() {
           </div>
 
           {/* Info Card (5 Cols) */}
-          <div className="lg:col-span-5 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 p-6 sm:p-8 md:p-10 shadow-xs backdrop-blur-sm flex flex-col justify-between text-left">
+          <div className="lg:col-span-5 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs  flex flex-col justify-between text-left">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-neutral-800 border border-amber-200 text-[#C59A2F] flex items-center justify-center shrink-0">
