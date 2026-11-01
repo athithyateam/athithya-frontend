@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function BungeeJumpingCategoryPage() {
   return (
     <div className="bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors pt-24 md:pt-28">
-      {/* Top Content */}
+      {/* Top Header & Intro */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left mb-6">
         {/* Title & Subtitle */}
         <div className="space-y-2">
@@ -39,7 +39,19 @@ export default function BungeeJumpingCategoryPage() {
             feels right for you.
           </p>
         </div>
+      </div>
 
+      {/* Experience Listings (Left Filter Sidebar + Right Cards Grid) */}
+      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
+        <CategoryExperiencesView
+          slug="bungee-jumping"
+          categoryName="Bungee Jumping"
+          subtitle="Explore bungee jumping experiences in Uttarakhand"
+        />
+      </div>
+
+      {/* Additional Content Sections Below Cards */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left pb-20 pt-8">
         {/* Find Your Next Bungee Jumping Experience on Athithya */}
         <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-3">
           <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
@@ -55,14 +67,9 @@ export default function BungeeJumpingCategoryPage() {
 
         {/* Why Try Bungee Jumping? */}
         <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-3">
-          <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
-              Why Try Bungee Jumping?
-            </h2>
-            <p className="text-xs sm:text-sm font-bold text-[#C59A2F]">
-              All bungee exp.
-            </p>
-          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
+            Why Try Bungee Jumping?
+          </h2>
           <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
             Bungee jumping is about challenging yourself, building confidence, and enjoying an
             unforgettable rush. With trained professionals and proper safety arrangements, it can be an
@@ -85,15 +92,6 @@ export default function BungeeJumpingCategoryPage() {
             enjoyable.
           </p>
         </div>
-      </div>
-
-      {/* Experience Listings */}
-      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
-        <CategoryExperiencesView
-          slug="bungee-jumping"
-          categoryName="Bungee Jumping"
-          subtitle="Explore bungee jumping experiences in Uttarakhand"
-        />
       </div>
     </div>
   );

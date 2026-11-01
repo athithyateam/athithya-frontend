@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function OtherCategoryPage() {
   return (
     <div className="bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors pt-24 md:pt-28">
-      {/* Top Content */}
+      {/* Top Header & Intro */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left mb-6">
         {/* Title & Tagline */}
         <div className="space-y-2">
@@ -41,7 +41,19 @@ export default function OtherCategoryPage() {
             of different experiences waiting to be explored.
           </p>
         </div>
+      </div>
 
+      {/* Experience Listings (Left Filter Sidebar + Right Cards Grid) */}
+      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
+        <CategoryExperiencesView
+          slug="other"
+          categoryName="Others"
+          subtitle="Explore other unique travel experiences below"
+        />
+      </div>
+
+      {/* Additional Content Sections Below Cards */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left pb-20 pt-8">
         {/* Find Your Next Travel Experience on Athithya */}
         <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-3">
           <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
@@ -57,14 +69,9 @@ export default function OtherCategoryPage() {
 
         {/* Why Try Different Travel Experiences? */}
         <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-3">
-          <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
-              Why Try Different Travel Experiences?
-            </h2>
-            <p className="text-xs sm:text-sm font-bold text-[#C59A2F]">
-              All crads for other
-            </p>
-          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
+            Why Try Different Travel Experiences?
+          </h2>
           <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
             Travel is about more than visiting places. It is also about the experiences that stay with you.
             Trying something new can help you step outside your routine, discover different interests,
@@ -87,15 +94,6 @@ export default function OtherCategoryPage() {
             most of your experience while keeping safety in mind.
           </p>
         </div>
-      </div>
-
-      {/* Experience Listings */}
-      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
-        <CategoryExperiencesView
-          slug="other"
-          categoryName="Others"
-          subtitle="Explore other unique travel experiences below"
-        />
       </div>
     </div>
   );

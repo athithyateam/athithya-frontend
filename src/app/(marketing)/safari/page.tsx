@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function SafariCategoryPage() {
   return (
     <div className="bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors pt-24 md:pt-28">
-      {/* Top Content */}
+      {/* Top Header & Intro */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left mb-6">
         {/* Title & Tagline */}
         <div className="space-y-2">
@@ -39,7 +39,19 @@ export default function SafariCategoryPage() {
             and plans.
           </p>
         </div>
+      </div>
 
+      {/* Experience Listings (Left Filter Sidebar + Right Cards Grid) */}
+      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
+        <CategoryExperiencesView
+          slug="safari"
+          categoryName="Safari"
+          subtitle="Explore all safari experiences below"
+        />
+      </div>
+
+      {/* Additional Content Sections Below Cards */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left pb-20 pt-8">
         {/* Find Your Next Safari Experience on Athithya */}
         <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-3">
           <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
@@ -67,14 +79,9 @@ export default function SafariCategoryPage() {
 
         {/* Tips for a Safe Safari */}
         <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-3">
-          <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
-              Tips for a Safe Safari
-            </h2>
-            <p className="text-xs sm:text-sm font-bold text-[#C59A2F]">
-              All safari related experiences
-            </p>
-          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
+            Tips for a Safe Safari
+          </h2>
           <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
             On Athithya, review the safari details and follow the guidance provided by the local host or park staff.
             Stay inside the designated vehicle or viewing area, keep a safe distance from animals, and avoid
@@ -82,15 +89,6 @@ export default function SafariCategoryPage() {
             follow all conservation rules to help keep your safari travel experience safe and responsible.
           </p>
         </div>
-      </div>
-
-      {/* Experience Listings */}
-      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
-        <CategoryExperiencesView
-          slug="safari"
-          categoryName="Safari"
-          subtitle="Explore all safari experiences below"
-        />
       </div>
     </div>
   );

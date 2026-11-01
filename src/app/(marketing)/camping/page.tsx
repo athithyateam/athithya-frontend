@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function CampingCategoryPage() {
   return (
     <div className="bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors pt-24 md:pt-28">
-      {/* Top Content */}
+      {/* Top Header & Intro */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left mb-6">
         {/* Title & Tagline */}
         <div className="space-y-2">
@@ -39,17 +39,24 @@ export default function CampingCategoryPage() {
             or an outdoor experience with friends, find a camping stay that feels right for you.
           </p>
         </div>
+      </div>
 
+      {/* Experience Listings (Left Filter Sidebar + Right Cards Grid) */}
+      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
+        <CategoryExperiencesView
+          slug="camping"
+          categoryName="Camping"
+          subtitle="Explore all camping experiences below"
+        />
+      </div>
+
+      {/* Additional Content Sections Below Cards */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left pb-20 pt-8">
         {/* Find Your Next Camping Experience on Athithya */}
         <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-3">
-          <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
-              Find Your Next Camping Experience on Athithya
-            </h2>
-            <p className="text-xs sm:text-sm font-bold text-[#C59A2F]">
-              All camping exp. listed on the platform
-            </p>
-          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
+            Find Your Next Camping Experience on Athithya
+          </h2>
           <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
             Every camping experience has its own charm. You might enjoy mountain views, spend an
             evening around a campfire where permitted, or wake up to the sounds of nature. Camping
@@ -86,15 +93,6 @@ export default function CampingCategoryPage() {
             enjoyable. Plan thoughtfully to make this travel experience memorable.
           </p>
         </div>
-      </div>
-
-      {/* Experience Listings */}
-      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
-        <CategoryExperiencesView
-          slug="camping"
-          categoryName="Camping"
-          subtitle="Explore all camping experiences below"
-        />
       </div>
     </div>
   );
