@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -28,7 +28,7 @@ import { useFeedbackStore } from "@/stores/feedback-store";
 import { Navbar } from "@/components/navigation/navbar";
 import { MobileFooter } from "@/components/navigation/mobile-footer";
 
-export default function BookingDetailPage({
+function BookingDetailContent({
   params,
 }: {
   params: Promise<{ bookingId: string }>;
@@ -396,5 +396,23 @@ export default function BookingDetailPage({
       </div>
       <MobileFooter />
     </div>
+  );
+}
+
+export default function BookingDetailPage({
+  params,
+}: {
+  params: Promise<{ bookingId: string }>;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen pt-28 text-center text-sm text-neutral-400">
+          Loading booking details...
+        </div>
+      }
+    >
+      <BookingDetailContent params={params} />
+    </Suspense>
   );
 }
