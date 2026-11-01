@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function TrekCategoryPage() {
   return (
     <div className="bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors pt-24 md:pt-28">
-      {/* Top Content */}
+      {/* Top Header & Intro */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left mb-6">
         {/* Title & Tagline */}
         <div className="space-y-2">
@@ -39,12 +39,21 @@ export default function TrekCategoryPage() {
             your limits, find a trek that feels right for you.
           </p>
         </div>
+      </div>
 
-        {/* All Treks listed on the platform */}
-        <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-3">
-          <p className="text-xs sm:text-sm font-bold text-[#C59A2F]">
-            All Treks listed on the platform
-          </p>
+      {/* Experience Listings (Left Filter Sidebar + Right Cards Grid) */}
+      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
+        <CategoryExperiencesView
+          slug="trek"
+          categoryName="Trek"
+          subtitle="Explore all trekking experiences below"
+        />
+      </div>
+
+      {/* Additional Content Sections Below Cards */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-6 text-left pb-20 pt-8">
+        {/* Platform Info */}
+        <div className="bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8">
           <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
             Athithya brings together treks and related travel experiences offered by different local hosts
             under one place. Explore all available options, reviews, compare offerings and find that one
@@ -94,15 +103,6 @@ export default function TrekCategoryPage() {
             trekking and travel experiences safe and enjoyable.
           </p>
         </div>
-      </div>
-
-      {/* Experience Listings */}
-      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
-        <CategoryExperiencesView
-          slug="trek"
-          categoryName="Trek"
-          subtitle="Explore all trekking experiences below"
-        />
       </div>
     </div>
   );
