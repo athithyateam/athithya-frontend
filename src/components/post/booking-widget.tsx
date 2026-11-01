@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { Minus, Plus, Clock, Calendar as CalendarIcon, Zap, ArrowRight } from "lucide-react";
+import { Minus, Plus, Clock, Calendar as CalendarIcon, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
 import { getPlatformFeeRate } from "@/lib/pricing";
 import { formatExperienceDuration } from "@/lib/duration-helper";
-import { createBooking, verifyPayment } from "@/lib/api/bookings-api";
+import { createBooking, verifyPayment, getGuestBookings } from "@/lib/api/bookings-api";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
 import { useNotificationStore } from "@/stores/notification-store";
@@ -48,6 +48,41 @@ export function BookingWidget({ post }: { post: any }) {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [bookingSubmitting, setBookingSubmitting] = useState(false);
+  const [localPaidStatus, setLocalPaidStatus] = useState(false);
+  const [hasExistingBooking, setHasExistingBooking] = useState(false);
+
+  // Check if current user already has an active confirmed booking for this experience
+  useEffect(() => {
+    if (!currentUser || !postId) return;
+    let isMounted = true;
+    getGuestBookings()
+      .then((res: any) => {
+        if (!isMounted) return;
+        const bookings = Array.isArray(res?.data)
+          ? res.data
+          : Array.isArray(res)
+          ? res
+          : [];
+        const match = bookings.some((b: any) => {
+          const bPostId = b.post?._id || b.post?.id || b.post || b.postId;
+          const isConfirmed =
+            b.status === "confirmed" ||
+            b.status === "completed" ||
+            b.paymentStatus === "completed" ||
+            b.paymentStatus === "paid";
+          return String(bPostId) === String(postId) && isConfirmed;
+        });
+        if (match) {
+          setHasExistingBooking(true);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser, postId]);
+
+  const isBooked = localPaidStatus || hasExistingBooking;
 
   const unitPrice =
     post?.price?.perPerson || post?.price?.amount || post?.price?.total || 0;
@@ -91,6 +126,7 @@ export function BookingWidget({ post }: { post: any }) {
   );
 
   const handleOpenBreakdown = () => {
+    if (isBooked) return;
     if (!currentUser) {
       openAuthModal("login");
       return;
@@ -153,6 +189,7 @@ export function BookingWidget({ post }: { post: any }) {
               bookingId: res.data.bookingId,
             });
             if (vRes.success) {
+              setLocalPaidStatus(true);
               setShowSuccessModal(true);
               fetchNotifications();
             } else {
@@ -168,6 +205,7 @@ export function BookingWidget({ post }: { post: any }) {
         const rzp = new (window as any).Razorpay(options);
         rzp.open();
       } else if (res.success) {
+        setLocalPaidStatus(true);
         setShowBreakdown(false);
         setShowSuccessModal(true);
         fetchNotifications();
@@ -234,10 +272,11 @@ export function BookingWidget({ post }: { post: any }) {
                   </label>
                   <input
                     type="date"
+                    disabled={isBooked}
                     min={new Date().toISOString().split("T")[0]}
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full bg-transparent text-xs font-bold outline-none cursor-pointer"
+                    className="w-full bg-transparent text-xs font-bold outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="p-3">
@@ -246,9 +285,10 @@ export function BookingWidget({ post }: { post: any }) {
                   </label>
                   <input
                     type="time"
+                    disabled={isBooked}
                     value={selectedTime}
                     onChange={(e) => setSelectedTime(e.target.value)}
-                    className="w-full bg-transparent text-xs font-bold outline-none cursor-pointer"
+                    className="w-full bg-transparent text-xs font-bold outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -265,7 +305,7 @@ export function BookingWidget({ post }: { post: any }) {
                 <div className="flex items-center gap-2.5">
                   <button
                     type="button"
-                    disabled={numberOfPeople <= 1}
+                    disabled={isBooked || numberOfPeople <= 1}
                     onClick={() => setNumberOfPeople((p) => Math.max(1, p - 1))}
                     className="w-7 h-7 rounded-full border border-neutral-300 dark:border-neutral-700 flex items-center justify-center disabled:opacity-25 cursor-pointer"
                   >
@@ -276,7 +316,7 @@ export function BookingWidget({ post }: { post: any }) {
                   </span>
                   <button
                     type="button"
-                    disabled={numberOfPeople >= maxGuests}
+                    disabled={isBooked || numberOfPeople >= maxGuests}
                     onClick={() =>
                       setNumberOfPeople((p) => Math.min(maxGuests, p + 1))
                     }
@@ -292,23 +332,25 @@ export function BookingWidget({ post }: { post: any }) {
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={agreedHost}
+                  checked={isBooked || agreedHost}
+                  disabled={isBooked}
                   onChange={(e) => setAgreedHost(e.target.checked)}
-                  className="w-4 h-4 accent-[#C59A2F]"
+                  className="w-4 h-4 accent-[#C59A2F] disabled:cursor-not-allowed"
                 />
-                <span className={triedBooking && !agreedHost ? "text-red-500" : ""}>
+                <span className={triedBooking && !agreedHost && !isBooked ? "text-red-500" : ""}>
                   I agree to Host Rules
                 </span>
               </label>
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={agreedAthithya}
+                  checked={isBooked || agreedAthithya}
+                  disabled={isBooked}
                   onChange={(e) => setAgreedAthithya(e.target.checked)}
-                  className="w-4 h-4 accent-[#C59A2F]"
+                  className="w-4 h-4 accent-[#C59A2F] disabled:cursor-not-allowed"
                 />
                 <span
-                  className={triedBooking && !agreedAthithya ? "text-red-500" : ""}
+                  className={triedBooking && !agreedAthithya && !isBooked ? "text-red-500" : ""}
                 >
                   I agree to{" "}
                   <Link href="/terms" className="text-[#C59A2F] underline">
@@ -320,12 +362,31 @@ export function BookingWidget({ post }: { post: any }) {
 
             <button
               type="button"
+              disabled={bookingSubmitting || isBooked}
               onClick={handleOpenBreakdown}
-              className="w-full py-4 rounded-2xl bg-[#C59A2F] hover:bg-[#A67F26] text-white font-black text-sm uppercase tracking-wider shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
+              className={`w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg transition flex items-center justify-center gap-2.5 ${
+                isBooked
+                  ? "bg-green-500 hover:bg-green-500 text-white cursor-default shadow-green-500/20"
+                  : "bg-[#C59A2F] hover:bg-[#A67F26] text-white disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              }`}
             >
-              <Zap size={16} />
-              <span>Book Now</span>
-              <ArrowRight size={16} />
+              {isBooked ? (
+                <>
+                  <CheckCircle2 size={18} className="text-white" />
+                  <span>Booked</span>
+                </>
+              ) : bookingSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Processing...</span>
+                </>
+              ) : (
+                <>
+                  <Zap size={16} />
+                  <span>Book Now</span>
+                  <ArrowRight size={16} />
+                </>
+              )}
             </button>
           </>
         )}
@@ -353,4 +414,3 @@ export function BookingWidget({ post }: { post: any }) {
     </>
   );
 }
-

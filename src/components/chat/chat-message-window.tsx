@@ -9,13 +9,14 @@ import {
   Trash2,
   LogOut,
   Loader2,
+  ChevronLeft,
 } from "lucide-react";
 import { useChatStore } from "@/stores/chat-store";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
 import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/posts-api";
 
-export function ChatMessageWindow() {
+export function ChatMessageWindow({ className = "" }: { className?: string }) {
   const { user } = useAuthStore();
   const { showToast } = useFeedbackStore();
   const {
@@ -26,6 +27,7 @@ export function ChatMessageWindow() {
     sendAttachment,
     leaveGroup,
     clearMessages,
+    selectConversation,
   } = useChatStore();
 
   const [text, setText] = useState("");
@@ -45,7 +47,9 @@ export function ChatMessageWindow() {
 
   if (!activeConversation) {
     return (
-      <section className="md:col-span-8 flex flex-col h-full min-h-0 justify-between bg-neutral-50/50 dark:bg-neutral-950/40">
+      <section
+        className={`flex flex-col h-full min-h-0 justify-between bg-neutral-50/50 dark:bg-neutral-950/40 ${className}`}
+      >
         <div className="p-4 border-b border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between bg-white dark:bg-neutral-900 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-[#C59A2F]/20 text-[#C59A2F] flex items-center justify-center font-bold">
@@ -60,19 +64,18 @@ export function ChatMessageWindow() {
           </div>
         </div>
 
-        <div className="flex-1 min-h-0 p-6 overflow-y-auto space-y-4">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#C59A2F] text-white flex items-center justify-center font-bold text-xs shrink-0">
-              A
-            </div>
-            <div className="max-w-md p-4 rounded-2xl rounded-tl-none bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs sm:text-sm shadow-xs leading-relaxed">
-              {(() => {
-                const roleText = user?.role === "host" ? "host" : "guest";
-                const firstName = user?.firstname || (user?.role === "host" ? "Host" : "Guest");
-                return `Dear ${roleText} ${firstName}, Welcome to Athithya! Thank you for creating an account as a ${roleText} in Athithya! If you have any queries, feel free to share them with us.`;
-              })()}
-            </div>
+        <div className="flex-1 min-h-0 p-6 overflow-y-auto space-y-4 flex flex-col justify-center items-center text-center">
+          <div className="w-14 h-14 rounded-full bg-[#C59A2F]/10 text-[#C59A2F] flex items-center justify-center mx-auto mb-3">
+            <User size={28} />
           </div>
+          <h4 className="font-bold text-base text-neutral-800 dark:text-neutral-200">
+            Welcome to Athithya Messages
+          </h4>
+          <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-sm mt-1">
+            {user?.role === "host"
+              ? "Select a conversation from the left to reply to travelers and plan experiences."
+              : "Select a conversation from the left or search for hosts and travel friends to start messaging."}
+          </p>
         </div>
       </section>
     );
@@ -118,29 +121,39 @@ export function ChatMessageWindow() {
   };
 
   return (
-    <section className="md:col-span-8 flex flex-col h-full min-h-0 justify-between bg-neutral-50/50 dark:bg-neutral-950/40 overflow-hidden">
+    <section
+      className={`flex flex-col h-full min-h-0 justify-between bg-neutral-50/50 dark:bg-neutral-950/40 overflow-hidden ${className}`}
+    >
       {/* Header */}
-      <div className="p-4 border-b border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between bg-white dark:bg-neutral-900 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#C59A2F] text-white flex items-center justify-center font-black text-sm">
+      <div className="p-3 sm:p-4 border-b border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between bg-white dark:bg-neutral-900 shrink-0 gap-2">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <button
+            type="button"
+            onClick={() => selectConversation(null)}
+            className="md:hidden p-1.5 -ml-1 rounded-full text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer shrink-0"
+            title="Back to conversations"
+          >
+            <ChevronLeft size={22} />
+          </button>
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#C59A2F] text-white flex items-center justify-center font-black text-sm shrink-0">
             {(chatTitle.charAt(0) || "C").toUpperCase()}
           </div>
-          <div>
-            <h3 className="font-extrabold text-sm capitalize">{chatTitle}</h3>
-            <span className="text-[11px] text-neutral-400">
+          <div className="min-w-0">
+            <h3 className="font-extrabold text-xs sm:text-sm capitalize truncate">{chatTitle}</h3>
+            <span className="text-[10px] sm:text-[11px] text-neutral-400 block truncate">
               {isGroup ? `${activeConversation.participants?.length || 2} Members` : "Direct Conversation"}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           <button
             type="button"
             onClick={() => clearMessages(convId)}
             className="p-2 rounded-full text-neutral-400 hover:text-rose-500 cursor-pointer transition"
             title="Clear Messages"
           >
-            <Trash2 size={15} />
+            <Trash2 size={16} />
           </button>
           {isGroup && (
             <button
@@ -149,14 +162,14 @@ export function ChatMessageWindow() {
               className="p-2 rounded-full text-neutral-400 hover:text-rose-500 cursor-pointer transition"
               title="Leave Group"
             >
-              <LogOut size={15} />
+              <LogOut size={16} />
             </button>
           )}
         </div>
       </div>
 
       {/* Messages Feed - Scrollable Container */}
-      <div className="flex-1 min-h-0 p-5 overflow-y-auto space-y-3 overscroll-contain">
+      <div className="flex-1 min-h-0 p-3 sm:p-5 overflow-y-auto space-y-3 overscroll-contain">
         {messages.map((m, idx) => {
           const senderId = m.sender?._id || m.sender?.id || m.sender;
           const isMe = m.isSelf || String(senderId) === String(user?.id || (user as any)?._id);
@@ -164,11 +177,10 @@ export function ChatMessageWindow() {
           return (
             <div key={m._id || idx} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-md px-4 py-2.5 rounded-2xl text-xs sm:text-sm space-y-2 shadow-xs ${
-                  isMe
+                className={`max-w-[85%] sm:max-w-md px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm space-y-2 shadow-xs ${isMe
                     ? "bg-[#C59A2F] text-white rounded-br-none"
                     : "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-700 rounded-bl-none"
-                }`}
+                  }`}
               >
                 {attachmentUrl && (
                   <img
@@ -178,12 +190,11 @@ export function ChatMessageWindow() {
                     onClick={() => window.open(attachmentUrl, "_blank")}
                   />
                 )}
-                {m.text && <p className="leading-relaxed whitespace-pre-wrap">{m.text}</p>}
+                {m.text && <p className="leading-relaxed whitespace-pre-wrap break-words">{m.text}</p>}
                 {m.createdAt && (
                   <span
-                    className={`block text-[9px] text-right mt-1 opacity-70 ${
-                      isMe ? "text-white/80" : "text-neutral-400"
-                    }`}
+                    className={`block text-[9px] text-right mt-1 opacity-70 ${isMe ? "text-white/80" : "text-neutral-400"
+                      }`}
                   >
                     {new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </span>
@@ -198,12 +209,11 @@ export function ChatMessageWindow() {
       {/* Input Bar */}
       <form
         onSubmit={handleSend}
-        className="p-3.5 border-t border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex items-center gap-2 shrink-0"
+        className="p-2.5 sm:p-3.5 border-t border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex items-center gap-2 shrink-0"
       >
-        {/* Attachment menu: visible only for guests matching athithya-app */}
         {!isHost && (
           <label
-            className="p-2 rounded-full text-neutral-500 hover:text-[#C59A2F] hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer transition"
+            className="p-2 rounded-full text-neutral-500 hover:text-[#C59A2F] hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer transition shrink-0"
             title="Upload Image"
           >
             {uploading ? (
@@ -225,13 +235,13 @@ export function ChatMessageWindow() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type your message..."
-          className="flex-1 px-4 py-2.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 text-xs sm:text-sm focus:border-[#C59A2F] focus:bg-white dark:focus:bg-neutral-800 outline-none transition"
+          className="flex-1 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 text-xs sm:text-sm focus:border-[#C59A2F] focus:bg-white dark:focus:bg-neutral-800 outline-none transition"
         />
 
         <button
           type="submit"
           disabled={sending || !text.trim()}
-          className="p-2.5 rounded-full bg-[#C59A2F] text-white hover:bg-[#A67F26] transition disabled:opacity-50 cursor-pointer shadow-sm"
+          className="p-2.5 rounded-full bg-[#C59A2F] text-white hover:bg-[#A67F26] transition disabled:opacity-50 cursor-pointer shadow-sm shrink-0"
           title="Send"
         >
           <Send size={15} />

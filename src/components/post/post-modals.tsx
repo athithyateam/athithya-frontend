@@ -39,9 +39,8 @@ export function SuccessModal({
               <X size={20} />
             </button>
             <div
-              className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${
-                isSchedule ? "bg-amber-50 text-[#C59A2F]" : "bg-green-50 text-green-500"
-              }`}
+              className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isSchedule ? "bg-amber-50 text-[#C59A2F]" : "bg-green-50 text-green-500"
+                }`}
             >
               {isSchedule ? <Clock size={32} /> : <CheckCircle2 size={32} />}
             </div>
@@ -57,6 +56,14 @@ export function SuccessModal({
               </span>
               .
             </p>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full mt-6 py-4 text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all bg-[#C59A2F] hover:bg-neutral-900 dark:hover:bg-neutral-800 cursor-pointer shadow-md"
+            >
+              Got it
+            </button>
           </motion.div>
         </div>
       )}
@@ -151,9 +158,8 @@ export function BreakdownModal({
                   <button
                     type="button"
                     onClick={() => setUseWallet(!useWallet)}
-                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-                      useWallet ? "bg-green-500 text-white" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-400"
-                    }`}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${useWallet ? "bg-green-500 text-white" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-400"
+                      }`}
                   >
                     {useWallet ? <CheckCircle2 size={15} /> : <Plus size={15} />}
                   </button>
@@ -183,4 +189,3 @@ export function BreakdownModal({
     </AnimatePresence>
   );
 }
-

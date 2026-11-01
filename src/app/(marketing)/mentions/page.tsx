@@ -56,7 +56,7 @@ export default function SpecialMentionsPage() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-10 md:space-y-16">
         {/* Community Appreciation */}
         <section className="w-full text-left">
-          <div className="bg-[#FAF8F5]/90 dark:bg-neutral-900/60 backdrop-blur-sm border-l-4 sm:border-l-[6px] border-[#C59A2F] p-6 sm:p-8 rounded-r-3xl shadow-xs border border-neutral-200/70 dark:border-neutral-800 transition-colors">
+          <div className="bg-[#FAF8F5] dark:bg-neutral-900  border-l-4 sm:border-l-[6px] border-[#C59A2F] p-6 sm:p-8 rounded-r-3xl shadow-xs border border-neutral-200/70 dark:border-neutral-800 transition-colors">
             <h2 className="text-xl sm:text-2xl font-extrabold mb-3 text-neutral-900 dark:text-neutral-100">
               To Our Community
             </h2>
@@ -70,7 +70,7 @@ export default function SpecialMentionsPage() {
 
         {/* Team Grid */}
         <section className="w-full text-left">
-          <div className="border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 md:p-10 bg-[#FAF8F5]/80 dark:bg-neutral-900/60 shadow-xs backdrop-blur-sm">
+          <div className="border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 md:p-10 bg-[#FAF8F5] dark:bg-neutral-900 shadow-xs ">
             <h3 className="font-extrabold mb-3 text-xl sm:text-2xl text-neutral-900 dark:text-neutral-100">
               A special note of thanks
             </h3>
@@ -112,7 +112,7 @@ export default function SpecialMentionsPage() {
 
         {/* Join Journey CTA */}
         <section className="w-full">
-          <div className="w-full bg-[#FAF8F5]/80 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-8 md:p-12 shadow-xs text-center backdrop-blur-sm">
+          <div className="w-full bg-[#FAF8F5] dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-8 md:p-12 shadow-xs text-center ">
             <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 mb-3">
               Join Our Journey
             </h3>

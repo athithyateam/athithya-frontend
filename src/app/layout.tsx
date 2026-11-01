@@ -18,12 +18,55 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: siteConfig.name,
+    default: siteConfig.title,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  metadataBase: new URL(siteConfig.url),
+  keywords: [...siteConfig.keywords],
+  alternates: {
+    canonical: siteConfig.url,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://athithya.in/#organization",
+      name: "Athithya",
+      alternateName: "Athithya Travel Experience Platform",
+      url: "https://athithya.in",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://athithya.in/favicon.ico",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://athithya.in/#website",
+      url: "https://athithya.in",
+      name: "Athithya",
+      publisher: {
+        "@id": "https://athithya.in/#organization",
+      },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -37,6 +80,12 @@ export default function RootLayout({
       className={`${playfair.variable} ${outfit.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         <ThemeProvider>
           {children}
