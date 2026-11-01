@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, IndianRupee, Headphones, Heart, ArrowLeft } from "lucide-react";
@@ -20,7 +20,7 @@ const TABS = [
   { key: "experiences", label: "Experiences" },
 ];
 
-export default function SinglePlacePage() {
+function SinglePlaceContent() {
   const params = useParams();
   const router = useRouter();
   const city = String(params?.city || "chopta").toLowerCase();
@@ -199,3 +199,16 @@ export default function SinglePlacePage() {
   );
 }
 
+export default function SinglePlacePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen pt-28 text-center text-sm text-neutral-400">
+          Loading destination...
+        </div>
+      }
+    >
+      <SinglePlaceContent />
+    </Suspense>
+  );
+}
