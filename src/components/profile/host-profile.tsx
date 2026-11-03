@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,6 +22,7 @@ import { apiClient } from "@/lib/api/axios-instance";
 import { ENDPOINTS } from "@/lib/api/endpoints";
 import { submitReview } from "@/lib/api/bookings-api";
 import { deleteAccountApi } from "@/lib/api/users-api";
+import { getMyExperiencesApi, getUserExperiencesApi } from "@/lib/api/posts-api";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
 import { useChatStore } from "@/stores/chat-store";
@@ -184,9 +185,44 @@ export function HostProfile({
     }
   }, [initialUser]);
 
+  const [loadingExperiences, setLoadingExperiences] = useState(false);
+
+  const fetchHostExperiences = useCallback(async () => {
+    const targetId = hostId || userId || initialUser?._id || initialUser?.id;
+    if (!targetId) return;
+    setLoadingExperiences(true);
+    try {
+      let res: any;
+      if (isOwner) {
+        res = await getMyExperiencesApi().catch(() => null);
+      }
+      if (!res?.success || (!res?.experiences && !res?.posts && !res?.data)) {
+        res = await getUserExperiencesApi(targetId).catch(() => null);
+      }
+      const list =
+        res?.experiences ||
+        res?.posts ||
+        res?.data ||
+        (Array.isArray(res) ? res : []);
+      if (Array.isArray(list)) {
+        setLocalPosts(list);
+      }
+    } catch (e) {
+      console.error("Failed to fetch host experiences", e);
+    } finally {
+      setLoadingExperiences(false);
+    }
+  }, [hostId, userId, initialUser, isOwner]);
+
   useEffect(() => {
     setLocalPosts(posts);
   }, [posts]);
+
+  useEffect(() => {
+    if (activeTab === "services") {
+      fetchHostExperiences();
+    }
+  }, [activeTab, fetchHostExperiences]);
 
   useEffect(() => {
     if (reviewStats?.currentUserRating) {
@@ -893,8 +929,11 @@ export function HostProfile({
               {isOwner ? (
                 <HostExperienceDataTable
                   experiences={filteredPosts}
-                  isLoading={isProfileLoading}
-                  onRefresh={onRatingSuccess}
+                  isLoading={isProfileLoading || loadingExperiences}
+                  onRefresh={() => {
+                    onRatingSuccess?.();
+                    fetchHostExperiences();
+                  }}
                   pagination={pagination}
                   onPageChange={onPageChange}
                   isThemed={isThemed}
@@ -921,7 +960,7 @@ export function HostProfile({
                         {`Browse experiences hosted by ${fullName}.`}
                       </p>
                     </div>
-                    {!isProfileLoading && filteredPosts.length > 0 && (
+                    {!isProfileLoading && !loadingExperiences && filteredPosts.length > 0 && (
                       <div className="hidden md:flex items-center gap-2">
                         <button
                           type="button"
@@ -960,7 +999,7 @@ export function HostProfile({
                       </div>
                     )}
                   </div>
-                  {isProfileLoading ? (
+                  {isProfileLoading || loadingExperiences ? (
                     <div
                       className="flex gap-4 md:gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory w-full"
                       style={{
