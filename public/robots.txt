@@ -1,0 +1,12 @@
+# robots.txt for Athithya
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /chat
+Disallow: /connect
+Disallow: /bookings/
+Disallow: /post$
+
+Sitemap: https://athithya.in/sitemap.xml
+

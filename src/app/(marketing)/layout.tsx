@@ -1,7 +1,6 @@
-/**
- * Marketing layout — wraps all public-facing pages (/about, /host, /how-it-works).
- * Add the public Navbar and Footer here once they're built.
- */
+import { Navbar } from "@/components/navigation/navbar";
+import { Footer } from "@/components/navigation/footer";
+import { MobileFooter } from "@/components/navigation/mobile-footer";
 
 export default function MarketingLayout({
   children,
@@ -9,10 +8,11 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      {/* TODO: <Navbar /> */}
-      <main className="flex flex-1 flex-col">{children}</main>
-      {/* TODO: <Footer /> */}
-    </>
+    <div className="relative min-h-screen flex flex-col pb-16 md:pb-0 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
+      <Navbar />
+      <main className="flex-1">{children}</main>
+      <Footer />
+      <MobileFooter />
+    </div>
   );
 }
