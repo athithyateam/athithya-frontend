@@ -67,6 +67,17 @@ export async function updateAdminExperienceStatusApi(
   return res.data;
 }
 
+export async function toggleAdminExperienceHideApi(
+  id: string,
+  payload: { action: "hide" | "unhide"; reason?: string }
+) {
+  const res = await apiRequest(ENDPOINTS.ADMIN_EXPERIENCE_HIDE(id), {
+    method: "PATCH",
+    body: payload,
+  });
+  return res.data;
+}
+
 export async function updateAdminExperienceApi(id: string, payload: Record<string, any>) {
   const res = await apiRequest(ENDPOINTS.ADMIN_UPDATE_EXPERIENCE(id), {
     method: "PATCH",

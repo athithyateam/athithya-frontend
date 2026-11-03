@@ -15,7 +15,8 @@ export async function getPresignedUrl(
       fileName: filename,
       fileType,
       fileSize: options.fileSize,
-      type: options.type || options.uploadType || "posts",
+      type: options.type || options.uploadType || "experiences",
+      folder: "experiences",
     },
     token: options.token,
   });
@@ -23,54 +24,94 @@ export async function getPresignedUrl(
 }
 
 export async function createPost(payload: Record<string, any> | FormData) {
-  const res = await apiRequest(ENDPOINTS.POSTS, { method: "POST", body: payload });
+  const res = await apiRequest(ENDPOINTS.EXPERIENCES, { method: "POST", body: payload });
   if (!res.ok) throw { success: false, message: res.message, status: res.status };
   return res.data;
 }
 
 export async function getPost(id: string) {
-  const res = await apiRequest(ENDPOINTS.GET_POST(id), { method: "GET" });
+  const res = await apiRequest(ENDPOINTS.GET_EXPERIENCE(id), { method: "GET" });
   if (res.ok) return res.data;
-  const fallback = await apiRequest(ENDPOINTS.POST_BY_ID(id), { method: "GET" });
+  const fallback = await apiRequest(`/api/posts/${id}`, { method: "GET" });
   return fallback.data;
 }
 
 export async function listPosts(params: Record<string, any> = {}) {
-  const res = await apiRequest(ENDPOINTS.POSTS, { method: "GET", params });
+  const res = await apiRequest(ENDPOINTS.EXPERIENCES, { method: "GET", params });
   return res.data;
 }
 
 export async function updatePost(id: string, payload: Record<string, any> | FormData) {
-  const res = await apiRequest(ENDPOINTS.GET_POST(id), { method: "PUT", body: payload });
+  const res = await apiRequest(ENDPOINTS.GET_EXPERIENCE(id), { method: "PUT", body: payload });
   return res.data;
 }
 
 export async function deletePost(id: string) {
-  const res = await apiRequest(ENDPOINTS.DELETE_POST(id), { method: "DELETE" });
+  const res = await apiRequest(ENDPOINTS.GET_EXPERIENCE(id), { method: "DELETE" });
   return res.data;
 }
 
-export async function requestHideService(id: string, reason?: string) {
-  const res = await apiRequest(ENDPOINTS.REQUEST_HIDE_POST(id), {
+export async function requestHideService(
+  id: string,
+  reason?: string,
+  action: "request_hide" | "hide" | "request_unhide" | "unhide" = "request_hide"
+) {
+  const res = await apiRequest(ENDPOINTS.REQUEST_HIDE_EXPERIENCE(id), {
     method: "PATCH",
-    body: { reason },
+    body: { action, reason },
   });
   return res.data;
 }
 
 export async function reactToPost(id: string, emoji: string) {
-  const res = await apiRequest(ENDPOINTS.REACT_POST(id), { method: "PUT", body: { emoji } });
+  const res = await apiRequest(`/api/experiences/${id}/react`, { method: "PUT", body: { emoji } });
   return res.data;
 }
 
 export async function savePostApi(id: string) {
-  const res = await apiRequest(ENDPOINTS.SAVE_POST(id), { method: "POST", body: {} });
+  const res = await apiRequest(ENDPOINTS.SAVE_EXPERIENCE(id), { method: "POST", body: {} });
   return res.data;
 }
 
 export async function unsavePostApi(id: string) {
-  const res = await apiRequest(ENDPOINTS.SAVE_POST(id), { method: "DELETE" });
+  const res = await apiRequest(ENDPOINTS.SAVE_EXPERIENCE(id), { method: "DELETE" });
   return res.data;
+}
+
+export async function getMyExperiencesApi() {
+  const res = await apiRequest(ENDPOINTS.GET_MY_EXPERIENCES, { method: "GET" });
+  return res.data;
+}
+
+export async function getUserExperiencesApi(userId: string) {
+  const res = await apiRequest(ENDPOINTS.GET_USER_EXPERIENCES(userId), { method: "GET" });
+  return res.data;
+}
+
+export async function getExperienceReviewsApi(experienceId: string) {
+  const res = await apiRequest(ENDPOINTS.GET_EXPERIENCE_REVIEWS(experienceId), { method: "GET" });
+  return res.data;
+}
+
+// Backward-compatible Service & Itinerary wrappers
+export async function createService(payload: Record<string, any> | FormData) {
+  return createPost(payload);
+}
+
+export async function getService(id: string) {
+  return getPost(id);
+}
+
+export async function listServices(params: Record<string, any> = {}) {
+  return listPosts(params);
+}
+
+export async function updateService(id: string, payload: Record<string, any> | FormData) {
+  return updatePost(id, payload);
+}
+
+export async function deleteService(id: string) {
+  return deletePost(id);
 }
 
 export async function createItinerary(payload: Record<string, any> | FormData) {
@@ -123,43 +164,18 @@ export async function unsaveItineraryApi(id: string) {
   return res.data;
 }
 
-export async function createService(payload: Record<string, any> | FormData) {
-  const res = await apiRequest(ENDPOINTS.POST_SERVICE, { method: "POST", body: payload });
-  return res.data;
-}
-
-export async function getService(id: string) {
-  const res = await apiRequest(ENDPOINTS.GET_SERVICE(id), { method: "GET" });
-  return res.data;
-}
-
-export async function listServices(params: Record<string, any> = {}) {
-  const res = await apiRequest(ENDPOINTS.ALL_SERVICES, { method: "GET", params });
-  return res.data;
-}
-
-export async function updateService(id: string, payload: Record<string, any> | FormData) {
-  const res = await apiRequest(`${ENDPOINTS.POST_SERVICE}/${id}`, { method: "PUT", body: payload });
-  return res.data;
-}
-
-export async function deleteService(id: string) {
-  const res = await apiRequest(ENDPOINTS.DELETE_SERVICE(id), { method: "DELETE" });
-  return res.data;
-}
-
-export async function getFeaturedTreks(limit = 16, page = 1, sort = "clicks") {
-  const res = await apiRequest(`${ENDPOINTS.GET_FEATURED_TREKS(limit, page)}&sort=${sort}`);
-  return res.data;
-}
-
+// Curated Feeds matching docs/api_docs/experiences.md
 export async function getFeaturedExperiences(limit = 16, page = 1, sort = "clicks") {
   const res = await apiRequest(`${ENDPOINTS.GET_FEATURED_EXPERIENCES(limit, page)}&sort=${sort}`);
   return res.data;
 }
 
+export async function getFeaturedTreks(limit = 16, page = 1, sort = "clicks") {
+  return getFeaturedExperiences(limit, page, sort);
+}
+
 export async function getTopRatedTreks(limit = 16, page = 1, sort = "rating") {
-  const res = await apiRequest(ENDPOINTS.POSTS, { params: { limit, page, sort } });
+  const res = await apiRequest(ENDPOINTS.GET_TOPRATED_TREKS, { params: { limit, page, sort } });
   return res.data;
 }
 
@@ -180,15 +196,13 @@ export async function getNearbyTreks(params: {
 
 export async function getMostLovedExperiences(limit = 16, page = 1, sort = "bookings") {
   const res = await apiRequest(
-    `${ENDPOINTS.GET_MOST_REACTED_EXPERIENCES(limit, page)}&sort=${sort}`
+    `${ENDPOINTS.GET_MOST_LOVED_EXPERIENCES(limit, page)}&sort=${sort}`
   );
   return res.data;
 }
 
-export async function getLatestExperiences(limit = 16, page = 1, sort = "latest") {
-  const res = await apiRequest(`${ENDPOINTS.POSTS_ROOT}/experiences/latest`, {
-    params: { limit, page, sort },
-  });
+export async function getLatestExperiences(limit = 16, page = 1, sort = "recent") {
+  const res = await apiRequest(ENDPOINTS.GET_LATEST_EXPERIENCES(limit, page, sort));
   return res.data;
 }
 
