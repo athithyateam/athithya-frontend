@@ -89,16 +89,23 @@ function PostDetailContent({
 
         if (isMounted && data?._id) {
           setPost(data);
-          const cats = data.categories || [];
-          if (cats.length > 0) {
-            listPosts({ categories: cats.join(","), limit: 8 })
-              .then((r: any) => {
-                const list = (r?.posts || r?.data || []).filter(
-                  (p: any) => p._id !== postId
-                );
-                if (isMounted) setRelatedPosts(list.slice(0, 4));
-              })
-              .catch(() => {});
+          if (res?.similarExperiences?.length) {
+            const list = res.similarExperiences.filter(
+              (p: any) => (p._id || p.id) !== postId
+            );
+            setRelatedPosts(list.slice(0, 4));
+          } else {
+            const cats = data.categories || [];
+            if (cats.length > 0) {
+              listPosts({ categories: cats.join(","), limit: 8 })
+                .then((r: any) => {
+                  const list = (r?.experiences || r?.posts || r?.data || []).filter(
+                    (p: any) => (p._id || p.id) !== postId
+                  );
+                  if (isMounted) setRelatedPosts(list.slice(0, 4));
+                })
+                .catch(() => {});
+            }
           }
         } else if (isMounted) {
           setError("Experience not found");

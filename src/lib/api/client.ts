@@ -4,7 +4,7 @@ export const getApiBase = (): string => {
     const isLocal = host === "localhost" || host === "127.0.0.1" || host.includes("192.168.");
     if (isLocal) return "";
   }
-  return process.env.NEXT_PUBLIC_API_URL || "https://api.athithya.in";
+  return process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
 };
 
 export const API_BASE = getApiBase();
