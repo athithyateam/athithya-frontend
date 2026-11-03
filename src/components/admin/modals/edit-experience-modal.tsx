@@ -68,13 +68,13 @@ export function EditExperienceModal({ experience, onClose, onSave }: EditExperie
   };
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
       <div className="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white dark:bg-neutral-900 w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100 dark:border-neutral-800 transition-colors z-10 flex flex-col max-h-[90vh]">
+      <div className="relative bg-white dark:bg-neutral-900 w-full max-w-2xl rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-slate-100 dark:border-neutral-800 transition-colors z-10 flex flex-col max-h-[92vh] sm:max-h-[90vh]">
         {/* Header */}
-        <div className="p-6 border-b border-slate-50 dark:border-neutral-800 flex items-center justify-between shrink-0">
+        <div className="p-4 sm:p-6 border-b border-slate-50 dark:border-neutral-800 flex items-center justify-between shrink-0">
           <div>
-            <h3 className="text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter">
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter">
               Edit Experience Info
             </h3>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
@@ -84,14 +84,14 @@ export function EditExperienceModal({ experience, onClose, onSave }: EditExperie
           <button
             type="button"
             onClick={onClose}
-            className="p-2 hover:bg-slate-50 dark:hover:bg-neutral-800 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full transition cursor-pointer"
+            className="p-1.5 sm:p-2 hover:bg-slate-50 dark:hover:bg-neutral-800 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full transition cursor-pointer"
           >
             <FiX size={20} />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5 overflow-y-auto flex-1">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto flex-1">
           <div className="space-y-1">
             <label className="text-[10px] font-black uppercase text-slate-400">Experience Title</label>
             <input
@@ -136,7 +136,7 @@ export function EditExperienceModal({ experience, onClose, onSave }: EditExperie
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase text-slate-400">Price (₹)</label>
               <input
@@ -183,7 +183,7 @@ export function EditExperienceModal({ experience, onClose, onSave }: EditExperie
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase text-slate-400">Status</label>
               <select
@@ -214,7 +214,7 @@ export function EditExperienceModal({ experience, onClose, onSave }: EditExperie
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase text-slate-400">Starting Point</label>
               <input
@@ -237,7 +237,7 @@ export function EditExperienceModal({ experience, onClose, onSave }: EditExperie
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase text-slate-400">City</label>
               <input

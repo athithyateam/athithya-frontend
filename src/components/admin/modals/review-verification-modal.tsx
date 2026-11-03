@@ -92,33 +92,33 @@ export function ReviewVerificationModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto">
       <div
         className="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white dark:bg-neutral-900 w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden border border-slate-100 dark:border-neutral-800 transition-colors z-10 flex flex-col max-h-[90vh]">
+      <div className="relative bg-white dark:bg-neutral-900 w-full max-w-2xl rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100 dark:border-neutral-800 transition-colors z-10 flex flex-col max-h-[92vh] sm:max-h-[90vh]">
         {/* Header */}
-        <div className="p-8 border-b border-slate-50 dark:border-neutral-800 flex items-center justify-between bg-slate-50/50 dark:bg-neutral-800/50 transition-colors shrink-0">
+        <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex items-center justify-between bg-slate-50/50 dark:bg-neutral-800/50 transition-colors shrink-0">
           <div>
             <span className="text-[10px] font-black text-[#C59A2F] uppercase tracking-widest mb-1 block">
               {isProfileUpdate ? "Profile Update Review" : "Verification Review"}
             </span>
-            <h2 className="text-2xl font-black text-slate-900 dark:text-neutral-100 tracking-tighter transition-colors">
+            <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-neutral-100 tracking-tighter transition-colors">
               {isProfileUpdate ? "Profile Details Update" : "Host Application"}
             </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="w-12 h-12 rounded-2xl bg-white dark:bg-neutral-800 text-slate-400 hover:text-slate-900 dark:hover:text-white shadow-sm flex items-center justify-center transition-all cursor-pointer"
+            className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white dark:bg-neutral-800 text-slate-400 hover:text-slate-900 dark:hover:text-white shadow-sm flex items-center justify-center transition-all cursor-pointer"
           >
-            <FiX size={24} />
+            <FiX size={20} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-8 space-y-8 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 overflow-y-auto flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* User Info */}
             <div className="space-y-6">
@@ -290,12 +290,12 @@ export function ReviewVerificationModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-8 bg-slate-50/50 dark:bg-neutral-800/50 border-t border-slate-50 dark:border-neutral-800 flex flex-col sm:flex-row gap-4 transition-colors shrink-0">
+        <div className="p-4 sm:p-6 md:p-8 bg-slate-50/50 dark:bg-neutral-800/50 border-t border-slate-50 dark:border-neutral-800 flex flex-col sm:flex-row gap-3 sm:gap-4 transition-colors shrink-0">
           <button
             type="button"
             disabled={actionLoading}
             onClick={() => handleAction("rejected")}
-            className="flex-1 h-14 rounded-2xl border-2 border-red-100 dark:border-red-900/30 text-red-500 font-black text-[10px] uppercase tracking-widest hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 cursor-pointer"
+            className="flex-1 h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-red-100 dark:border-red-900/30 text-red-500 font-black text-[10px] uppercase tracking-widest hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50 cursor-pointer"
           >
             <FiXCircle size={18} />
             {actionLoading ? "Processing..." : isProfileUpdate ? "Reject Updates" : "Reject Application"}
@@ -304,7 +304,7 @@ export function ReviewVerificationModal({
             type="button"
             disabled={actionLoading}
             onClick={() => handleAction("approved")}
-            className="flex-1 h-14 rounded-2xl bg-[#C59A2F] text-white font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-[#a67f26] transition-all flex items-center justify-center gap-3 disabled:opacity-50 cursor-pointer"
+            className="flex-1 h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-[#C59A2F] text-white font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-[#a67f26] transition-all flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50 cursor-pointer"
           >
             <FiCheckCircle size={18} />
             {actionLoading ? "Processing..." : isProfileUpdate ? "Approve Updates" : "Approve Verification"}
