@@ -5,14 +5,22 @@ import { useRouter } from "next/navigation";
 import { FaChevronLeft, FaChevronRight, FaStar, FaQuoteLeft } from "react-icons/fa";
 import { FiCalendar } from "react-icons/fi";
 import { useExploreStore } from "@/stores/explore-store";
+import { ProgressiveImage } from "@/components/ui/progressive-image";
 
-export function HomeReviewsSection() {
+export function HomeReviewsSection({
+  initialReviews,
+}: {
+  initialReviews?: any[];
+} = {}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { reviews } = useExploreStore();
 
+  const activeReviews =
+    initialReviews && initialReviews.length > 0 ? initialReviews : reviews;
+
   const displayReviews = useMemo(() => {
-    return (reviews || []).filter(
+    return (activeReviews || []).filter(
       (r: any) =>
         r &&
         r.comment &&
@@ -20,7 +28,7 @@ export function HomeReviewsSection() {
         r.reviewer &&
         (r.reviewer._id || r.reviewer.id || r.reviewer.firstname)
     );
-  }, [reviews]);
+  }, [activeReviews]);
 
   const scrollReviews = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -162,11 +170,14 @@ export function HomeReviewsSection() {
                           title={`View Host ${hostName}`}
                         >
                           {hostAvatarUrl && (
-                            <img
+                            <ProgressiveImage
                               src={hostAvatarUrl}
                               alt={hostName}
-                              className="w-4 h-4 rounded-full object-cover border border-[#C59A2F]/40 shrink-0"
-                              loading="lazy"
+                              rowIndex={6}
+                              cardIndex={index}
+                              isAvatar
+                              aspectRatio="aspect-square"
+                              containerClassName="w-4 h-4 rounded-full border border-[#C59A2F]/40 shrink-0"
                             />
                           )}
                           <span className="text-[11px] font-bold text-neutral-600 dark:text-neutral-300 truncate">
@@ -191,11 +202,17 @@ export function HomeReviewsSection() {
                     }}
                     className="pt-4 border-t border-neutral-200/60 dark:border-neutral-800 flex items-center gap-3 cursor-pointer group/user"
                   >
-                    <img
+                    <ProgressiveImage
                       src={avatarUrl}
                       alt={reviewerName}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-[#C59A2F]/30 shrink-0 shadow-xs group-hover/user:scale-110 transition-transform duration-300"
-                      loading="lazy"
+                      rowIndex={6}
+                      cardIndex={index}
+                      isAvatar
+                      aspectRatio="aspect-square"
+                      containerClassName="w-10 h-10 rounded-full border-2 border-[#C59A2F]/30 shrink-0 shadow-xs group-hover/user:scale-110 transition-transform duration-300"
+                      fallbackSrc={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        reviewerName
+                      )}&background=C59A2F&color=fff&bold=true`}
                     />
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm sm:text-base font-extrabold text-neutral-900 dark:text-neutral-100 truncate group-hover/user:text-[#C59A2F] transition-colors">
