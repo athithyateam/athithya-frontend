@@ -11,7 +11,7 @@ import {
 } from "react-icons/fi";
 import { updateProfileApi } from "@/lib/api/users-api";
 import { sendPhoneOtpApi, verifyPhoneOtpApi } from "@/lib/api/auth-api";
-import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/posts-api";
+import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/experiences-api";
 import { PROFILE_THEMES, DEFAULT_THEME_KEY } from "./profile-shared";
 import { STATE_DISTRICT_MAPPING, CITY_MAPPING } from "@/data/location-data";
 

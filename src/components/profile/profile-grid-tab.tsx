@@ -16,7 +16,7 @@ import {
 } from "react-icons/fi";
 import { FaThumbtack } from "react-icons/fa";
 import { apiClient } from "@/lib/api/axios-instance";
-import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/posts-api";
+import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/experiences-api";
 import { useFeedbackStore } from "@/stores/feedback-store";
 import { GOLD, type ProfileTheme } from "./profile-shared";
 

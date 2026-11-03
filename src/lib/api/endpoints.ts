@@ -76,36 +76,6 @@ export const ENDPOINTS = {
   GET_TOPRATED_TREKS: "/api/experiences/top-rated/treks",
   GET_CATEGORY_ACTIVITY: "/api/experiences/categories/activity",
 
-  // Legacy Aliases for Experiences (backward compatibility)
-  POSTS: "/api/experiences",
-  POSTS_ROOT: "/api/experiences",
-  GET_POST: (id: string) => `/api/experiences/${id}`,
-  POST_BY_ID: (id: string) => `/api/experiences/${id}`,
-  DELETE_POST: (id: string) => `/api/experiences/${id}`,
-  USER_POST: (userId: string) => `/api/experiences/user/${userId}`,
-  REACT_POST: (id: string) => `/api/experiences/${id}/react`,
-  SAVE_POST: (id: string) => `/api/experiences/${id}/save`,
-  REQUEST_HIDE_POST: (id: string) => `/api/experiences/${id}/request-hide`,
-  POST_SERVICE: "/api/experiences",
-  ALL_SERVICES: "/api/experiences",
-  DELETE_SERVICE: (id: string) => `/api/experiences/${id}`,
-  GET_SERVICE: (id: string) => `/api/experiences/${id}`,
-  USER_SERVICE: (userId: string) => `/api/experiences/user/${userId}`,
-  GET_FEATURED_TREKS: (limit = 10, page = 1) =>
-    `/api/experiences/featured/list?limit=${limit}&page=${page}`,
-  GET_MOST_REACTED_EXPERIENCES: (limit = 10, page = 1) =>
-    `/api/experiences/most-loved?limit=${limit}&page=${page}`,
-
-  // Itineraries
-  ITINERARIES: "/api/itineraries",
-  EXPLORE_ITINERARIES: "/api/itineraries/explore/complete",
-  COMBINED_LOCATION: "/api/itineraries/location/combined",
-  GET_ITINERARY: (id: string) => `/api/itineraries/${id}`,
-  USER_ITINERARIES: (userId: string) => `/api/itineraries/user/${userId}`,
-  DELETE_ITINERARY: (id: string) => `/api/itineraries/${id}`,
-  REACT_ITINERARY: (id: string) => `/api/itineraries/${id}/react`,
-  SAVE_ITINERARY: (id: string) => `/api/itineraries/${id}/save`,
-
   // Search & Geocoding (Docs: search.md)
   SEARCH: "/api/search",
   SEARCH_ADVANCED: "/api/search/advanced",
@@ -143,26 +113,11 @@ export const ENDPOINTS = {
   REMOVE_GROUP_FRIEND: (experienceId: string, friendId: string) =>
     `/api/group-bookings/experience/${experienceId}/invite/${friendId}`,
 
-  // Legacy Group Schedules Aliases
-  CREATE_SCHEDULE: "/api/group-bookings",
-  MY_SCHEDULES: "/api/group-bookings/me",
-  SCHEDULE_INVITES: "/api/group-bookings/invites",
-  RESPOND_SCHEDULE: (id: string) => `/api/group-bookings/${id}/respond`,
-  SCHEDULE_STATUS: (postId: string) => `/api/group-bookings/experience/${postId}/status`,
-  REMOVE_FRIEND: (postId: string, friendId: string) =>
-    `/api/group-bookings/experience/${postId}/invite/${friendId}`,
-
   // Wishlist Schedules (Docs: wishlist-schedules.md)
   WISHLIST_SCHEDULES: "/api/wishlist-schedules",
   MY_WISHLIST_SCHEDULES: "/api/wishlist-schedules/me",
   CHECK_WISHLIST_SCHEDULE: (experienceId: string) => `/api/wishlist-schedules/check/${experienceId}`,
   DELETE_WISHLIST_SCHEDULE: (id: string) => `/api/wishlist-schedules/${id}`,
-
-  // Legacy Guest Schedules Aliases
-  GUEST_SCHEDULES: "/api/wishlist-schedules",
-  MY_GUEST_SCHEDULES: "/api/wishlist-schedules/me",
-  CHECK_GUEST_SCHEDULE: (postId: string) => `/api/wishlist-schedules/check/${postId}`,
-  DELETE_GUEST_SCHEDULE: (id: string) => `/api/wishlist-schedules/${id}`,
 
   // Reviews & Ratings (Docs: reviews.md)
   REVIEWS: "/api/reviews",

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { UploadCloud, CheckCircle2, X, FileText } from "lucide-react";
 import { submitHostVerificationApi, sendPhoneOtpApi, verifyPhoneOtpApi } from "@/lib/api/auth-api";
-import { getPresignedUrl } from "@/lib/api/posts-api";
+import { getPresignedUrl } from "@/lib/api/experiences-api";
 import { uploadFileToS3 } from "@/lib/api/client";
 import { STATE_DISTRICT_MAPPING, CITY_MAPPING } from "@/data/location-data";
 import { compressImage } from "@/lib/image-helper";

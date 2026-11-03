@@ -14,12 +14,12 @@ import {
   FiAlertTriangle,
 } from "react-icons/fi";
 import {
-  getService,
-  createService,
-  updateService,
+  getExperience,
+  createExperience,
+  updateExperience,
   getPresignedUrl,
   uploadFileToS3,
-} from "@/lib/api/posts-api";
+} from "@/lib/api/experiences-api";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
 import { MapPicker } from "@/components/ui/map-picker";
@@ -197,9 +197,9 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
   useEffect(() => {
     if (editId) {
-      getService(editId)
+      getExperience(editId)
         .then((res: any) => {
-          const basePost = res?.service || res?.post || res?.data || res;
+          const basePost = res?.experience || res?.data || res;
           if (!basePost?._id) return;
           const s = basePost.pendingUpdate
             ? { ...basePost, ...basePost.pendingUpdate }
@@ -439,8 +439,8 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
       };
 
       const res = editId
-        ? await updateService(editId, { ...payload, status: "pending" })
-        : await createService(payload);
+        ? await updateExperience(editId, { ...payload, status: "pending" })
+        : await createExperience(payload);
 
       if (res?.success) {
         setShowSuccess(true);

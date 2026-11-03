@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Compass, HelpCircle } from "lucide-react";
 import { Navbar } from "@/components/navigation/navbar";
 import { Footer } from "@/components/navigation/footer";
 import { MobileFooter } from "@/components/navigation/mobile-footer";
-import { getCategoryActivity } from "@/lib/api/posts-api";
+import { getCategoryActivity } from "@/lib/api/experiences-api";
 
 export const CATEGORIES_DATA = [
   {

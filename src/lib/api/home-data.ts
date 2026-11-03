@@ -5,17 +5,16 @@ import {
   getTopRatedTreks,
   getNearbyTreks,
   getTopRatedHosts,
-} from "./posts-api";
+} from "./experiences-api";
 import { getLatestReviews } from "./bookings-api";
 
 export function extractList(res: any): any[] {
   return (
-    res?.posts ||
     res?.experiences ||
     res?.treks ||
-    res?.services ||
     res?.hosts ||
     res?.reviews ||
+    res?.posts ||
     res?.data ||
     (Array.isArray(res) ? res : [])
   );
