@@ -207,7 +207,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
   // ================= 1. EXPERIENCES MODE =================
   if (mode === "experiences") {
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative w-full min-w-0 max-w-full">
         <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full md:w-auto">
             <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
@@ -270,7 +270,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
         </div>
 
         {/* Experiences Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto w-full min-w-0 max-w-full">
           <table className="w-full min-w-[800px]">
             <thead>
               <tr className="bg-slate-50/50 dark:bg-neutral-950/40 transition-colors">
@@ -436,7 +436,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
     });
 
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative w-full min-w-0 max-w-full">
         <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full md:w-auto">
             <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter shrink-0">
@@ -539,7 +539,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
 
   // ================= 3. BOOKINGS MODE (BookingManagement.jsx) =================
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative w-full min-w-0 max-w-full">
       <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
         <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
           <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
@@ -569,7 +569,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto w-full min-w-0 max-w-full">
         <table className="w-full min-w-[800px]">
           <thead>
             <tr className="bg-slate-50/50 dark:bg-neutral-950/40 border-b border-slate-100 dark:border-neutral-800">

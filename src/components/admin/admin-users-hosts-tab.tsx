@@ -151,7 +151,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
     const experienceDeletions = hostHistory.filter((log) => log.type === "experience_delete");
 
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors w-full min-w-0 max-w-full">
         <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col gap-4 sm:gap-6 transition-colors">
           <div className="flex flex-col gap-2">
             <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
@@ -195,7 +195,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
         </div>
 
         {/* Content Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto w-full min-w-0 max-w-full">
           {historyLoading ? (
             <div className="text-center py-16">
               <div className="w-8 h-8 border-4 border-[#C59A2F] border-t-transparent rounded-full animate-spin mx-auto" />
@@ -259,7 +259,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
   const hostsCount = userCounts.hostsCount || 0;
 
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors w-full min-w-0 max-w-full">
       {/* Header matching athithya-app UserManagement.jsx */}
       <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 transition-colors">
         <div className="flex flex-col gap-3 sm:gap-4">
@@ -338,7 +338,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
       </div>
 
       {/* Users Datatable matching athithya-app */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto w-full min-w-0 max-w-full">
         <table className="w-full min-w-[700px]">
           <thead>
             <tr className="bg-slate-50/50 dark:bg-neutral-950/40 transition-colors">

@@ -32,7 +32,7 @@ export function AdminSystemTab({ mode }: AdminSystemTabProps) {
 
   if (mode === "chat") {
     return (
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6 w-full min-w-0 max-w-full">
         <div>
           <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">Chat Activity Monitor</h2>
           <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest mt-1">
@@ -75,7 +75,7 @@ export function AdminSystemTab({ mode }: AdminSystemTabProps) {
 
   if (mode === "traffic") {
     return (
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6 w-full min-w-0 max-w-full">
         <div>
           <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">Traffic & SEO Analytics</h2>
           <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest mt-1">
@@ -104,7 +104,7 @@ export function AdminSystemTab({ mode }: AdminSystemTabProps) {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6 w-full min-w-0 max-w-full">
       <div>
         <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">System Health & Media Integrity</h2>
         <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest mt-1">
