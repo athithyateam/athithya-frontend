@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api/axios-instance";
+import { ENDPOINTS } from "@/lib/api/endpoints";
 
 interface FollowListModalProps {
   userId: string;
@@ -29,7 +30,7 @@ export function FollowListModal({
       setLoading(true);
       setError(null);
       try {
-        const res = await apiClient.get(`/api/users/friends/${userId}`);
+        const res = await apiClient.get(ENDPOINTS.GET_FRIENDS(userId));
         if (res.data?.success) {
           const list = res.data.data || res.data.friends || [];
           setUsers(list);

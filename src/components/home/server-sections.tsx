@@ -92,3 +92,4 @@ export async function HomeReviewsSectionServer() {
   const reviews = await getHomeLatestReviews();
   return <HomeReviewsSection initialReviews={reviews} />;
 }
+

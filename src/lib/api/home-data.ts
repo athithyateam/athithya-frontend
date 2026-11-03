@@ -23,7 +23,7 @@ export function extractList(res: any): any[] {
 
 export async function getHomeExploreExperiences(): Promise<any[]> {
   try {
-    const res = await getLatestExperiences(16, 1, "latest");
+    const res = await getLatestExperiences(16, 1, "recent");
     return extractList(res);
   } catch (err) {
     console.error("Error fetching home explore experiences:", err);
@@ -90,3 +90,4 @@ export async function getHomeLatestReviews(): Promise<any[]> {
     return [];
   }
 }
+

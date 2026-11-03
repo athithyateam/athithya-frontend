@@ -95,86 +95,108 @@ export async function verifyCompletionOTP(bookingId: string, otp: string) {
   return res.data;
 }
 
+// Group Bookings (Docs: group-bookings.md)
 export async function createSchedule(scheduleData: Record<string, any>) {
-  const res = await apiRequest(ENDPOINTS.CREATE_SCHEDULE, { method: "POST", body: scheduleData });
+  const payload = {
+    ...scheduleData,
+    experienceId: scheduleData.experienceId || scheduleData.postId,
+  };
+  const res = await apiRequest(ENDPOINTS.GROUP_BOOKINGS, { method: "POST", body: payload });
   return res.data;
 }
 
 export async function getMySchedules() {
-  const res = await apiRequest(ENDPOINTS.MY_SCHEDULES);
+  const res = await apiRequest(ENDPOINTS.MY_GROUP_BOOKINGS);
   return res.data;
 }
 
 export async function getScheduleInvites() {
-  const res = await apiRequest(ENDPOINTS.SCHEDULE_INVITES);
+  const res = await apiRequest(ENDPOINTS.GROUP_INVITES);
   return res.data;
 }
 
-export async function getScheduleStatus(postId: string, scheduleId?: string) {
-  const res = await apiRequest(ENDPOINTS.SCHEDULE_STATUS(postId), {
+export async function getScheduleStatus(experienceId: string, scheduleId?: string) {
+  const res = await apiRequest(ENDPOINTS.GROUP_BOOKING_STATUS(experienceId), {
     params: scheduleId ? { scheduleId } : undefined,
   });
   return res.data;
 }
 
-export async function respondToScheduleInvite(scheduleId: string, status: "accepted" | "declined") {
-  const res = await apiRequest(ENDPOINTS.RESPOND_SCHEDULE(scheduleId), {
+export async function respondToScheduleInvite(scheduleId: string, status: "accepted" | "declined" | "rejected") {
+  const normalizedStatus = status === "declined" ? "rejected" : status;
+  const res = await apiRequest(ENDPOINTS.RESPOND_GROUP_INVITE(scheduleId), {
     method: "POST",
-    body: { status },
+    body: { status: normalizedStatus },
   });
   return res.data;
 }
 
 export async function deleteSchedule(scheduleId: string) {
-  const res = await apiRequest(`/api/schedules/${scheduleId}`, { method: "DELETE" });
+  const res = await apiRequest(`/api/group-bookings/${scheduleId}`, { method: "DELETE" });
   return res.data;
 }
 
 export async function inviteFriendDirectly(
-  postId: string,
+  experienceId: string,
   friendId?: string | null,
   scheduleId?: string | null,
   friendIds?: string[] | null,
   numberOfPeople = 1
 ) {
-  const body: Record<string, any> = { postId, scheduleId, numberOfPeople };
+  const body: Record<string, any> = {
+    experienceId,
+    groupBookingId: scheduleId,
+    numberOfPeople,
+  };
   if (friendIds && friendIds.length > 0) body.friendIds = friendIds;
-  else if (friendId) body.friendId = friendId;
-  const res = await apiRequest("/api/schedules/send-friend-invite", { method: "POST", body });
+  else if (friendId) body.friendIds = [friendId];
+  const res = await apiRequest(ENDPOINTS.SEND_FRIEND_INVITE, { method: "POST", body });
   return res.data;
 }
 
-export async function removeScheduleFriend(postId: string, friendId: string) {
-  const res = await apiRequest(ENDPOINTS.REMOVE_FRIEND(postId, friendId), { method: "POST" });
+export async function removeScheduleFriend(experienceId: string, friendId: string) {
+  const res = await apiRequest(ENDPOINTS.REMOVE_GROUP_FRIEND(experienceId, friendId), { method: "DELETE" });
   return res.data;
 }
 
+// Wishlist Schedules (Docs: wishlist-schedules.md)
 export async function scheduleExperienceApi(payload: {
-  postId: string;
+  postId?: string;
+  experienceId?: string;
   scheduledDate: string;
   scheduledTime: string;
 }) {
-  const res = await apiRequest(ENDPOINTS.GUEST_SCHEDULES, { method: "POST", body: payload });
+  const body = {
+    experienceId: payload.experienceId || payload.postId,
+    scheduledDate: payload.scheduledDate,
+    scheduledTime: payload.scheduledTime,
+  };
+  const res = await apiRequest(ENDPOINTS.WISHLIST_SCHEDULES, { method: "POST", body });
   return res.data;
 }
 
 export async function getMyGuestSchedulesApi() {
-  const res = await apiRequest(ENDPOINTS.MY_GUEST_SCHEDULES);
+  const res = await apiRequest(ENDPOINTS.MY_WISHLIST_SCHEDULES);
   return res.data;
 }
 
-export async function checkGuestScheduleApi(postId: string) {
-  const res = await apiRequest(ENDPOINTS.CHECK_GUEST_SCHEDULE(postId));
+export async function checkGuestScheduleApi(experienceId: string) {
+  const res = await apiRequest(ENDPOINTS.CHECK_WISHLIST_SCHEDULE(experienceId));
   return res.data;
 }
 
 export async function deleteGuestScheduleApi(id: string) {
-  const res = await apiRequest(ENDPOINTS.DELETE_GUEST_SCHEDULE(id), { method: "DELETE" });
+  const res = await apiRequest(ENDPOINTS.DELETE_WISHLIST_SCHEDULE(id), { method: "DELETE" });
   return res.data;
 }
 
+// Reviews & Ratings (Docs: reviews.md)
 export async function submitReview(reviewData: Record<string, any>) {
-  const res = await apiRequest(ENDPOINTS.REVIEWS, { method: "POST", body: reviewData });
+  const payload = {
+    ...reviewData,
+    experienceId: reviewData.experienceId || reviewData.postId,
+  };
+  const res = await apiRequest(ENDPOINTS.REVIEWS, { method: "POST", body: payload });
   return res.data;
 }
 
@@ -188,8 +210,10 @@ export async function getHostReviewsApi(hostId: string, params: Record<string, a
   return res.data;
 }
 
-export async function checkReviewEligibilityApi(postId: string) {
-  const res = await apiRequest(ENDPOINTS.REVIEW_ELIGIBILITY, { params: { postId } });
+export async function checkReviewEligibilityApi(experienceId: string) {
+  const res = await apiRequest(ENDPOINTS.REVIEW_ELIGIBILITY, {
+    params: { experienceId, postId: experienceId },
+  });
   return res.data;
 }
 
