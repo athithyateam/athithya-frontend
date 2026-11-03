@@ -91,7 +91,7 @@ function NavbarContent() {
     }
   };
 
-  const navBase = "fixed inset-x-0 top-0 z-[999] transition-all duration-300";
+  const navBase = "fixed inset-x-0 top-0 z-[999] transition-all duration-300 w-full max-w-full";
   const heroNav = scrolled
     ? "bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-sm border-b border-neutral-100 dark:border-neutral-800"
     : "bg-transparent";
@@ -120,7 +120,7 @@ function NavbarContent() {
           isHome ? heroNav : contentNav
         } py-3 md:py-4`}
       >
-        <div className="max-w-[1400px] mx-auto px-5 md:px-8 flex items-center justify-between">
+        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between">
           {/* LOGO */}
           <Link href={routes.home} className="flex items-center">
             <Image

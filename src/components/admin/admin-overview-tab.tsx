@@ -99,9 +99,9 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
   );
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 sm:space-y-10 w-full min-w-0 max-w-full">
       {/* 3 Main Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full min-w-0 max-w-full">
         <StatCard
           title="Total Users"
           value={stats?.totalUsers || 0}
@@ -123,9 +123,9 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
       </div>
 
       {/* Row 1: Recent Signups & New Experiences */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 w-full min-w-0 max-w-full">
         {/* Recent Signups */}
-        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 transition-all duration-500">
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 transition-all duration-500 min-w-0 max-w-full">
           <div className="flex items-center justify-between mb-6 sm:mb-8">
             <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
               Recent Signups
@@ -176,7 +176,7 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
         </div>
 
         {/* New Experiences */}
-        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 lg:col-span-2 transition-all duration-500">
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 lg:col-span-2 transition-all duration-500 min-w-0 max-w-full overflow-hidden">
           <div className="flex items-center justify-between mb-6 sm:mb-8">
             <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
               New Experiences
@@ -185,7 +185,7 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
               <FiMap />
             </div>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto w-full max-w-full min-w-0">
             <table className="w-full min-w-[500px]">
               <thead>
                 <tr className="border-b border-slate-50 dark:border-neutral-800">
@@ -275,9 +275,9 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
       </div>
 
       {/* Row 2: Category Bifurcation & Host Analytics */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 w-full min-w-0 max-w-full">
         {/* Category count list */}
-        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 transition-all duration-500">
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 transition-all duration-500 min-w-0 max-w-full">
           <div className="flex items-center justify-between mb-6 sm:mb-8">
             <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
               By Category
@@ -312,7 +312,7 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
         </div>
 
         {/* Host Experience Count by Category */}
-        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 lg:col-span-2 transition-all duration-500">
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 lg:col-span-2 transition-all duration-500 min-w-0 max-w-full overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
             <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
               Host Experience Count by Category
@@ -328,7 +328,7 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
               />
             </div>
           </div>
-          <div className="overflow-x-auto max-h-[350px] overflow-y-auto">
+          <div className="overflow-x-auto max-h-[350px] overflow-y-auto w-full max-w-full min-w-0">
             <table className="w-full min-w-[480px]">
               <thead>
                 <tr className="border-b border-slate-50 dark:border-neutral-800">

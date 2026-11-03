@@ -63,9 +63,9 @@ export function EditUserModal({ user, onClose, onSave }: EditUserModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-[50000] flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto">
       <div className="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white dark:bg-neutral-900 w-full max-w-xl rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-slate-100 dark:border-neutral-800 transition-colors z-10 flex flex-col max-h-[92vh] sm:max-h-[90vh]">
+      <div className="relative bg-white dark:bg-neutral-900 w-full max-w-xl rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-slate-100 dark:border-neutral-800 transition-colors z-10 flex flex-col max-h-[calc(100dvh-2rem)] sm:max-h-[90vh]">
         {/* Header */}
         <div className="p-4 sm:p-6 border-b border-slate-50 dark:border-neutral-800 flex items-center justify-between shrink-0">
           <div>

@@ -109,7 +109,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
           </p>
         </div>
       ) : (
-        <div className="space-y-8 sm:space-y-12">
+        <div className="space-y-8 sm:space-y-12 w-full min-w-0 max-w-full">
           {/* Pending Host Verifications Section matching athithya-app */}
           {pendingKyc.length > 0 && (
             <div className="space-y-4 sm:space-y-6">
