@@ -140,18 +140,19 @@ export function TopRatedHostsSection({
                   className="w-full sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 snap-start bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-4 sm:p-5 shadow-xs hover:shadow-md hover:border-[#C59A2F]/40 transition-all duration-300 cursor-pointer flex items-center gap-3.5 sm:gap-4 group"
                 >
                   <div className="relative shrink-0">
-                    <ProgressiveImage
-                      src={avatar}
-                      alt={name}
-                      rowIndex={5}
-                      cardIndex={idx}
-                      isAvatar
-                      aspectRatio="aspect-square"
-                      containerClassName="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-neutral-200 dark:border-neutral-700 shadow-xs group-hover:scale-105 transition-transform duration-300 shrink-0"
-                      fallbackSrc={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        name
-                      )}&background=C59A2F&color=fff`}
-                    />
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 border border-neutral-200 dark:border-neutral-700 shadow-xs group-hover:scale-105 transition-transform duration-300">
+                      <ProgressiveImage
+                        src={avatar}
+                        alt={name}
+                        rowIndex={5}
+                        cardIndex={idx}
+                        isAvatar
+                        containerClassName="w-full h-full"
+                        fallbackSrc={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          name
+                        )}&background=C59A2F&color=fff`}
+                      />
+                    </div>
                     {host.verifyBadge?.enabled && (
                       <div
                         className="absolute -bottom-1 -right-1 bg-white dark:bg-neutral-900 rounded-full p-0.5 shadow-sm"

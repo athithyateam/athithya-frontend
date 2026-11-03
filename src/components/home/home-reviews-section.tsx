@@ -170,15 +170,16 @@ export function HomeReviewsSection({
                           title={`View Host ${hostName}`}
                         >
                           {hostAvatarUrl && (
-                            <ProgressiveImage
-                              src={hostAvatarUrl}
-                              alt={hostName}
-                              rowIndex={6}
-                              cardIndex={index}
-                              isAvatar
-                              aspectRatio="aspect-square"
-                              containerClassName="w-4 h-4 rounded-full border border-[#C59A2F]/40 shrink-0"
-                            />
+                            <div className="w-4 h-4 rounded-full overflow-hidden shrink-0 border border-[#C59A2F]/40">
+                              <ProgressiveImage
+                                src={hostAvatarUrl}
+                                alt={hostName}
+                                rowIndex={6}
+                                cardIndex={index}
+                                isAvatar
+                                containerClassName="w-4 h-4"
+                              />
+                            </div>
                           )}
                           <span className="text-[11px] font-bold text-neutral-600 dark:text-neutral-300 truncate">
                             Host:{" "}
@@ -202,18 +203,19 @@ export function HomeReviewsSection({
                     }}
                     className="pt-4 border-t border-neutral-200/60 dark:border-neutral-800 flex items-center gap-3 cursor-pointer group/user"
                   >
-                    <ProgressiveImage
-                      src={avatarUrl}
-                      alt={reviewerName}
-                      rowIndex={6}
-                      cardIndex={index}
-                      isAvatar
-                      aspectRatio="aspect-square"
-                      containerClassName="w-10 h-10 rounded-full border-2 border-[#C59A2F]/30 shrink-0 shadow-xs group-hover/user:scale-110 transition-transform duration-300"
-                      fallbackSrc={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        reviewerName
-                      )}&background=C59A2F&color=fff&bold=true`}
-                    />
+                    <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-[#C59A2F]/30 shadow-xs group-hover/user:scale-110 transition-transform duration-300">
+                      <ProgressiveImage
+                        src={avatarUrl}
+                        alt={reviewerName}
+                        rowIndex={6}
+                        cardIndex={index}
+                        isAvatar
+                        containerClassName="w-10 h-10"
+                        fallbackSrc={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          reviewerName
+                        )}&background=C59A2F&color=fff&bold=true`}
+                      />
+                    </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm sm:text-base font-extrabold text-neutral-900 dark:text-neutral-100 truncate group-hover/user:text-[#C59A2F] transition-colors">
                         {reviewerName}

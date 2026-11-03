@@ -79,8 +79,8 @@ export function ProgressiveImage({
     <div
       ref={containerRef}
       className={`relative overflow-hidden ${
-        isAvatar ? "rounded-full" : aspectRatio
-      } w-full bg-neutral-100 dark:bg-neutral-800 ${containerClassName}`}
+        isAvatar ? "rounded-full shrink-0" : `w-full ${aspectRatio}`
+      } bg-neutral-100 dark:bg-neutral-800 ${containerClassName}`}
     >
       {/* Shimmer Placeholder while loading */}
       {!isLoaded && (
