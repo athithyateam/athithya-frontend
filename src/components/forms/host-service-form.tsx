@@ -297,14 +297,31 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
     return Object.keys(err).length === 0;
   };
 
+  const validateAll = () => {
+    for (let s = 1; s <= 4; s++) {
+      if (!validateStep(s)) {
+        setCurrentStep(s);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleNext = () => {
     if (validateStep(currentStep)) {
-      if (currentStep < 4) setCurrentStep((prev) => prev + 1);
+      if (currentStep < 4) {
+        setCurrentStep((prev) => prev + 1);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     }
   };
 
   const handlePrev = () => {
-    if (currentStep > 1) setCurrentStep((prev) => prev - 1);
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const toggleMonth = (m: string) => {
@@ -343,7 +360,9 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateStep(4)) return;
+    if (loading) return;
+    if (currentStep !== 4) return;
+    if (!validateAll()) return;
 
     setLoading(true);
     setProgress(10);
@@ -463,14 +482,29 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
   const totalGuestPrice = basePriceNum + platformFee;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      onKeyDown={(e) => {
+        if (
+          e.key === "Enter" &&
+          currentStep < 4 &&
+          (e.target as HTMLElement)?.tagName === "INPUT"
+        ) {
+          e.preventDefault();
+        }
+      }}
+      className="space-y-6"
+    >
       {/* Wizard Step Tabs matching athithya-app */}
       <div className="flex items-center justify-between gap-2 mb-6">
         {steps.map((s) => (
           <div
             key={s.id}
             onClick={() => {
-              if (s.id < currentStep) setCurrentStep(s.id);
+              if (s.id < currentStep) {
+                setCurrentStep(s.id);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
             }}
             className={`flex-1 py-3 px-3 rounded-2xl text-center text-xs font-black uppercase tracking-wider border transition-all ${
               currentStep >= s.id
@@ -1206,6 +1240,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
       {/* Navigation Buttons */}
       <div className="flex items-center justify-between pt-4 border-t border-neutral-200/80 dark:border-neutral-800">
         <button
+          key="btn-prev-step"
           type="button"
           onClick={handlePrev}
           disabled={currentStep === 1 || loading}
@@ -1216,6 +1251,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
         {currentStep < 4 ? (
           <button
+            key={`btn-next-step-${currentStep}`}
             type="button"
             onClick={handleNext}
             className="flex items-center gap-2 px-7 py-3 rounded-2xl bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-md cursor-pointer"
@@ -1224,6 +1260,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
           </button>
         ) : (
           <button
+            key="btn-submit-experience"
             type="submit"
             disabled={loading}
             className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-lg disabled:opacity-50 cursor-pointer"
