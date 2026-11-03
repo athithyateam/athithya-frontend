@@ -24,13 +24,16 @@ Branch: `feat/chat`
 * **`src/app/chat/page.tsx`**:
   * 2-pane responsive chat layout with conversation search and automatic `?userId=` deep-link handling.
   * **Find Friends (Guests only)**: The former "New Group" button is renamed to **Find Friends** for guests and completely hidden for host accounts. Clicking opens the traveler connect directory.
+  * **Dedicated Mobile Chat Experience**:
+    * When viewing an active conversation thread on mobile devices, the global fixed `MobileFooter` is automatically hidden to prevent overlaying the input bar and give 100% of the mobile viewport to the active conversation and message composition bar.
+    * Responsive chat container heights (`calc(100dvh-5.5rem)` in active thread, `calc(100dvh-9.5rem)` in conversation list) prevent unwanted page overflow and double-scrollbars.
+    * Desktop marketing footer is omitted on mobile screens on the `/chat` route.
 * **`src/components/chat/chat-group-modal.tsx` ("Find Friends Modal")**:
   * Displays travelers directory with lazy pagination loading **8 guests at a time** with a "Show More" trigger.
   * Right-side **Connect** action matching profile friendship request logic with instant visual pending/connected states.
 * **`src/components/chat/chat-message-window.tsx`**:
   * **Branding & Roles**: Default header displays **Athithya** with the **Administrator** badge (replacing "Concierge" / "Verified Support").
   * **Official Welcome Message**: Displays the auto-generated welcoming onboarding message matching `onboardingHelper.js` on backend.
-  * Active chat header with **Clear Messages** and **Leave Group** controls.
+  * Active chat header with **Clear Messages** and **Leave Group** controls, plus mobile back button to return to conversation list.
   * **Message Scroll Feed**: Dedicated scrollable container with smooth auto-scroll to the latest message.
   * Input bar with S3 photo upload (`getPresignedUrl` + `uploadFileToS3`) and text input.
-

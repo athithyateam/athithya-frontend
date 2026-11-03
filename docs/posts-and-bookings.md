@@ -24,16 +24,18 @@ Supports Experience posts, Host Services (`?type=service`), and Traveler Plans/I
 
 ## 2. Post Creation & Editing (`src/app/post/page.tsx` & `src/components/forms/`)
 
-* **`form-primitives.tsx`**: Reusable form inputs, tag selectors, S3 media dropzones, and discount tier builders.
+* **`form-primitives.tsx`**: Reusable form inputs, tag selectors, S3 media dropzones, and discount tier builders. Includes mobile-responsive padding (`p-3.5 sm:p-6`) and flex-safe inline tag adder (`InlineAdder`) preventing input overflow.
 * **`host-service-form.tsx`**:
   * Used by verified Hosts to create or edit Experiences and Services (`createService`, `updateService`, `createPost`, `updatePost`).
-  * **Interactive Map Picker (`map-picker.tsx`)**: Leaflet map integrated with Uttarakhand official boundary GeoJSON (`uttarakhand-boundary.json`), forward Nominatim location search, click-to-pin coordinate positioning with boundary validation, and automatic reverse geocoding to address.
+  * **Adaptive Responsive Stepper**: Wizard step tabs adapt gracefully between screen sizes; displays full titles (`1. Basic Details`, `2. Location & Pricing`, etc.) on desktop and compact labels (`1. Basic`, `2. Location`, etc.) on mobile, preventing broken multi-line text wraps.
+  * **Interactive Map Picker (`map-picker.tsx`)**: Leaflet map integrated with Uttarakhand official boundary GeoJSON (`uttarakhand-boundary.json`), forward Nominatim location search, click-to-pin coordinate positioning with boundary validation, and automatic reverse geocoding to address. Features responsive map container height (`h-[270px] sm:h-[350px] md:h-[400px]`) and a compact search button to avoid touch scroll lock on mobile devices.
   * **Route Details with Suggestions**: Starting Point and Ending Point inputs with dropdown suggestions covering all major Uttarakhand hubs (*Dehradun, Haridwar, Rishikesh, Haldwani, Nainital, Mussoorie, Almora, Pithoragarh, Uttarkashi, Srinagar, Joshimath, Chopta, Kedarnath, Badrinath, Roorkee, Rudrapur*).
-  * **Dual-Tier Group Discounting**: Step 2 features dual tiers (`Group of 2` and `Group of 3`) matching `athithya-app`, with synchronized dual-direction inputs (Discounted Price ₹ and Percentage %), live savings tags, and real-time validation.
-  * **Host Rules**: Custom policy input (`PolicyAdder` style) where hosts manually add rules and delete them, with preset suggestion pills removed.
+  * **Dual-Tier Group Discounting**: Step 2 features dual tiers (`Group of 2` and `Group of 3`) matching `athithya-app`, with synchronized dual-direction inputs (Discounted Price ₹ and Percentage %), live savings tags, and real-time validation. Form fields adapt to `grid-cols-1 sm:grid-cols-2` with compact action buttons to preserve input space on mobile screens.
+  * **Host Rules**: Custom policy input (`PolicyAdder` style) where hosts manually add rules and delete them, with preset suggestion pills removed. Responsive input row keeps add button shrink-safe on narrow mobile screens.
   * **S3 Upload Proxy Architecture**: Uploads photos and videos via `uploadFileToS3`, using a transparent local Next.js server proxy (`/api/s3-upload`) to bypass browser cross-origin preflight restrictions on localhost and avoid console CORS errors.
 * **`traveller-plan-form.tsx`**:
   * Used by Guests/Travelers to publish or edit public/collaborative Travel Plans (`createItinerary`, `updateItinerary`).
+  * Optimized responsive form grids (`grid-cols-1 sm:grid-cols-2` and `grid-cols-1 sm:grid-cols-3`) ensuring placeholders and touch targets are clearly legible on mobile screens.
 
 ---
 
@@ -46,4 +48,3 @@ Supports Experience posts, Host Services (`?type=service`), and Traveler Plans/I
   * Trigger & verify **Trip Start OTP** (`sendStartOTP`, `verifyStartOTP`) and **Trip Completion OTP** (`sendCompletionOTP`, `verifyCompletionOTP`).
 * **Guest Controls**:
   * View booking status, payment breakdown, and OTP codes; request cancellation (`requestCancellation`); or accept/reject orphaned group invites (`acceptOrphanedInvite`, `rejectOrphanedInvite`).
-

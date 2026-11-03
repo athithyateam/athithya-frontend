@@ -72,9 +72,15 @@ function ChatContent() {
   });
 
   return (
-    <main className="min-h-screen pt-20 md:pt-24 pb-16 md:pb-16 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
+    <main className="min-h-screen pt-16 sm:pt-20 md:pt-24 pb-20 md:pb-16 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
       <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6">
-        <div className="h-[calc(100dvh-130px)] md:h-[78vh] min-h-[480px] md:min-h-[560px] rounded-2xl md:rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 overflow-hidden shadow-xl flex flex-col md:flex-row">
+        <div
+          className={`rounded-2xl md:rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 overflow-hidden shadow-xl flex flex-col md:flex-row ${
+            activeConversation
+              ? "h-[calc(100dvh-5.5rem)] md:h-[78vh] min-h-[420px] md:min-h-[560px]"
+              : "h-[calc(100dvh-9.5rem)] md:h-[78vh] min-h-[420px] md:min-h-[560px]"
+          }`}
+        >
           {/* Left: Conversation List */}
           <aside
             className={`w-full md:w-80 lg:w-96 md:shrink-0 h-full min-h-0 border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col bg-white dark:bg-neutral-900/60 overflow-hidden ${
@@ -175,7 +181,9 @@ export default function ChatPage() {
       <Suspense fallback={<div className="min-h-screen pt-28 text-center text-sm text-neutral-400">Loading messages...</div>}>
         <ChatContent />
       </Suspense>
-      <Footer />
+      <div className="hidden md:block">
+        <Footer />
+      </div>
       <MobileFooter />
     </>
   );

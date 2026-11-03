@@ -342,7 +342,7 @@ export function MapPicker({
 
   return (
     <div className="space-y-4">
-      {/* Search Bar matching athithya-app */}
+      {/* Search Bar */}
       <div className="relative">
         <div className="flex gap-2">
           <div className="relative flex-1">
@@ -361,7 +361,7 @@ export function MapPicker({
               }}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               placeholder="Search location (e.g. Rishikesh, Chopta)"
-              className={`w-full pl-10 pr-4 py-3 bg-white border rounded-xl text-sm focus:outline-none transition-all shadow-sm dark:bg-neutral-900 ${
+              className={`w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border rounded-xl text-xs sm:text-sm focus:outline-none transition-all shadow-sm dark:bg-neutral-900 ${
                 searchError
                   ? "border-red-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 text-red-900 dark:text-red-400 placeholder-red-300 dark:bg-neutral-900"
                   : "border-gray-200 dark:border-neutral-800 focus:border-[#C59A2F] focus:ring-1 focus:ring-[#C59A2F] dark:bg-neutral-900"
@@ -372,16 +372,16 @@ export function MapPicker({
             type="button"
             onClick={handleSearch}
             disabled={searching || !searchQuery.trim()}
-            className="px-6 py-2 bg-[#C59A2F] text-white rounded-xl font-medium text-sm hover:bg-[#a67f26] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm min-w-[100px] cursor-pointer"
+            className="px-3.5 sm:px-6 py-2 bg-[#C59A2F] text-white rounded-xl font-medium text-xs sm:text-sm hover:bg-[#a67f26] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm min-w-[70px] sm:min-w-[100px] cursor-pointer shrink-0"
           >
-            {searching ? "Searching..." : "Search"}
+            {searching ? "..." : "Search"}
           </button>
         </div>
 
         {/* Error message */}
         {searchError && (
-          <div className="mt-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 px-3 py-2 rounded-lg flex items-center gap-2">
-            <AlertTriangle size={16} />
+          <div className="mt-2 text-xs sm:text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 px-3 py-2 rounded-lg flex items-center gap-2">
+            <AlertTriangle size={15} />
             <span>{searchError}</span>
           </div>
         )}
@@ -391,14 +391,14 @@ export function MapPicker({
       <div className="relative mt-2">
         <div
           ref={mapContainerRef}
-          style={{ height: "400px", width: "100%", borderRadius: "1rem", zIndex: 0 }}
-          className="z-0 border-2 border-neutral-100 dark:border-neutral-800 transition-colors"
+          style={{ width: "100%", borderRadius: "1rem", zIndex: 0 }}
+          className="z-0 border-2 border-neutral-100 dark:border-neutral-800 transition-colors h-[270px] sm:h-[350px] md:h-[400px]"
         />
 
         {/* Instruction badge when no position */}
         {!position && (
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg z-[400] pointer-events-none border border-gray-100 dark:border-neutral-800 transition-colors">
-            <p className="text-xs font-bold text-neutral-700 uppercase tracking-wide flex items-center gap-2 dark:text-neutral-300 transition-colors">
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg z-[400] pointer-events-none border border-gray-100 dark:border-neutral-800 transition-colors">
+            <p className="text-[11px] sm:text-xs font-bold text-neutral-700 uppercase tracking-wide flex items-center gap-2 dark:text-neutral-300 transition-colors">
               <span>📍</span> Click map or search above
             </p>
           </div>
@@ -407,13 +407,13 @@ export function MapPicker({
 
       {/* Selected Location Info Card */}
       {position && (
-        <div className="bg-[#FDFBF7] dark:bg-neutral-950/40 border border-[#f0e6d2] dark:border-neutral-800 rounded-xl p-4 transition-colors">
+        <div className="bg-[#FDFBF7] dark:bg-neutral-950/40 border border-[#f0e6d2] dark:border-neutral-800 rounded-xl p-3 sm:p-4 transition-colors">
           <div className="flex items-start gap-3">
             <div className="w-8 h-8 rounded-full bg-[#C59A2F] flex items-center justify-center shrink-0 mt-0.5 shadow-sm text-white">
               <MapPin size={14} />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-black text-neutral-900 uppercase mb-1 dark:text-neutral-100 transition-colors">
+              <h4 className="text-xs sm:text-sm font-black text-neutral-900 uppercase mb-1 dark:text-neutral-100 transition-colors">
                 Selected Location
               </h4>
               {loading ? (

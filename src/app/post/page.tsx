@@ -49,11 +49,11 @@ function PostFormContent() {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center">
-        <div className="bg-white p-8 rounded-2xl shadow-xl border border-neutral-100 max-w-sm dark:bg-neutral-900 dark:border-neutral-800 transition-colors">
-          <h2 className="text-2xl font-bold text-neutral-800 mb-2 dark:text-neutral-200 transition-colors">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-neutral-100 max-w-sm dark:bg-neutral-900 dark:border-neutral-800 transition-colors">
+          <h2 className="text-xl sm:text-2xl font-bold text-neutral-800 mb-2 dark:text-neutral-200 transition-colors">
             Login Required
           </h2>
-          <p className="text-neutral-600 dark:text-neutral-400 mb-6 transition-colors">
+          <p className="text-neutral-600 dark:text-neutral-400 mb-6 text-sm transition-colors">
             You need to be logged in to create posts or offerings.
           </p>
           <button
@@ -82,13 +82,13 @@ function PostFormContent() {
 
   if (isHost && !isApprovedHost) {
     return (
-      <div className="min-h-[90vh] bg-[#FDFBF7]/30 dark:bg-neutral-950 flex flex-col justify-center py-12 md:py-24 px-4 md:px-0 transition-colors">
-        <div className="max-w-5xl mx-auto w-full text-center py-20">
+      <div className="min-h-[90vh] bg-[#FDFBF7]/30 dark:bg-neutral-950 flex flex-col justify-center py-6 sm:py-12 md:py-24 px-3 sm:px-4 md:px-0 transition-colors">
+        <div className="max-w-5xl mx-auto w-full text-center py-12 sm:py-20">
           <div className="animate-pulse">
-            <p className="text-neutral-400 font-bold text-xl">
+            <p className="text-neutral-400 font-bold text-lg sm:text-xl">
               Verification Required to Host
             </p>
-            <p className="text-neutral-500 mt-2">
+            <p className="text-neutral-500 mt-2 text-xs sm:text-sm">
               Please complete the verification process in the modal.
             </p>
           </div>
@@ -98,11 +98,11 @@ function PostFormContent() {
   }
 
   return (
-    <div className="min-h-[90vh] bg-[#FDFBF7]/30 dark:bg-neutral-950 flex flex-col justify-center py-12 md:py-24 px-4 md:px-0 transition-colors">
+    <div className="min-h-[85vh] bg-[#FDFBF7]/30 dark:bg-neutral-950 flex flex-col justify-center py-4 sm:py-8 md:py-16 px-2.5 sm:px-4 md:px-0 transition-colors">
       <div className="max-w-5xl mx-auto w-full">
-        <div className="mx-auto p-4 md:p-6 bg-[#fffdf8] dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 shadow-sm">
-          <div className="mb-6 text-center">
-            <h2 className="text-2xl font-semibold text-[#C59A2F]">
+        <div className="mx-auto p-3.5 sm:p-6 bg-[#fffdf8] dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 shadow-sm">
+          <div className="mb-4 sm:mb-6 text-center">
+            <h2 className="text-xl sm:text-2xl font-semibold text-[#C59A2F]">
               Host Dashboard
             </h2>
           </div>
@@ -117,7 +117,7 @@ export default function CreateExperiencePage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#FDFBF7]/30 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
       <Navbar />
-      <main className="flex-1 pt-20 pb-20">
+      <main className="flex-1 pt-16 sm:pt-20 pb-16 sm:pb-20">
         <Suspense
           fallback={
             <div className="py-20 text-center text-sm text-neutral-400">

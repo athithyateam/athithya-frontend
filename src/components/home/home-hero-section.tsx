@@ -75,7 +75,7 @@ export function HomeHeroSection() {
   const hasResults = suggestions.people.length > 0 || suggestions.experiences.length > 0;
 
   return (
-    <div className="relative z-20 w-full min-h-[505px] sm:min-h-[565px] md:min-h-[680px] lg:min-h-[720px] flex flex-col justify-center items-center py-20 sm:py-24 md:py-32 px-4 sm:px-6 text-center">
+    <div className="relative z-20 w-full min-h-[505px] sm:min-h-[565px] md:min-h-[680px] lg:min-h-[720px] flex flex-col justify-center items-center py-20 sm:py-24 md:py-32 px-3 sm:px-6 text-center">
       <div className="absolute inset-0 z-0 overflow-hidden w-full h-full">
         <picture className="w-full h-full block">
           <source srcSet="/images/hero-mobile.jpg" media="(max-width: 767px)" />
@@ -91,34 +91,37 @@ export function HomeHeroSection() {
         </h1>
 
         <div ref={searchRef} className="relative w-full max-w-3xl mx-auto">
-          <div className="w-full bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md rounded-full shadow-2xl p-1.5 md:p-2 flex items-center border border-white/40 dark:border-neutral-800 transition-all">
-            <div className="flex-1 flex items-center px-2.5 sm:px-4 md:px-5 py-1.5 sm:py-2 w-full">
-              <Search className="text-[#C59A2F] mr-2.5 sm:mr-3 shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="w-full bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md rounded-full shadow-2xl p-1.5 md:p-2 flex items-center border border-white/40 dark:border-neutral-800 transition-all gap-1">
+            <div className="flex-1 flex items-center px-2.5 sm:px-4 md:px-5 py-1.5 sm:py-2 w-full min-w-0">
+              <Search className="text-[#C59A2F] mr-2 sm:mr-3 shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 onFocus={() => hasResults && setShowSuggestions(true)}
-                placeholder="Search Experiences, Hosts, Plans and People"
+                placeholder="Search Experiences, Hosts, Plans"
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-100 font-bold text-xs sm:text-sm w-full placeholder:text-neutral-400 placeholder:font-normal"
+                className="bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-100 font-bold text-xs sm:text-sm w-full placeholder:text-neutral-400 placeholder:font-normal min-w-0"
               />
               <button
                 type="button"
                 onClick={handleUseLocation}
-                className="text-[#C59A2F] text-[10px] md:text-xs font-bold whitespace-nowrap ml-1.5 sm:ml-2 hover:underline px-2.5 py-1.5 rounded-full transition shrink-0 flex items-center gap-1 cursor-pointer"
+                className="text-[#C59A2F] text-[10px] md:text-xs font-bold whitespace-nowrap ml-1 sm:ml-2 hover:underline px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full transition shrink-0 flex items-center gap-1 cursor-pointer"
                 title="Detect location"
               >
                 <MapPin className="w-3.5 h-3.5 shrink-0" />
-                <span>{locationLoading ? "Detecting..." : "Use current location"}</span>
+                <span className="hidden sm:inline">{locationLoading ? "Detecting..." : "Use current location"}</span>
+                <span className="sm:hidden">{locationLoading ? "..." : "Location"}</span>
               </button>
             </div>
             <button
               type="button"
               onClick={handleSearch}
-              className="p-2.5 sm:px-5 sm:py-2.5 rounded-full bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-md hidden sm:flex items-center gap-1.5 cursor-pointer"
+              className="p-2 sm:px-5 sm:py-2.5 rounded-full bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-md flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+              title="Search"
             >
-              <span>Search</span>
+              <Search className="w-4 h-4 sm:hidden" />
+              <span className="hidden sm:inline">Search</span>
             </button>
           </div>
 

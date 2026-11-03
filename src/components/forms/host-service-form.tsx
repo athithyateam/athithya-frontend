@@ -9,8 +9,6 @@ import {
   FiX,
   FiTrash2,
   FiPercent,
-  FiCalendar,
-  FiMapPin,
   FiAlertTriangle,
 } from "react-icons/fi";
 import {
@@ -27,14 +25,13 @@ import {
   FormSection,
   ErrorMsg,
   InlineAdder,
-  FORM_GOLD,
 } from "./form-primitives";
 
 const steps = [
-  { id: 1, label: "Basic Details" },
-  { id: 2, label: "Location & Pricing" },
-  { id: 3, label: "Rules & Categories" },
-  { id: 4, label: "Media" },
+  { id: 1, label: "Basic Details", shortLabel: "Basic" },
+  { id: 2, label: "Location & Pricing", shortLabel: "Location" },
+  { id: 3, label: "Rules & Categories", shortLabel: "Rules" },
+  { id: 4, label: "Media", shortLabel: "Media" },
 ];
 
 const EXPERIENCE_TYPES = [
@@ -438,18 +435,18 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
   if (showSuccess) {
     return (
-      <div className="p-12 bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 text-center space-y-4 shadow-xl">
+      <div className="p-6 sm:p-12 bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 text-center space-y-4 shadow-xl">
         <FiCheckCircle size={56} className="text-[#C59A2F] mx-auto animate-bounce" />
-        <h3 className="text-2xl font-black uppercase tracking-tight">
+        <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight">
           Experience Submitted!
         </h3>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-md mx-auto">
+        <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md mx-auto">
           Your Himalayan experience is pending admin verification and will be published live once reviewed.
         </p>
         <button
           type="button"
           onClick={() => (window.location.href = "/profile")}
-          className="mt-6 px-8 py-3 rounded-2xl bg-[#C59A2F] text-white font-black text-xs uppercase tracking-widest hover:bg-[#A67F26] transition shadow-md cursor-pointer"
+          className="mt-6 px-6 sm:px-8 py-3 rounded-2xl bg-[#C59A2F] text-white font-black text-xs uppercase tracking-widest hover:bg-[#A67F26] transition shadow-md cursor-pointer"
         >
           View My Profile
         </button>
@@ -463,37 +460,39 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
   const totalGuestPrice = basePriceNum + platformFee;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Wizard Step Tabs matching athithya-app */}
-      <div className="flex items-center justify-between gap-2 mb-6">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+      {/* Wizard Step Tabs */}
+      <div className="flex items-center justify-between gap-1.5 sm:gap-2 mb-4 sm:mb-6">
         {steps.map((s) => (
-          <div
+          <button
             key={s.id}
+            type="button"
             onClick={() => {
               if (s.id < currentStep) setCurrentStep(s.id);
             }}
-            className={`flex-1 py-3 px-3 rounded-2xl text-center text-xs font-black uppercase tracking-wider border transition-all ${
+            className={`flex-1 py-2 sm:py-3 px-1 sm:px-3 rounded-xl sm:rounded-2xl text-center text-[11px] sm:text-xs font-black uppercase tracking-normal sm:tracking-wider border transition-all ${
               currentStep >= s.id
                 ? "bg-[#C59A2F] text-white border-[#C59A2F] shadow-sm"
                 : "bg-white dark:bg-neutral-900 text-neutral-400 border-neutral-200 dark:border-neutral-800"
             } ${s.id < currentStep ? "cursor-pointer" : ""}`}
           >
-            {s.id}. {s.label}
-          </div>
+            <span className="sm:hidden">{s.id}. {s.shortLabel}</span>
+            <span className="hidden sm:inline">{s.id}. {s.label}</span>
+          </button>
         ))}
       </div>
 
       {/* ================= STEP 1: BASIC DETAILS ================= */}
       {currentStep === 1 && (
-        <div className="space-y-5">
-          {/* Uttarakhand Strict Policy Alert matching athithya-app */}
-          <div className="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-900/40 rounded-2xl p-4 flex gap-3 shadow-xs select-none">
-            <FiAlertTriangle className="text-yellow-600 dark:text-yellow-400 shrink-0 text-xl mt-0.5" />
+        <div className="space-y-4 sm:space-y-5">
+          {/* Uttarakhand Strict Policy Alert */}
+          <div className="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-900/40 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex gap-2.5 sm:gap-3 shadow-xs select-none">
+            <FiAlertTriangle className="text-yellow-600 dark:text-yellow-400 shrink-0 text-lg sm:text-xl mt-0.5" />
             <div>
-              <h4 className="text-xs font-black text-yellow-800 dark:text-yellow-300 uppercase tracking-wider">
+              <h4 className="text-[11px] sm:text-xs font-black text-yellow-800 dark:text-yellow-300 uppercase tracking-wider">
                 Uttarakhand Region
               </h4>
-              <p className="text-xs text-yellow-700 dark:text-yellow-400 mt-1 font-medium leading-relaxed">
+              <p className="text-[11px] sm:text-xs text-yellow-700 dark:text-yellow-400 mt-0.5 sm:mt-1 font-medium leading-relaxed">
                 Athithya is a dedicated local experiences platform strictly for Uttarakhand only. Please ensure all details relate strictly to Uttarakhand. Experiences outside this region will not be approved.
               </p>
             </div>
@@ -509,7 +508,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                     setTitle(e.target.value);
                     if (errors.title) setErrors((prev) => ({ ...prev, title: null }));
                   }}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-3 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none transition"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2.5 sm:py-3 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none transition"
                   placeholder="Invitation title *"
                 />
                 <ErrorMsg error={errors.title} />
@@ -528,7 +527,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                     if (errors.description)
                       setErrors((prev) => ({ ...prev, description: null }));
                   }}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 pt-3 pb-7 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none transition"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 pt-2.5 sm:pt-3 pb-7 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none transition"
                   placeholder="Short description (Experience name, duration, short intro) *"
                 />
                 <div className="absolute bottom-2.5 right-3 text-[10px] font-bold text-neutral-400 pointer-events-none select-none">
@@ -540,14 +539,14 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
               <div>
                 <label className="text-xs font-bold block mb-1">Full description *</label>
                 <textarea
-                  rows={6}
+                  rows={5}
                   value={longDescription}
                   onChange={(e) => {
                     setLongDescription(e.target.value);
                     if (errors.longDescription)
                       setErrors((prev) => ({ ...prev, longDescription: null }));
                   }}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-3 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none transition"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2.5 sm:py-3 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none transition"
                   placeholder="Full description *"
                 />
                 <ErrorMsg error={errors.longDescription} />
@@ -555,15 +554,15 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
               {/* Experience Categories */}
               <div className="pt-2">
-                <div className="flex items-center justify-between mb-2.5">
+                <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-black uppercase tracking-wider text-[#C59A2F]">
-                    Experience Categories * (Select one or multiple)
+                    Experience Categories *
                   </label>
                   <span className="text-[11px] font-bold text-neutral-400">
                     {selectedCategories.length} selected
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {EXPERIENCE_TYPES.map((type) => {
                     const isSelected = selectedCategories.includes(type);
                     return (
@@ -571,7 +570,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                         key={type}
                         type="button"
                         onClick={() => toggleCategory(type)}
-                        className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                           isSelected
                             ? "bg-[#C59A2F] text-white shadow-sm ring-2 ring-[#C59A2F]/30"
                             : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
@@ -592,7 +591,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
       {/* ================= STEP 2: LOCATION & PRICING ================= */}
       {currentStep === 2 && (
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           <FormSection title="Location (Pin on Map) *">
             <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
               Click/tap on the map to pin the exact location. The address will be auto-filled.
@@ -629,21 +628,21 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                   setAddress(e.target.value);
                   if (errors.address) setErrors((prev) => ({ ...prev, address: null }));
                 }}
-                className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none"
+                className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none"
                 placeholder="Full address will appear here..."
               />
               <ErrorMsg error={errors.address} />
             </div>
 
-            {/* Route Details matching athithya-app */}
-            <div className="mt-4 border border-dashed border-neutral-200 dark:border-neutral-700 rounded-2xl p-4 bg-neutral-50/50 dark:bg-neutral-800/20 space-y-3">
+            {/* Route Details */}
+            <div className="mt-4 border border-dashed border-neutral-200 dark:border-neutral-700 rounded-xl sm:rounded-2xl p-3 sm:p-4 bg-neutral-50/50 dark:bg-neutral-800/20 space-y-3">
               <h4 className="text-xs font-black uppercase tracking-wider text-[#C59A2F]">
                 Route Details
               </h4>
               <p className="text-[11px] text-neutral-400">
                 If this experience involves travelling between different locations, specify the starting and ending points.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div className="relative">
                   <label className="text-xs font-bold block mb-1">Starting Point *</label>
                   <input
@@ -658,7 +657,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                         setErrors((prev) => ({ ...prev, startPoint: null }));
                     }}
                     placeholder="e.g. Dehradun"
-                    className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none"
+                    className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none"
                   />
                   {showStartSuggestions && (
                     <ul className="absolute z-50 left-0 right-0 top-full mt-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-xl overflow-hidden max-h-52 overflow-y-auto">
@@ -701,7 +700,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                         setErrors((prev) => ({ ...prev, endPoint: null }));
                     }}
                     placeholder="e.g. Rishikesh"
-                    className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none"
+                    className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-[#C59A2F] outline-none"
                   />
                   {showEndSuggestions && (
                     <ul className="absolute z-50 left-0 right-0 top-full mt-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-xl overflow-hidden max-h-52 overflow-y-auto">
@@ -744,7 +743,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
           {/* Pricing & Scheduling Section */}
           <FormSection title="Pricing & Duration *">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 items-end">
               <div>
                 <label className="text-xs font-bold block mb-1">Price per person (₹) *</label>
                 <input
@@ -755,7 +754,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                     setPrice(e.target.value);
                     if (errors.price) setErrors((prev) => ({ ...prev, price: null }));
                   }}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:border-[#C59A2F] outline-none"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:border-[#C59A2F] outline-none"
                   placeholder="0"
                 />
                 <ErrorMsg error={errors.price} />
@@ -766,7 +765,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                 <select
                   value={period}
                   onChange={(e) => setPeriod(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:border-[#C59A2F] outline-none"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:border-[#C59A2F] outline-none"
                 >
                   <option value="minute">Minute(s)</option>
                   <option value="hour">Hour(s)</option>
@@ -783,15 +782,18 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                   min={1}
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:border-[#C59A2F] outline-none"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:border-[#C59A2F] outline-none"
                 />
               </div>
 
               <div>
+                <label className="text-xs font-bold block mb-1 opacity-0 hidden md:block select-none">
+                  Discount
+                </label>
                 <button
                   type="button"
                   onClick={() => setShowDiscountInputs((v) => !v)}
-                  className={`w-full py-2.5 rounded-xl border text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                  className={`w-full h-[42px] rounded-xl border text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition cursor-pointer ${
                     showDiscountInputs
                       ? "bg-[#C59A2F] text-white border-[#C59A2F] shadow-sm"
                       : "bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50"
@@ -802,26 +804,26 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
               </div>
             </div>
 
-            {/* Per-Person Discount List Area matching athithya-app */}
+            {/* Per-Person Discount List Area */}
             {showDiscountInputs && (
-              <div className="mt-8 mb-6 p-6 bg-[#fbf6ea]/40 dark:bg-[#C59A2F]/5 rounded-[2rem] border border-[#C59A2F]/20 shadow-sm animate-in fade-in duration-200">
-                <div className="flex items-center justify-between mb-6">
+              <div className="mt-6 sm:mt-8 mb-4 sm:mb-6 p-3.5 sm:p-6 bg-[#fbf6ea]/40 dark:bg-[#C59A2F]/5 rounded-2xl sm:rounded-[2rem] border border-[#C59A2F]/20 shadow-sm animate-in fade-in duration-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 sm:mb-6">
                   <div>
-                    <h4 className="text-sm font-black text-[#C59A2F] uppercase tracking-[0.2em]">
+                    <h4 className="text-xs sm:text-sm font-black text-[#C59A2F] uppercase tracking-[0.15em] sm:tracking-[0.2em]">
                       Discounting
                     </h4>
-                    <p className="text-xs text-gray-500 italic mt-1 font-medium dark:text-neutral-400">
+                    <p className="text-[11px] sm:text-xs text-gray-500 italic mt-0.5 sm:mt-1 font-medium dark:text-neutral-400">
                       Encourage larger groups by offering better per-person rates
                     </p>
                   </div>
-                  <div className="bg-[#C59A2F]/10 px-3 py-1.5 rounded-lg border border-[#C59A2F]/20">
-                    <span className="text-xs font-black text-[#C59A2F] uppercase">
+                  <div className="self-start sm:self-auto bg-[#C59A2F]/10 px-3 py-1.5 rounded-lg border border-[#C59A2F]/20">
+                    <span className="text-[11px] sm:text-xs font-black text-[#C59A2F] uppercase">
                       Base Price: ₹{price || 0}
                     </span>
                   </div>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {[2, 3].map((personNum) => {
                     const existing = discounts.find(
                       (d) => Number(d.threshold) === personNum
@@ -879,7 +881,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                     return (
                       <div
                         key={personNum}
-                        className={`p-5 rounded-3xl border shadow-sm relative overflow-hidden group transition-all ${
+                        className={`p-4 sm:p-5 rounded-2xl sm:rounded-3xl border shadow-sm relative overflow-hidden group transition-all ${
                           priceError
                             ? "bg-red-50/40 border-red-200 dark:bg-red-950/20"
                             : "bg-white/80 border-[#C59A2F]/10 hover:border-[#C59A2F]/30 dark:bg-neutral-900/60 dark:border-neutral-800"
@@ -891,45 +893,47 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                           }`}
                         />
 
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs font-black text-neutral-900 uppercase tracking-widest dark:text-neutral-100">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-3 sm:mb-4">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <span className="text-xs font-black text-neutral-900 uppercase tracking-wider sm:tracking-widest dark:text-neutral-100">
                               Group of {personNum}
                             </span>
                             {existing && !priceError && (
-                              <span className="text-[10px] font-black text-[#C59A2F] bg-[#C59A2F]/5 dark:bg-[#C59A2F]/10 px-2.5 py-1 rounded-full uppercase border border-[#C59A2F]/20">
+                              <span className="text-[10px] font-black text-[#C59A2F] bg-[#C59A2F]/5 dark:bg-[#C59A2F]/10 px-2 py-0.5 rounded-full uppercase border border-[#C59A2F]/20">
                                 ✓ Applied
                               </span>
                             )}
                           </div>
-                          {basePricePerPerson > 0 && (
-                            <span className="text-[11px] text-neutral-400 font-bold italic">
-                              Standard: ₹{basePricePerPerson.toLocaleString()}
-                            </span>
-                          )}
-                          {(() => {
-                            const p =
-                              activeDiscountField === personNum &&
-                              currentPriceInputValue !== "" &&
-                              basePricePerPerson > 0
-                                ? ((basePricePerPerson - Number(currentPriceInputValue)) /
-                                    basePricePerPerson) *
-                                  100
-                                : existing
-                                ? existing.percentage
-                                : 0;
-                            if (p > 0) {
-                              return (
-                                <span className="text-[11px] font-black text-[#C59A2F] bg-[#C59A2F]/10 px-2.5 py-1 rounded-lg border border-[#C59A2F]/20 ml-2 animate-pulse">
-                                  {Math.round(p)}% OFF
-                                </span>
-                              );
-                            }
-                            return null;
-                          })()}
+                          <div className="flex items-center gap-2">
+                            {basePricePerPerson > 0 && (
+                              <span className="text-[11px] text-neutral-400 font-bold italic">
+                                Standard: ₹{basePricePerPerson.toLocaleString()}
+                              </span>
+                            )}
+                            {(() => {
+                              const p =
+                                activeDiscountField === personNum &&
+                                currentPriceInputValue !== "" &&
+                                basePricePerPerson > 0
+                                  ? ((basePricePerPerson - Number(currentPriceInputValue)) /
+                                      basePricePerPerson) *
+                                    100
+                                  : existing
+                                  ? existing.percentage
+                                  : 0;
+                              if (p > 0) {
+                                return (
+                                  <span className="text-[11px] font-black text-[#C59A2F] bg-[#C59A2F]/10 px-2 py-0.5 rounded-lg border border-[#C59A2F]/20 animate-pulse">
+                                    {Math.round(p)}% OFF
+                                  </span>
+                                );
+                              }
+                              return null;
+                            })()}
+                          </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 items-end">
                           <div>
                             <label className="text-[11px] text-[#C59A2F] font-black uppercase mb-1.5 block tracking-tight">
                               Price After Discount (₹)
@@ -947,7 +951,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                                 onFocus={() => setActiveDiscountField(personNum)}
                                 onBlur={() => setActiveDiscountField(null)}
                                 onChange={(e) => handlePriceInput(e.target.value)}
-                                className={`w-full bg-white dark:bg-neutral-900 dark:text-neutral-100 rounded-xl border pl-8 pr-3 h-[52px] text-sm font-medium focus:outline-none focus:ring-2 transition-all ${
+                                className={`w-full bg-white dark:bg-neutral-900 dark:text-neutral-100 rounded-xl border pl-8 pr-3 h-[46px] sm:h-[52px] text-sm font-medium focus:outline-none focus:ring-2 transition-all ${
                                   priceError
                                     ? "border-red-200 dark:border-red-800 focus:border-red-400"
                                     : "border-neutral-200 dark:border-neutral-800 focus:border-[#C59A2F]"
@@ -955,14 +959,14 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                               />
                             </div>
                             {priceError && (
-                              <p className="text-[10px] text-red-500 font-black mt-2 leading-tight">
+                              <p className="text-[10px] text-red-500 font-black mt-1.5 leading-tight">
                                 ⚠ {priceError}
                               </p>
                             )}
                           </div>
 
-                          <div className="flex items-end gap-3 w-full">
-                            <div className="flex-1">
+                          <div className="flex items-end gap-2 sm:gap-3 w-full">
+                            <div className="flex-1 min-w-0">
                               <label className="text-[11px] text-[#C59A2F] font-black uppercase mb-1.5 block tracking-tight">
                                 Percentage (%)
                               </label>
@@ -974,7 +978,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                                   onFocus={() => setActiveDiscountField(personNum)}
                                   onBlur={() => setActiveDiscountField(null)}
                                   onChange={(e) => handlePercentageInput(e.target.value)}
-                                  className="w-full bg-white dark:bg-neutral-900 dark:text-neutral-100 rounded-xl border pr-8 pl-4 h-[52px] text-sm font-medium focus:outline-none focus:ring-2 focus:border-[#C59A2F] border-neutral-200 dark:border-neutral-800 transition-all shadow-sm"
+                                  className="w-full bg-white dark:bg-neutral-900 dark:text-neutral-100 rounded-xl border pr-8 pl-4 h-[46px] sm:h-[52px] text-sm font-medium focus:outline-none focus:ring-2 focus:border-[#C59A2F] border-neutral-200 dark:border-neutral-800 transition-all shadow-sm"
                                 />
                                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm font-black">
                                   %
@@ -982,7 +986,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                               </div>
                             </div>
 
-                            <div className="pb-[1px]">
+                            <div className="shrink-0 pb-[1px]">
                               {existing ? (
                                 <button
                                   type="button"
@@ -994,10 +998,10 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                                       [personNum]: "",
                                     }));
                                   }}
-                                  className="h-[52px] w-[52px] flex items-center justify-center text-neutral-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-all border border-transparent hover:border-red-100 cursor-pointer"
+                                  className="h-[46px] sm:h-[52px] w-[46px] sm:w-[52px] flex items-center justify-center text-neutral-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl sm:rounded-2xl transition-all border border-transparent hover:border-red-100 cursor-pointer"
                                   title="Remove Tier"
                                 >
-                                  <FiTrash2 size={20} />
+                                  <FiTrash2 size={18} />
                                 </button>
                               ) : (
                                 <button
@@ -1006,9 +1010,10 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                                     const val = discountPercentageInputs[personNum];
                                     if (val) handlePercentageInput(val);
                                   }}
-                                  className="px-6 h-[52px] flex items-center justify-center bg-[#C59A2F] text-white text-[11px] font-black uppercase tracking-widest rounded-2xl hover:shadow-xl transition-all active:scale-95 whitespace-nowrap cursor-pointer"
+                                  className="px-3.5 sm:px-6 h-[46px] sm:h-[52px] flex items-center justify-center bg-[#C59A2F] text-white text-[11px] font-black uppercase tracking-wider rounded-xl sm:rounded-2xl hover:shadow-xl transition-all active:scale-95 whitespace-nowrap cursor-pointer shrink-0"
                                 >
-                                  Add Discount
+                                  <span className="sm:hidden">Add</span>
+                                  <span className="hidden sm:inline">Add Discount</span>
                                 </button>
                               )}
                             </div>
@@ -1023,26 +1028,26 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
             {/* Platform Fee & Total Guest Cost Breakdown */}
             {basePriceNum > 0 && (
-              <div className="mt-4 p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="mt-4 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 text-xs">
                 <div>
                   <span className="text-neutral-500 dark:text-neutral-400">Host Base:</span>{" "}
                   <strong className="text-neutral-900 dark:text-neutral-100 font-bold">₹{basePriceNum}</strong>
                   <span className="mx-2 text-neutral-300 dark:text-neutral-600">•</span>
-                  <span className="text-neutral-500 dark:text-neutral-400">Platform Fee ({(platformFeeRate * 100).toFixed(1)}%):</span>{" "}
+                  <span className="text-neutral-500 dark:text-neutral-400">Fee ({(platformFeeRate * 100).toFixed(1)}%):</span>{" "}
                   <strong className="text-[#C59A2F] font-bold">₹{platformFee}</strong>
                 </div>
-                <div className="text-sm font-black text-neutral-900 dark:text-neutral-100">
+                <div className="text-xs sm:text-sm font-black text-neutral-900 dark:text-neutral-100">
                   Guest Total: <span className="text-[#C59A2F]">₹{totalGuestPrice}</span> / person
                 </div>
               </div>
             )}
 
             {/* Best Season to Visit */}
-            <div className="mt-5">
+            <div className="mt-4 sm:mt-5">
               <label className="text-xs font-black uppercase tracking-wider text-[#C59A2F] block mb-2">
                 Best Season to Visit *
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {ALL_MONTHS.map((m) => {
                   const isSelected = selectedMonths.includes(m);
                   return (
@@ -1069,7 +1074,7 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
       {/* ================= STEP 3: RULES & AMENITIES ================= */}
       {currentStep === 3 && (
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           <FormSection title="Host Rules *">
             <p className="text-xs text-neutral-400 mb-3 font-semibold">
               Set clear rules for your guests (e.g. Carry valid ID, No smoking).
@@ -1081,28 +1086,28 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                 onChange={(e) => setCustomRule(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCustomRule())}
                 placeholder="Type one policy sentence..."
-                className="flex-1 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:border-[#C59A2F] outline-none"
+                className="flex-1 min-w-0 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 sm:px-4 py-2 sm:py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:border-[#C59A2F] outline-none"
               />
               <button
                 type="button"
                 onClick={addCustomRule}
-                className="px-5 py-2.5 rounded-xl bg-[#C59A2F] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#A67F26] transition cursor-pointer"
+                className="px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-[#C59A2F] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#A67F26] transition cursor-pointer shrink-0"
               >
-                Add Rule
+                Add
               </button>
             </div>
 
-            <div className="mt-4 space-y-2">
+            <div className="mt-3 space-y-2">
               {privacyPolicies.map((rule, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700 text-xs font-medium text-neutral-800 dark:text-neutral-200"
                 >
-                  <span>{rule}</span>
+                  <span className="pr-2">{rule}</span>
                   <button
                     type="button"
                     onClick={() => setPrivacyPolicies((p) => p.filter((_, i) => i !== idx))}
-                    className="text-neutral-400 hover:text-red-500 transition cursor-pointer"
+                    className="text-neutral-400 hover:text-red-500 transition cursor-pointer shrink-0"
                   >
                     <FiTrash2 size={13} />
                   </button>
@@ -1132,9 +1137,9 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
 
       {/* ================= STEP 4: MEDIA ================= */}
       {currentStep === 4 && (
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           <FormSection title="Media">
-            <label className="rounded-2xl p-8 border-2 border-dashed border-neutral-300 dark:border-neutral-700 hover:border-[#C59A2F] bg-neutral-50/50 dark:bg-neutral-800/30 transition flex flex-col items-center justify-center text-center cursor-pointer">
+            <label className="rounded-2xl p-5 sm:p-8 border-2 border-dashed border-neutral-300 dark:border-neutral-700 hover:border-[#C59A2F] bg-neutral-50/50 dark:bg-neutral-800/30 transition flex flex-col items-center justify-center text-center cursor-pointer">
               <input
                 type="file"
                 multiple
@@ -1142,20 +1147,20 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
                 onChange={handleFileChange}
                 className="hidden"
               />
-              <div className="w-12 h-12 rounded-full bg-amber-50 dark:bg-neutral-800 text-[#C59A2F] flex items-center justify-center mb-3">
-                <FiUpload size={22} />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-amber-50 dark:bg-neutral-800 text-[#C59A2F] flex items-center justify-center mb-2 sm:mb-3">
+                <FiUpload size={20} />
               </div>
-              <h4 className="font-bold text-sm text-neutral-800 dark:text-neutral-200">
+              <h4 className="font-bold text-xs sm:text-sm text-neutral-800 dark:text-neutral-200">
                 Click or Drag photos here
               </h4>
-              <p className="text-xs text-neutral-400 mt-1">
+              <p className="text-[11px] sm:text-xs text-neutral-400 mt-1">
                 Upload up to 5 photos or 1 video max. High-resolution landscape photos recommended.
               </p>
             </label>
             <ErrorMsg error={errors.media} />
 
             {/* Media previews */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mt-4">
               {existingPhotos.map((p, idx) => (
                 <div key={`exist_${idx}`} className="relative aspect-video rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 group">
                   <img src={p.url} alt="Photo" className="w-full h-full object-cover" />
@@ -1204,12 +1209,12 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
       )}
 
       {/* Navigation Buttons */}
-      <div className="flex items-center justify-between pt-4 border-t border-neutral-200/80 dark:border-neutral-800">
+      <div className="flex items-center justify-between pt-4 border-t border-neutral-200/80 dark:border-neutral-800 gap-2">
         <button
           type="button"
           onClick={handlePrev}
           disabled={currentStep === 1 || loading}
-          className="flex items-center gap-2 px-6 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-xs font-black uppercase tracking-wider disabled:opacity-30 transition cursor-pointer"
+          className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-xs font-black uppercase tracking-wider disabled:opacity-30 transition cursor-pointer shrink-0"
         >
           <FiArrowLeft /> Back
         </button>
@@ -1218,15 +1223,15 @@ export function HostServiceForm({ editId }: { editId?: string | null }) {
           <button
             type="button"
             onClick={handleNext}
-            className="flex items-center gap-2 px-7 py-3 rounded-2xl bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-md cursor-pointer"
+            className="flex items-center gap-1.5 sm:gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-md cursor-pointer shrink-0"
           >
-            Next Step <FiArrowRight />
+            Next <span className="hidden sm:inline">Step</span> <FiArrowRight />
           </button>
         ) : (
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-lg disabled:opacity-50 cursor-pointer"
+            className="flex items-center gap-1.5 sm:gap-2 px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-lg disabled:opacity-50 cursor-pointer shrink-0"
           >
             {loading ? "Publishing..." : editId ? "Update Experience" : "Publish Experience"}
           </button>

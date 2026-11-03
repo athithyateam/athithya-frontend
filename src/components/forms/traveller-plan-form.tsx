@@ -154,60 +154,60 @@ export function TravellerPlanForm({ editId }: { editId?: string | null }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
       <FormSection title="Basic Details">
         <div className="space-y-3">
           <input
             value={planName}
             onChange={(e) => setPlanName(e.target.value)}
             placeholder="Plan name (optional)"
-            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
           />
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Your invitation title"
-            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm font-medium"
+            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm font-medium"
           />
           <input
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
             placeholder="e.g. Kedarnath"
-            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
           />
           <textarea
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value.slice(0, 250))}
             placeholder="Describe the plan"
-            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
           />
         </div>
       </FormSection>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 space-y-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-5">
           <FormSection title="Location, Duration & Pricing">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
               <input
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="City"
-                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
               />
               <input
                 value={stateField}
                 readOnly
-                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-3 py-2 text-sm"
+                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-3.5 py-2.5 text-sm"
               />
               <input
                 value={country}
                 readOnly
-                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-3 py-2 text-sm"
+                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-3.5 py-2.5 text-sm"
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-3 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
               <div>
                 <label className="text-[11px] text-neutral-500 block mb-1">
                   Days
@@ -217,7 +217,7 @@ export function TravellerPlanForm({ editId }: { editId?: string | null }) {
                   min={1}
                   value={days}
                   onChange={(e) => setDays(Number(e.target.value))}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
                 />
               </div>
               <div>
@@ -229,7 +229,7 @@ export function TravellerPlanForm({ editId }: { editId?: string | null }) {
                   min={0}
                   value={nights}
                   onChange={(e) => setNights(Number(e.target.value))}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
                 />
               </div>
               <div>
@@ -241,31 +241,31 @@ export function TravellerPlanForm({ editId }: { editId?: string | null }) {
                   min={1}
                   value={maxPeople}
                   onChange={(e) => setMaxPeople(Number(e.target.value))}
-                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input
                 type="number"
                 value={pricePerPerson}
                 onChange={(e) => setPricePerPerson(e.target.value)}
                 placeholder="Price per person (₹)"
-                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
               />
               <input
                 type="number"
                 value={priceTotal}
                 onChange={(e) => setPriceTotal(e.target.value)}
                 placeholder="Total price (optional)"
-                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+                className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3.5 py-2.5 text-sm"
               />
             </div>
           </FormSection>
         </div>
 
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           <FormSection title="Photos">
             <label className="block rounded-xl p-4 text-center cursor-pointer border-dashed border-2 border-neutral-300 dark:border-neutral-700 hover:border-[#C59A2F]">
               <Upload className="mx-auto mb-1 text-[#C59A2F]" size={18} />

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, MessageSquare, User } from "lucide-react";
 import { routes } from "@/config/navigation";
+import { useChatStore } from "@/stores/chat-store";
 
 const navItems = [
   { name: "Home", href: routes.home, icon: Compass },
@@ -14,6 +15,12 @@ const navItems = [
 
 function MobileFooterContent() {
   const pathname = usePathname();
+  const { activeConversation } = useChatStore();
+
+  // Hide mobile footer when chatting inside an active thread
+  if (pathname?.startsWith("/chat") && activeConversation) {
+    return null;
+  }
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";

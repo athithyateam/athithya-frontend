@@ -13,8 +13,8 @@ export function FormSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white p-6 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs w-full dark:bg-neutral-900 transition-colors">
-      <h3 className="text-sm font-semibold mb-4" style={{ color: FORM_GOLD }}>
+    <div className="bg-white p-3.5 sm:p-6 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs w-full dark:bg-neutral-900 transition-colors">
+      <h3 className="text-xs sm:text-sm font-semibold mb-3 sm:mb-4" style={{ color: FORM_GOLD }}>
         {title}
       </h3>
       {children}
@@ -61,29 +61,29 @@ export function InlineAdder({
 
   return (
     <div>
-      <div className="flex flex-wrap sm:flex-nowrap gap-2 mb-3">
+      <div className="flex gap-2 mb-3">
         <input
           ref={ref}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), commit())}
           placeholder={placeholder}
-          className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm flex-1 min-w-[120px] outline-none focus:border-[#C59A2F]"
+          className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm flex-1 min-w-0 outline-none focus:border-[#C59A2F]"
         />
         <button
           type="button"
           onClick={commit}
-          className="bg-[#C59A2F] text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap cursor-pointer"
+          className="bg-[#C59A2F] text-white px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap cursor-pointer shrink-0"
         >
           Add
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {values.map((v) => (
           <span
             key={v}
-            className="px-3 py-1 rounded-full border flex items-center gap-2 text-sm bg-[#faf7f0] dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+            className="px-2.5 sm:px-3 py-1 rounded-full border flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm bg-[#faf7f0] dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
           >
             <span className="font-medium">{v}</span>
             <button
@@ -91,7 +91,7 @@ export function InlineAdder({
               onClick={() => onRemove(v)}
               className="p-0.5 cursor-pointer text-neutral-400 hover:text-red-500"
             >
-              <X size={14} />
+              <X size={13} />
             </button>
           </span>
         ))}
@@ -137,14 +137,14 @@ export function CategoryPills({
 }) {
   return (
     <div>
-      <div className="flex flex-wrap gap-2 mb-3">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3">
         {values.length === 0 && (
           <span className="text-xs text-neutral-400">No categories selected</span>
         )}
         {values.map((v) => (
           <span
             key={v}
-            className="px-3 py-1 rounded-full border flex items-center gap-2 text-xs font-bold bg-[#faf7f0] dark:bg-neutral-800 text-[#C59A2F] border-[#C59A2F]/40"
+            className="px-2.5 sm:px-3 py-1 rounded-full border flex items-center gap-1.5 text-xs font-bold bg-[#faf7f0] dark:bg-neutral-800 text-[#C59A2F] border-[#C59A2F]/40"
           >
             <span>{v}</span>
             <button
@@ -157,13 +157,13 @@ export function CategoryPills({
           </span>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {CATEGORY_OPTIONS.filter((o) => !values.includes(o)).map((o) => (
           <button
             key={o}
             type="button"
             onClick={() => onAdd(o)}
-            className="px-3 py-1 rounded-full border border-neutral-200 dark:border-neutral-700 text-xs text-neutral-700 dark:text-neutral-300 hover:bg-[#fbf6ea] dark:hover:bg-neutral-800 cursor-pointer"
+            className="px-2.5 sm:px-3 py-1 rounded-full border border-neutral-200 dark:border-neutral-700 text-xs text-neutral-700 dark:text-neutral-300 hover:bg-[#fbf6ea] dark:hover:bg-neutral-800 cursor-pointer"
           >
             + {o}
           </button>
@@ -172,4 +172,3 @@ export function CategoryPills({
     </div>
   );
 }
-
