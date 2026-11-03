@@ -69,10 +69,9 @@ export const ENDPOINTS = {
     limit?: number;
     page?: number;
   }) => {
-    let url = `/api/experiences/nearby/treks?limit=${limit}&page=${page}`;
-    if (latitude !== undefined && latitude !== null) url += `&latitude=${latitude}`;
-    if (longitude !== undefined && longitude !== null) url += `&longitude=${longitude}`;
-    return url;
+    const lat = latitude !== undefined && latitude !== null ? latitude : 30.3165;
+    const lng = longitude !== undefined && longitude !== null ? longitude : 78.0322;
+    return `/api/experiences/nearby/treks?limit=${limit}&page=${page}&latitude=${lat}&longitude=${lng}`;
   },
   GET_TOPRATED_TREKS: "/api/experiences/top-rated/treks",
   GET_CATEGORY_ACTIVITY: "/api/experiences/categories/activity",
