@@ -22,7 +22,7 @@ import { apiClient } from "@/lib/api/axios-instance";
 import { ENDPOINTS } from "@/lib/api/endpoints";
 import { submitReview } from "@/lib/api/bookings-api";
 import { deleteAccountApi } from "@/lib/api/users-api";
-import { getMyExperiencesApi, getUserExperiencesApi } from "@/lib/api/posts-api";
+import { getMyExperiencesApi, getUserExperiencesApi } from "@/lib/api/experiences-api";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
 import { useChatStore } from "@/stores/chat-store";

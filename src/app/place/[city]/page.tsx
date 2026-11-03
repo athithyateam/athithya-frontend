@@ -16,7 +16,6 @@ const TABS = [
   { key: "photos", label: "Photos" },
   { key: "plans", label: "Plans" },
   { key: "map", label: "Map" },
-  { key: "itineraries", label: "Itineraries" },
   { key: "experiences", label: "Experiences" },
 ];
 
@@ -50,8 +49,7 @@ function SinglePlaceContent() {
 
   if (!place) return <div className="p-10 text-center">Location not found</div>;
 
-  const allItineraries = localExperiences.filter((exp) => exp.postType === "plan" || exp.postType === "itinerary");
-  const allExperiences = localExperiences.filter((exp) => exp.postType !== "plan" && exp.postType !== "itinerary");
+  const allExperiences = localExperiences;
 
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col font-sans">
@@ -149,21 +147,21 @@ function SinglePlaceContent() {
                   </motion.div>
                 )}
 
-                {(active === "itineraries" || active === "experiences") && (
-                  <motion.div key={active} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl p-6 border border-neutral-200 dark:border-neutral-800 text-left">
-                    <h2 className="text-2xl font-bold mb-6">{active === "itineraries" ? `Itineraries in ${place.name}` : `Experiences in ${place.name}`}</h2>
+                {active === "experiences" && (
+                  <motion.div key="experiences" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl p-6 border border-neutral-200 dark:border-neutral-800 text-left">
+                    <h2 className="text-2xl font-bold mb-6">{`Experiences in ${place.name}`}</h2>
                     {loadingLocal ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {[1, 2, 3, 4].map((i) => <div key={i} className="h-72 bg-neutral-100 dark:bg-neutral-800 animate-pulse rounded-2xl" />)}
                       </div>
-                    ) : (active === "itineraries" ? allItineraries : allExperiences).length > 0 ? (
+                    ) : allExperiences.length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {(active === "itineraries" ? allItineraries : allExperiences).map((exp) => (
+                        {allExperiences.map((exp) => (
                           <ExperienceCard key={exp._id || exp.id} data={exp} showBookmark className="w-full" />
                         ))}
                       </div>
                     ) : (
-                      <p className="text-neutral-500 py-8">No official {active} found for {place.name} in our database yet.</p>
+                      <p className="text-neutral-500 py-8">No official experiences found for {place.name} in our database yet.</p>
                     )}
                   </motion.div>
                 )}

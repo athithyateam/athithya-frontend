@@ -9,7 +9,7 @@ import {
   getNearbyTreks,
   getTopRatedHosts,
   getCategoryActivity,
-} from "@/lib/api/posts-api";
+} from "@/lib/api/experiences-api";
 import { getLatestReviews } from "@/lib/api/bookings-api";
 
 interface ExploreState {

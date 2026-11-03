@@ -22,7 +22,7 @@ import { FaStar } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useFeedbackStore } from "@/stores/feedback-store";
 import { useAuthStore } from "@/stores/auth-store";
-import { deleteService, requestHideService } from "@/lib/api/posts-api";
+import { deleteExperience, requestHideExperience } from "@/lib/api/experiences-api";
 import { apiClient } from "@/lib/api/axios-instance";
 import { ExperienceCard } from "@/components/cards/experience-card";
 import { GOLD, type ProfileTheme } from "./profile-shared";
@@ -170,7 +170,7 @@ export function HostExperienceDataTable({
     try {
       const results = await Promise.allSettled(
         hideModalData.ids.map((id) =>
-          requestHideService(
+          requestHideExperience(
             id,
             hideModalData.action === "unhide" ? "Unhide request" : hideReasonText.trim(),
             hideModalData.action === "unhide" ? "request_unhide" : "request_hide"
@@ -211,7 +211,7 @@ export function HostExperienceDataTable({
       async () => {
         setDeletingId(id);
         try {
-          const res = await deleteService(id);
+          const res = await deleteExperience(id);
           if (res?.success) {
             showToast("Deletion request submitted for admin review", "success");
             onRefresh?.();
@@ -239,7 +239,7 @@ export function HostExperienceDataTable({
         setIsBulkDeleting(true);
         try {
           const results = await Promise.allSettled(
-            selectedIds.map((id) => deleteService(id))
+            selectedIds.map((id) => deleteExperience(id))
           );
 
           const successfulCount = results.filter(

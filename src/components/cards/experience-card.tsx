@@ -6,7 +6,7 @@ import { Bookmark, Tag, MapPin, Edit, Trash2, Calendar } from "lucide-react";
 import { extractExperienceCardMeta } from "@/lib/experience-helpers";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
-import { deletePost, deleteService, deleteItinerary, savePostApi, unsavePostApi, saveItineraryApi, unsaveItineraryApi } from "@/lib/api/posts-api";
+import { deleteExperience, saveExperienceApi, unsaveExperienceApi } from "@/lib/api/experiences-api";
 import { ConfirmModal, DiscountInfoModal } from "@/components/ui/modal";
 import { ProgressiveImage } from "@/components/ui/progressive-image";
 
@@ -54,13 +54,12 @@ export const ExperienceCard = memo(function ExperienceCard({
     if (!user) return openAuthModal("login");
     if (user.role === "host") return showToast("You can't save another host experience, if you are already a host.", "error");
     try {
-      const isPlan = meta.postType === "plan" || meta.postType === "itinerary";
       if (!isSaved) {
-        await (isPlan ? saveItineraryApi(meta.id) : savePostApi(meta.id));
+        await saveExperienceApi(meta.id);
         setIsSaved(true);
         showToast("Saved to your profile!", "success");
       } else {
-        await (isPlan ? unsaveItineraryApi(meta.id) : unsavePostApi(meta.id));
+        await unsaveExperienceApi(meta.id);
         setIsSaved(false);
         showToast("Removed from saved", "success");
         onUnsave?.(meta.id);
@@ -72,7 +71,7 @@ export const ExperienceCard = memo(function ExperienceCard({
 
   const performDelete = async () => {
     try {
-      const res = meta.postType === "service" ? await deleteService(meta.id) : meta.postType === "plan" || meta.postType === "itinerary" ? await deleteItinerary(meta.id) : await deletePost(meta.id);
+      const res = await deleteExperience(meta.id);
       if (res?.success) {
         showToast(res?.message || "Experience deleted successfully", "success");
         onDeleteSuccess?.();
@@ -84,7 +83,7 @@ export const ExperienceCard = memo(function ExperienceCard({
 
   return (
     <div
-      onClick={() => router.push(`/post/${meta.id}?type=${meta.postType}`)}
+      onClick={() => router.push(`/post/${meta.id}`)}
       className={`snap-start cursor-pointer group block h-full ${className || (compact ? "min-w-[160px] max-w-[160px]" : "home-card-size")}`}
     >
       <div
@@ -111,7 +110,7 @@ export const ExperienceCard = memo(function ExperienceCard({
             {meta.isNew && <span className="px-2 py-0.5 rounded-md bg-[#C59A2F] text-white text-[9px] md:text-[10px] font-black uppercase tracking-wider shadow-md border border-white dark:border-neutral-950">New</span>}
             {showActions && !data?.deleteRequested && (
               <div className="flex gap-1.5">
-                <button onClick={(e) => { e.stopPropagation(); router.push(`/post?edit=${meta.id}&type=${meta.postType}`); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center"><Edit size={13} /></button>
+                <button onClick={(e) => { e.stopPropagation(); router.push(`/post?edit=${meta.id}`); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center"><Edit size={13} /></button>
                 <button onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center"><Trash2 size={13} /></button>
               </div>
             )}

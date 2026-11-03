@@ -8,7 +8,7 @@ import {
   toggleLikeCommunityPostApi,
   deleteCommunityPostApi,
 } from "@/lib/api/users-api";
-import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/posts-api";
+import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/experiences-api";
 import { useFeedbackStore } from "@/stores/feedback-store";
 
 interface CommunityPostsTabProps {
