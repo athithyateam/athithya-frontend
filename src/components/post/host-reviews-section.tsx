@@ -12,23 +12,54 @@ import { getOptimizedImage } from "@/lib/image-helper";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
 
+interface ReviewItem {
+  _id?: string;
+  id?: string;
+  rating?: number;
+  comment?: string;
+  createdAt?: string;
+  reviewer?: {
+    firstname?: string;
+    lastname?: string;
+    avatar?: { url?: string };
+  };
+  [key: string]: unknown;
+}
+
+interface HostReviewData {
+  success?: boolean;
+  reviews?: ReviewItem[];
+  averageRating?: number;
+  totalRatings?: number;
+  total?: number;
+  [key: string]: unknown;
+}
+
 interface HostReviewsSectionProps {
-  host: any;
+  host: Record<string, unknown> | null | undefined;
   hostId?: string;
   postId?: string;
+  initialReviewsData?: HostReviewData | null;
 }
 
 export function HostReviewsSection({
   host,
   hostId,
   postId,
+  initialReviewsData,
 }: HostReviewsSectionProps) {
   const router = useRouter();
   const { user: currentUser } = useAuthStore();
   const { showToast } = useFeedbackStore();
 
-  const [loading, setLoading] = useState(false);
-  const [hostReviewsData, setHostReviewsData] = useState<any>(null);
+  const actualHostId = (hostId || (host?._id as string) || (host?.id as string)) || "";
+
+  const [loading, setLoading] = useState(
+    Boolean(!initialReviewsData && actualHostId)
+  );
+  const [hostReviewsData, setHostReviewsData] = useState<HostReviewData | null>(
+    initialReviewsData || null
+  );
   const [displayCount, setDisplayCount] = useState(6);
   const [selectedRatingFilter, setSelectedRatingFilter] = useState("all");
 
@@ -36,8 +67,6 @@ export function HostReviewsSection({
   const [ratingInput, setRatingInput] = useState(5);
   const [commentInput, setCommentInput] = useState("");
   const [submittingReview, setSubmittingReview] = useState(false);
-
-  const actualHostId = hostId || host?._id || host?.id;
 
   const fetchReviews = async () => {
     if (!actualHostId) return;
@@ -53,18 +82,33 @@ export function HostReviewsSection({
   };
 
   useEffect(() => {
-    fetchReviews();
-  }, [actualHostId]);
+    if (initialReviewsData || !actualHostId) return;
+    let isMounted = true;
+    getHostReviewsApi(actualHostId)
+      .then((res) => {
+        if (isMounted && res?.success) {
+          setHostReviewsData(res);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [actualHostId, initialReviewsData]);
 
   useEffect(() => {
-    if (currentUser && actualHostId && currentUser.role !== "host") {
-      checkReviewEligibilityApi(actualHostId)
+    if (currentUser && postId && currentUser.role !== "host") {
+      checkReviewEligibilityApi(postId)
         .then((res) => {
           if (res?.canReview || res?.eligible) setCanReview(true);
         })
         .catch(() => {});
     }
-  }, [currentUser, actualHostId]);
+  }, [currentUser, postId]);
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,27 +126,34 @@ export function HostReviewsSection({
         setCanReview(false);
         fetchReviews();
       }
-    } catch (err: any) {
-      showToast(err?.message || "Failed to submit review", "error");
+    } catch (err: unknown) {
+      const msg =
+        err && typeof err === "object" && "message" in err
+          ? String((err as { message: unknown }).message)
+          : "Failed to submit review";
+      showToast(msg, "error");
     } finally {
       setSubmittingReview(false);
     }
   };
 
-  const hostName = host?.firstname
-    ? `${host.firstname} ${host.lastname || ""}`.trim()
-    : "Host";
-  const reviewsList: any[] = useMemo(
+  const firstname = typeof host?.firstname === "string" ? host.firstname : "";
+  const lastname = typeof host?.lastname === "string" ? host.lastname : "";
+  const hostName = firstname ? `${firstname} ${lastname}`.trim() : "Host";
+
+  const reviewsList: ReviewItem[] = useMemo(
     () => hostReviewsData?.reviews || [],
     [hostReviewsData]
   );
+
+  const hostRatingObj = host?.hostRating as Record<string, unknown> | undefined;
   const avgRating = Number(
-    hostReviewsData?.averageRating || host?.hostRating?.average || 0
+    hostReviewsData?.averageRating || hostRatingObj?.average || 0
   );
   const totalCount = Number(
     hostReviewsData?.totalRatings ||
       hostReviewsData?.total ||
-      host?.hostRating?.count ||
+      hostRatingObj?.count ||
       reviewsList.length ||
       0
   );
@@ -114,6 +165,13 @@ export function HostReviewsSection({
       (r) => Math.round(Number(r.rating) || 5) === targetStar
     );
   }, [reviewsList, selectedRatingFilter]);
+
+  const avatarUrl =
+    ((host?.avatar as Record<string, unknown>)?.url as string) || undefined;
+  const isHostVerified = Boolean(
+    host?.isHostVerified || host?.verifiedBadge
+  );
+  const bio = typeof host?.bio === "string" ? host.bio : undefined;
 
   if (!actualHostId) return null;
 
@@ -129,16 +187,16 @@ export function HostReviewsSection({
               >
                 <img
                   src={
-                    getOptimizedImage(host?.avatar?.url, {
+                    getOptimizedImage(avatarUrl, {
                       width: 140,
                       height: 140,
                     }) ||
-                    `https://ui-avatars.com/api/?name=${host?.firstname || "H"}&background=C59A2F&color=fff`
+                    `https://ui-avatars.com/api/?name=${firstname || "H"}&background=C59A2F&color=fff`
                   }
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-white dark:border-neutral-800 shadow-md ring-2 ring-[#C59A2F]/40"
                   alt={hostName}
                 />
-                {(host?.isHostVerified || host?.verifiedBadge) && (
+                {isHostVerified && (
                   <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#C59A2F] text-white flex items-center justify-center shadow-md border-2 border-white dark:border-neutral-900">
                     <CheckCircle2 size={12} />
                   </div>
@@ -194,9 +252,9 @@ export function HostReviewsSection({
               </div>
             </div>
 
-            {host?.bio && (
+            {bio && (
               <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed line-clamp-3">
-                &ldquo;{host.bio}&rdquo;
+                &ldquo;{bio}&rdquo;
               </p>
             )}
 
@@ -290,7 +348,7 @@ export function HostReviewsSection({
             </div>
           ) : filteredReviews.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredReviews.slice(0, displayCount).map((r: any) => {
+              {filteredReviews.slice(0, displayCount).map((r: ReviewItem) => {
                 const reviewerName = r.reviewer?.firstname
                   ? `${r.reviewer.firstname} ${r.reviewer.lastname || ""}`.trim()
                   : "Verified Guest";
