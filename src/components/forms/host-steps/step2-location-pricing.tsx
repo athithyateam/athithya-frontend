@@ -547,3 +547,4 @@ export function Step2LocationPricing({
     </div>
   );
 }
+

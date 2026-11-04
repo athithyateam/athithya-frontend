@@ -93,3 +93,4 @@ export function Step3RulesAmenities({
     </div>
   );
 }
+
