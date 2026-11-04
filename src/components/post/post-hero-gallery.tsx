@@ -154,7 +154,7 @@ export function PostHeroGallery({
         <button
           type="button"
           onClick={handleBack}
-          className="absolute top-4 left-4 z-10 w-10 h-10 rounded-full bg-white/90 dark:bg-neutral-900/90 text-neutral-800 dark:text-neutral-100 border border-neutral-200/70 dark:border-neutral-700 shadow-md backdrop-blur-md flex items-center justify-center hover:scale-105 transition-all cursor-pointer"
+          className="absolute top-4 left-4 z-10 w-10 h-10 rounded-full bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-700 shadow-md flex items-center justify-center transition-colors cursor-pointer"
           title="Go back"
         >
           <ArrowLeft size={15} />
@@ -164,7 +164,7 @@ export function PostHeroGallery({
           <button
             type="button"
             onClick={handleShare}
-            className="w-10 h-10 rounded-full bg-white/90 dark:bg-neutral-900/90 text-neutral-800 dark:text-neutral-100 border border-neutral-200/70 dark:border-neutral-700 shadow-md backdrop-blur-md flex items-center justify-center hover:scale-105 transition-all cursor-pointer"
+            className="w-10 h-10 rounded-full bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-700 shadow-md flex items-center justify-center transition-colors cursor-pointer"
             title="Share this experience"
           >
             <Share2 size={15} />
@@ -175,7 +175,7 @@ export function PostHeroGallery({
               e.stopPropagation();
               handleToggleSave();
             }}
-            className="w-10 h-10 rounded-full bg-white/90 dark:bg-neutral-900/90 text-neutral-800 dark:text-neutral-100 border border-neutral-200/70 dark:border-neutral-700 shadow-md backdrop-blur-md flex items-center justify-center hover:scale-105 transition-all cursor-pointer"
+            className="w-10 h-10 rounded-full bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-700 shadow-md flex items-center justify-center transition-colors cursor-pointer"
             title={isSaved ? "Saved to favorites" : "Save to favorites"}
           >
             <Bookmark
@@ -248,7 +248,7 @@ export function PostHeroGallery({
         <button
           type="button"
           onClick={() => openLightboxAt(0)}
-          className="absolute bottom-5 right-5 z-10 inline-flex items-center gap-2 px-4 py-2 bg-white/95 dark:bg-neutral-900/95 text-neutral-900 dark:text-neutral-100 rounded-xl text-xs font-black uppercase tracking-wider border border-neutral-200/80 dark:border-neutral-700 shadow-md backdrop-blur-md cursor-pointer"
+          className="absolute bottom-5 right-5 z-10 inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 rounded-xl text-xs font-black uppercase tracking-wider border border-neutral-200 dark:border-neutral-700 shadow-md cursor-pointer transition-colors"
         >
           <Grid size={14} className="text-[#C59A2F]" />
           <span>Show all {mediaList.length} photos</span>
@@ -265,7 +265,7 @@ export function PostHeroGallery({
         <button
           type="button"
           onClick={handleBack}
-          className="absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center cursor-pointer"
+          className="absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-black/75 text-white flex items-center justify-center cursor-pointer shadow-sm"
         >
           <ArrowLeft size={14} />
         </button>
@@ -273,14 +273,14 @@ export function PostHeroGallery({
           <button
             type="button"
             onClick={handleShare}
-            className="w-9 h-9 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center cursor-pointer"
+            className="w-9 h-9 rounded-full bg-black/75 text-white flex items-center justify-center cursor-pointer shadow-sm"
           >
             <Share2 size={14} />
           </button>
           <button
             type="button"
             onClick={handleToggleSave}
-            className="w-9 h-9 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center cursor-pointer"
+            className="w-9 h-9 rounded-full bg-black/75 text-white flex items-center justify-center cursor-pointer shadow-sm"
             title={isSaved ? "Saved to favorites" : "Save to favorites"}
           >
             <Bookmark size={14} className={isSaved ? "fill-[#C59A2F] text-[#C59A2F]" : ""} />
