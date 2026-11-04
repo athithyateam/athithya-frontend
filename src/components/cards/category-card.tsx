@@ -85,3 +85,4 @@ export function CategoryCard({ category, isNew = false }: CategoryCardProps) {
     </Link>
   );
 }
+
