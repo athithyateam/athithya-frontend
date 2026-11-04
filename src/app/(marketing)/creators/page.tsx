@@ -1,6 +1,19 @@
-"use client";
-
+import type { Metadata } from "next";
 import { Mail, Phone, Heart, ArrowRight, Check } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Inspire & Create with Athithya | Creator Community",
+  description:
+    "Join Athithya's travel creator community. Share your authentic stories, collaborate with local mountain hosts, and inspire meaningful travel experiences across Uttarakhand.",
+  alternates: { canonical: "https://athithya.in/creators" },
+  openGraph: {
+    title: "Inspire & Create with Athithya | Creator Community",
+    description:
+      "Join Athithya's travel creator community. Share your authentic stories, collaborate with local mountain hosts, and inspire meaningful travel experiences across Uttarakhand.",
+    url: "https://athithya.in/creators",
+    type: "website",
+  },
+};
 
 interface PolaroidProps {
   src: string;
@@ -37,7 +50,7 @@ function PolaroidCard({ src, caption, rotate = 0, className = "" }: PolaroidProp
 
 export default function CreatorsPage() {
   return (
-    <main className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300 pb-16 md:pb-24">
+    <div className="text-neutral-900 dark:text-neutral-100 transition-colors duration-300 pb-16 md:pb-24">
       <section className="pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 relative overflow-hidden text-center">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 dark:bg-neutral-800 text-xs font-bold text-[#C59A2F] border border-amber-200 uppercase tracking-wider mb-3 mx-auto">
@@ -54,7 +67,7 @@ export default function CreatorsPage() {
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-8 md:space-y-12">
         {/* Storytelling & Spotlight */}
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs ">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-5 order-2 lg:order-1 flex items-center justify-center gap-3 sm:gap-4 py-3 sm:py-6">
               <PolaroidCard
@@ -101,7 +114,7 @@ export default function CreatorsPage() {
         </section>
 
         {/* Philosophy */}
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs ">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 text-left space-y-4">
               <div className="flex items-center gap-3.5 mb-2">
@@ -144,7 +157,7 @@ export default function CreatorsPage() {
         </section>
 
         {/* Community Banner */}
-        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs  text-center">
+        <section className="rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs text-center">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 mb-2">
             Join our Growing Creator Community
           </h3>
@@ -174,6 +187,6 @@ export default function CreatorsPage() {
           </a>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
