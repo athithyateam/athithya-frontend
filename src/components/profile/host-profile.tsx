@@ -196,12 +196,11 @@ export function HostProfile({
       if (isOwner) {
         res = await getMyExperiencesApi().catch(() => null);
       }
-      if (!res?.success || (!res?.experiences && !res?.posts && !res?.data)) {
+      if (!res?.success || (!res?.experiences && !res?.data)) {
         res = await getUserExperiencesApi(targetId).catch(() => null);
       }
       const list =
         res?.experiences ||
-        res?.posts ||
         res?.data ||
         (Array.isArray(res) ? res : []);
       if (Array.isArray(list)) {

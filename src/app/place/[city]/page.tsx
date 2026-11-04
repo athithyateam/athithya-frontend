@@ -35,7 +35,7 @@ function SinglePlaceContent() {
       setLoadingLocal(true);
       try {
         const res = await searchAll(city, "all", 100);
-        const list = res?.data?.results || res?.data?.posts || res?.posts || [];
+        const list = res?.data?.experiences || res?.data?.results || res?.experiences || [];
         if (mounted) setLocalExperiences(list);
       } catch {
         if (mounted) setLocalExperiences([]);

@@ -44,9 +44,9 @@ export const ExperienceCard = memo(function ExperienceCard({
   const meta = useMemo(() => extractExperienceCardMeta(data, compact, defaultType), [data, compact, defaultType]);
 
   useEffect(() => {
-    const savedPosts = (user as any)?.savedPosts;
-    if (!Array.isArray(savedPosts)) return setIsSaved(false);
-    setIsSaved(savedPosts.some((item: any) => String(typeof item === "object" ? item._id || item.id : item) === String(meta.id)));
+    const saved = user?.savedExperiences || (user as any)?.savedPosts;
+    if (!Array.isArray(saved)) return setIsSaved(false);
+    setIsSaved(saved.some((item: any) => String(typeof item === "object" ? item._id || item.id : item) === String(meta.id)));
   }, [user, meta.id]);
 
   const handleSave = async (e: React.MouseEvent) => {

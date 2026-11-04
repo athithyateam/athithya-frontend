@@ -35,7 +35,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
         getAdminPendingVerificationsApi(),
       ]);
       setPendingPosts(
-        postsRes?.experiences || postsRes?.posts || postsRes?.data?.posts || (Array.isArray(postsRes) ? postsRes : [])
+        postsRes?.experiences || postsRes?.data?.experiences || (Array.isArray(postsRes) ? postsRes : [])
       );
       setPendingKyc(
         kycRes?.data || kycRes?.verifications || kycRes?.users || kycRes?.data?.verifications || (Array.isArray(kycRes) ? kycRes : [])
