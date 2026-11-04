@@ -13,6 +13,7 @@ export interface UserSession {
   avatar?: string | { url?: string; public_id?: string };
   profilePic?: string;
   hostStatus?: "pending_verification" | "pending_approval" | "approved" | "rejected";
+  savedExperiences?: any[];
   savedPosts?: any[];
   verifyBadge?: { enabled?: boolean };
   profileTheme?: string;

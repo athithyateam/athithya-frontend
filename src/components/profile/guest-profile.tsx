@@ -209,9 +209,9 @@ export function GuestProfile({
       (async () => {
         setLoadingSaved(true);
         try {
-          const res = await apiClient.get(ENDPOINTS.GET_SAVED_POSTS);
+          const res = await apiClient.get(ENDPOINTS.GET_SAVED_EXPERIENCES);
           if (res.data?.success) {
-            setSavedPosts(res.data.posts || res.data.savedPosts || []);
+            setSavedPosts(res.data.experiences || res.data.savedExperiences || res.data.posts || res.data.savedPosts || []);
           }
         } catch {
         } finally {

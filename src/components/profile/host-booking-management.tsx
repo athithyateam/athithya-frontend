@@ -129,10 +129,11 @@ const formatBookingTimeline = (b: any) => {
     })}`;
 
   let end = b.endDate ? new Date(b.endDate) : null;
-  if (!end && b.post?.duration) {
+  const exp = b.experience || b.post;
+  if (!end && exp?.duration) {
     end = new Date(start.getTime());
-    const dur = b.post.duration;
-    const period = b.post.price?.period;
+    const dur = exp.duration;
+    const period = exp.price?.period;
     const durMinutes = Number(dur?.minutes || 0);
     const durHours = Number(
       dur?.hours || (period === "hour" ? dur?.hours || dur?.days || 1 : 0)
@@ -337,12 +338,12 @@ function IndividualBookingCard({
                 className="font-black text-xs uppercase tracking-widest truncate"
                 style={{ color: GOLD }}
               >
-                {b.postTitle}
+                {b.experience?.title || b.postTitle}
               </h6>
               <button
                 type="button"
                 onClick={() =>
-                  window.open(`/post/${b.post?._id || b.post}`, "_blank")
+                  window.open(`/post/${b.experience?._id || b.experience || b.post?._id || b.post}`, "_blank")
                 }
                 className="shrink-0 opacity-30 hover:opacity-80 transition-opacity cursor-pointer"
               >
@@ -669,7 +670,7 @@ export function HostBookingManagement({
   const groupedBookings = useMemo(() => {
     const groups: Record<string, any> = {};
     bookings.forEach((b) => {
-      const experienceId = b.post?._id || b.post;
+      const experienceId = b.experience?._id || b.experience || b.post?._id || b.post;
       let groupKey: string;
       let displayVal: any;
       if (mostRequestedGroupBy === "price") {
@@ -686,7 +687,7 @@ export function HostBookingManagement({
       if (!groups[groupKey]) {
         groups[groupKey] = {
           key: groupKey,
-          experienceTitle: b.postTitle,
+          experienceTitle: b.experience?.title || b.postTitle,
           experienceId,
           displayValue: displayVal,
           count: 0,
