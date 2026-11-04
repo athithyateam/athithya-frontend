@@ -1,414 +1,248 @@
-"use client";
-
-import React, { useState, useEffect, use, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import React from "react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { MapPin } from "lucide-react";
 import {
-  MapPin,
-  ChevronDown,
-  FileText,
-  Shield,
-  CheckCircle2,
-  Star,
-} from "lucide-react";
-import {
-  getExperience,
-  listExperiences,
-  saveExperienceApi,
-  unsaveExperienceApi,
-} from "@/lib/api/experiences-api";
-import { useAuthStore } from "@/stores/auth-store";
-import { useFeedbackStore } from "@/stores/feedback-store";
-import { Navbar } from "@/components/navigation/navbar";
-import { Footer } from "@/components/navigation/footer";
-import { MobileFooter } from "@/components/navigation/mobile-footer";
+  getCachedExperience,
+  getCachedHostReviews,
+} from "@/lib/api/experience-detail-data";
 import { PostHeroGallery } from "@/components/post/post-hero-gallery";
 import { BookingWidget } from "@/components/post/booking-widget";
 import { HostReviewsSection } from "@/components/post/host-reviews-section";
 import { MapViewer } from "@/components/ui/map-viewer";
 import { ExperienceCard } from "@/components/cards/experience-card";
+import { ExperienceNavTabs } from "@/components/post/experience-nav-tabs";
+import { ExperienceDescription } from "@/components/post/experience-description";
+import { ExperienceJsonLd } from "@/components/post/experience-json-ld";
+import { ChecklistSection } from "@/components/post/checklist-section";
 
-function PostDetailContent({
+export const instant = false;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const data = await getCachedExperience(id);
+  const post = data?.experience;
+
+  if (!post) {
+    return {
+      title: "Experience Not Found | Athithya",
+      description: "The requested experience could not be found on Athithya.",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const titleStr = typeof post.title === "string" ? post.title : "Experience";
+  const title = `${titleStr} | Athithya`;
+  const descStr =
+    typeof post.subtitle === "string"
+      ? post.subtitle
+      : typeof post.description === "string"
+      ? post.description.slice(0, 160)
+      : `Book ${titleStr} with local hosts on Athithya.`;
+
+  const rawPhotos = Array.isArray(post.photos) ? post.photos : [];
+  const images = rawPhotos
+    .map((p: unknown) => {
+      if (typeof p === "string") return p;
+      if (p && typeof p === "object" && "url" in p) {
+        return (p as { url?: string }).url;
+      }
+      return null;
+    })
+    .filter((url): url is string => Boolean(url));
+
+  const primaryImage = images[0] || "https://athithya.in/og-image.jpg";
+
+  return {
+    title,
+    description: descStr,
+    alternates: {
+      canonical: `/post/${id}`,
+    },
+    openGraph: {
+      title,
+      description: descStr,
+      url: `https://athithya.in/post/${id}`,
+      siteName: "Athithya",
+      images: images.slice(0, 4).map((url: string) => ({
+        url,
+        alt: titleStr,
+      })),
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: descStr,
+      images: [primaryImage],
+    },
+  };
+}
+
+export default async function PostDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id: postId } = use(params);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { user: currentUser, fetchUser, openAuthModal } = useAuthStore();
-  const { showToast } = useFeedbackStore();
+  const { id: postId } = await params;
+  const data = await getCachedExperience(postId);
+  const post = data?.experience;
+  const similarExperiences = data?.similarExperiences || [];
 
-  const [post, setPost] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
-  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
-  const [activeNavTab, setActiveNavTab] = useState("overview");
-  const [relatedPosts, setRelatedPosts] = useState<any[]>([]);
-
-  useEffect(() => {
-    const savedList = currentUser?.savedExperiences || currentUser?.savedPosts;
-    if (savedList && Array.isArray(savedList)) {
-      const saved = savedList.some((item: any) => {
-        const idStr = typeof item === "object" ? item._id || item.id : item;
-        return String(idStr) === String(postId);
-      });
-      setIsSaved(saved);
-    } else {
-      setIsSaved(false);
-    }
-  }, [currentUser, postId]);
-
-  useEffect(() => {
-    let isMounted = true;
-    const loadPost = async () => {
-      setLoading(true);
-      try {
-        const res = await getExperience(postId);
-        const data = res?.experience || res?.data || res;
-
-        if (isMounted && data?._id) {
-          setPost(data);
-          if (res?.similarExperiences?.length) {
-            const list = res.similarExperiences.filter(
-              (p: any) => (p._id || p.id) !== postId
-            );
-            setRelatedPosts(list.slice(0, 4));
-          } else {
-            const cats = data.categories || [];
-            if (cats.length > 0) {
-              listExperiences({ categories: cats.join(","), limit: 8 })
-                .then((r: any) => {
-                  const list = (r?.experiences || r?.data || []).filter(
-                    (p: any) => (p._id || p.id) !== postId
-                  );
-                  if (isMounted) setRelatedPosts(list.slice(0, 4));
-                })
-                .catch(() => {});
-            }
-          }
-        } else if (isMounted) {
-          setError("Experience not found");
-        }
-      } catch {
-        if (isMounted) setError("Failed to load experience details");
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-    loadPost();
-    return () => {
-      isMounted = false;
-    };
-  }, [postId]);
-
-  const handleToggleSave = async () => {
-    if (!currentUser) {
-      openAuthModal("login");
-      return;
-    }
-    if (currentUser.role === "host") {
-      showToast(
-        "Hosts cannot engage with another host's experience. Only guests can.",
-        "error"
-      );
-      return;
-    }
-    try {
-      if (!isSaved) {
-        await saveExperienceApi(postId);
-        showToast("Experience saved to your profile!", "success");
-      } else {
-        await unsaveExperienceApi(postId);
-        showToast("Experience removed from saved", "success");
-      }
-      await fetchUser();
-    } catch {
-      showToast("Failed to save experience", "error");
-    }
-  };
-
-  const scrollToSection = (tabId: string) => {
-    setActiveNavTab(tabId);
-    const el = document.getElementById(`section-${tabId}`);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-neutral-950">
-        <div className="w-10 h-10 border-4 border-[#C59A2F]/20 border-t-[#C59A2F] rounded-full animate-spin" />
-      </div>
-    );
+  if (!post) {
+    notFound();
   }
 
-  if (error || !post) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-white dark:bg-neutral-950">
-        <h2 className="text-xl font-black uppercase mb-4">
-          {error || "Not Found"}
-        </h2>
-        <button
-          onClick={() => router.back()}
-          className="px-8 py-3 bg-neutral-900 text-white rounded-full font-black text-xs uppercase cursor-pointer"
-        >
-          Go Back
-        </button>
-      </div>
-    );
-  }
-
+  const locationObj = post.location as Record<string, unknown> | undefined;
   const locationText = [
-    post.location?.city,
-    post.location?.state,
-    post.location?.country,
+    locationObj?.city,
+    locationObj?.state,
+    locationObj?.country,
   ]
     .filter(Boolean)
     .join(", ");
 
-  const navTabs = [
-    { id: "overview", label: "Overview", icon: <FileText size={14} />, show: true },
-    {
-      id: "rules",
-      label: "Rules",
-      icon: <Shield size={14} />,
-      show: Boolean(post?.privacyPolicy?.length),
-    },
-    {
-      id: "amenities",
-      label: "Amenities",
-      icon: <CheckCircle2 size={14} />,
-      show: Boolean(post?.amenities?.length),
-    },
-    {
-      id: "location",
-      label: "Location",
-      icon: <MapPin size={14} />,
-      show: Boolean(post?.location?.coordinates?.coordinates),
-    },
-    { id: "reviews", label: "Reviews", icon: <Star size={14} />, show: true },
-  ].filter((t) => t.show);
+  const userObj = post.user as Record<string, unknown> | undefined;
+  const hostId = (userObj?._id || userObj?.id) as string | undefined;
+  const initialReviewsData = hostId ? await getCachedHostReviews(hostId) : null;
+
+  const titleStr = typeof post.title === "string" ? post.title : "Experience";
+  const descStr = typeof post.description === "string" ? post.description : "";
+  const longDescStr =
+    typeof post.longDescription === "string" ? post.longDescription : undefined;
+
+  const categories = Array.isArray(post.categories)
+    ? (post.categories as string[])
+    : [];
+  const postTypeStr =
+    typeof post.postType === "string" ? post.postType : "Experience";
+
+  const privacyPolicy = Array.isArray(post.privacyPolicy)
+    ? (post.privacyPolicy as string[])
+    : [];
+  const amenities = Array.isArray(post.amenities)
+    ? (post.amenities as string[])
+    : [];
+
+  const coordObj = locationObj?.coordinates as Record<string, unknown> | undefined;
+  const coordArray = Array.isArray(coordObj?.coordinates)
+    ? (coordObj.coordinates as number[])
+    : undefined;
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
-      <Navbar />
+    <>
+      <ExperienceJsonLd post={post} id={postId} />
+      <PostHeroGallery post={post} />
 
-      <main className="flex-1 max-w-[1320px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28 pb-16 space-y-6">
-        <PostHeroGallery
-          post={post}
-          onBack={() => router.back()}
-          isSaved={isSaved}
-          onToggleSave={handleToggleSave}
-        />
-
-        <div className="text-left space-y-3">
-          <div className="flex flex-wrap items-center gap-2">
-            {post.categories?.length > 0 ? (
-              post.categories.map((cat: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="bg-[#C59A2F]/10 text-[#C59A2F] border border-[#C59A2F]/20 px-3 py-1 rounded-full text-[10px] md:text-[11px] font-black uppercase tracking-wider"
-                >
-                  {cat}
-                </span>
-              ))
-            ) : (
-              <span className="bg-[#C59A2F]/10 text-[#C59A2F] border border-[#C59A2F]/20 px-3 py-1 rounded-full text-[10px] md:text-[11px] font-black uppercase tracking-wider">
-                {post.postType || "Experience"}
+      <header className="text-left space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
+          {categories.length > 0 ? (
+            categories.map((cat: string, idx: number) => (
+              <span
+                key={idx}
+                className="bg-[#C59A2F]/10 text-[#C59A2F] border border-[#C59A2F]/20 px-3 py-1 rounded-full text-[10px] md:text-[11px] font-black uppercase tracking-wider"
+              >
+                {cat}
               </span>
-            )}
-          </div>
-
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
-            {post.title}
-          </h1>
-
-          {locationText && (
-            <div className="flex items-center gap-1.5 text-xs md:text-sm font-semibold text-neutral-700 dark:text-neutral-300 pb-2">
-              <MapPin className="text-[#C59A2F] shrink-0" size={14} />
-              <span>{locationText}</span>
-            </div>
+            ))
+          ) : (
+            <span className="bg-[#C59A2F]/10 text-[#C59A2F] border border-[#C59A2F]/20 px-3 py-1 rounded-full text-[10px] md:text-[11px] font-black uppercase tracking-wider">
+              {postTypeStr}
+            </span>
           )}
         </div>
 
-        <div className="sticky top-16 md:top-20 z-20 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md py-2 border-b border-neutral-200/60 dark:border-neutral-800/80">
-          <div className="flex items-center overflow-x-auto bg-neutral-100/90 dark:bg-neutral-900 rounded-2xl p-1.5 border border-neutral-200/80 dark:border-neutral-800 gap-1">
-            {navTabs.map((tab) => {
-              const active = activeNavTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => scrollToSection(tab.id)}
-                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-all shrink-0 cursor-pointer z-10 ${
-                    active
-                      ? "text-white"
-                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900"
-                  }`}
-                >
-                  {active && (
-                    <motion.div
-                      layoutId="experienceTabIndicator"
-                      className="absolute inset-0 rounded-xl -z-10 bg-[#C59A2F]"
-                    />
-                  )}
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+          {titleStr}
+        </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 pt-4">
-          <div className="lg:col-span-7 xl:col-span-8 space-y-8 min-w-0">
-            <div id="section-overview" className="scroll-mt-32 space-y-4">
-              <h3 className="text-base md:text-xl font-black uppercase tracking-tight">
-                Overview
-              </h3>
-              <div className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base leading-relaxed whitespace-pre-wrap font-medium">
-                {post.description}
-              </div>
-
-              {post.longDescription && (
-                <div className="border border-neutral-200/80 dark:border-neutral-800 rounded-2xl overflow-hidden bg-neutral-50/50 dark:bg-neutral-900/40">
-                  <button
-                    type="button"
-                    onClick={() => setIsDescriptionOpen((p) => !p)}
-                    className="w-full p-4 md:p-5 flex items-center justify-between text-left cursor-pointer"
-                  >
-                    <span className="text-sm md:text-base font-black">
-                      Description
-                    </span>
-                    <ChevronDown
-                      className={`transition-transform ${
-                        isDescriptionOpen ? "rotate-180 text-[#C59A2F]" : ""
-                      }`}
-                    />
-                  </button>
-                  {isDescriptionOpen && (
-                    <div className="px-4 pb-5 md:px-5 pt-1 text-sm md:text-base leading-relaxed whitespace-pre-wrap border-t border-neutral-200/60 dark:border-neutral-800/60">
-                      {post.longDescription}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {post.privacyPolicy?.length > 0 && (
-              <div id="section-rules" className="scroll-mt-32">
-                <h3 className="text-base md:text-xl font-black uppercase tracking-tight mb-4">
-                  Rules
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {post.privacyPolicy.map((rule: string, i: number) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3.5 p-3.5 bg-neutral-50 dark:bg-neutral-900/60 rounded-2xl border border-neutral-100 dark:border-neutral-800"
-                    >
-                      <CheckCircle2
-                        size={14}
-                        className="text-[#C59A2F] shrink-0"
-                      />
-                      <span className="text-xs md:text-sm font-semibold">
-                        {rule}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {post.amenities?.length > 0 && (
-              <div id="section-amenities" className="scroll-mt-32">
-                <h3 className="text-base md:text-xl font-black uppercase tracking-tight mb-4">
-                  Amenities
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {post.amenities.map((amenity: string, i: number) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3.5 p-3.5 bg-neutral-50 dark:bg-neutral-900/60 rounded-2xl border border-neutral-100 dark:border-neutral-800"
-                    >
-                      <CheckCircle2
-                        size={14}
-                        className="text-emerald-500 shrink-0"
-                      />
-                      <span className="text-xs md:text-sm font-semibold">
-                        {amenity}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {post.location?.coordinates?.coordinates && (
-              <div id="section-location" className="scroll-mt-32 space-y-4">
-                <h3 className="text-base md:text-xl font-black uppercase tracking-tight">
-                  Pinned Location
-                </h3>
-                <div className="rounded-3xl overflow-hidden border border-neutral-200/80 dark:border-neutral-800">
-                  <MapViewer
-                    lat={post.location.coordinates.coordinates[1]}
-                    lng={post.location.coordinates.coordinates[0]}
-                    city={post.location.city}
-                    state={post.location.state}
-                    address={post.location.address}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="lg:col-span-5 xl:col-span-4 w-full">
-            <div className="lg:sticky lg:top-28 z-20">
-              <BookingWidget post={post} />
-            </div>
-          </div>
-        </div>
-
-        <HostReviewsSection
-          host={post?.user}
-          hostId={post?.user?._id || post?.user?.id}
-          postId={postId}
-        />
-
-        {relatedPosts.length > 0 && (
-          <div className="mt-16 pt-8 border-t border-neutral-100 dark:border-neutral-800">
-            <h3 className="text-xl font-black uppercase tracking-tight mb-6">
-              Similar <span className="text-[#C59A2F]">Experiences</span>
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-              {relatedPosts.map((item) => (
-                <ExperienceCard key={item._id || item.id} data={item} />
-              ))}
-            </div>
+        {locationText && (
+          <div className="flex items-center gap-1.5 text-xs md:text-sm font-semibold text-neutral-700 dark:text-neutral-300 pb-2">
+            <MapPin className="text-[#C59A2F] shrink-0" size={14} />
+            <span>{locationText}</span>
           </div>
         )}
-      </main>
+      </header>
 
-      <Footer />
-      <MobileFooter />
-    </div>
-  );
-}
+      <ExperienceNavTabs
+        hasRules={Boolean(privacyPolicy.length)}
+        hasAmenities={Boolean(amenities.length)}
+        hasLocation={Boolean(coordArray && coordArray.length >= 2)}
+        hasReviews={true}
+      />
 
-export default function PostDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen pt-28 text-center text-sm text-neutral-400">
-          Loading experience...
-        </div>
-      }
-    >
-      <PostDetailContent params={params} />
-    </Suspense>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 pt-4">
+        <article className="lg:col-span-7 xl:col-span-8 space-y-8 min-w-0">
+          <ExperienceDescription
+            description={descStr}
+            longDescription={longDescStr}
+          />
+
+          <ChecklistSection
+            id="section-rules"
+            title="Rules"
+            items={privacyPolicy}
+            iconColor="text-[#C59A2F]"
+          />
+
+          <ChecklistSection
+            id="section-amenities"
+            title="Amenities"
+            items={amenities}
+            iconColor="text-emerald-500"
+          />
+
+          {coordArray && coordArray.length >= 2 && (
+            <section id="section-location" className="scroll-mt-32 space-y-4">
+              <h3 className="text-base md:text-xl font-black uppercase tracking-tight">
+                Pinned Location
+              </h3>
+              <div className="rounded-3xl overflow-hidden border border-neutral-200/80 dark:border-neutral-800">
+                <MapViewer
+                  lat={coordArray[1]}
+                  lng={coordArray[0]}
+                  city={typeof locationObj?.city === "string" ? locationObj.city : undefined}
+                  state={typeof locationObj?.state === "string" ? locationObj.state : undefined}
+                  address={typeof locationObj?.address === "string" ? locationObj.address : undefined}
+                />
+              </div>
+            </section>
+          )}
+        </article>
+
+        <aside className="lg:col-span-5 xl:col-span-4 w-full">
+          <div className="lg:sticky lg:top-28 z-20">
+            <BookingWidget post={post} />
+          </div>
+        </aside>
+      </div>
+
+      <HostReviewsSection
+        host={userObj}
+        hostId={hostId}
+        postId={postId}
+        initialReviewsData={initialReviewsData}
+      />
+
+      {similarExperiences.length > 0 && (
+        <section className="mt-16 pt-8 border-t border-neutral-100 dark:border-neutral-800">
+          <h3 className="text-xl font-black uppercase tracking-tight mb-6">
+            Similar <span className="text-[#C59A2F]">Experiences</span>
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+            {similarExperiences.map((item: Record<string, unknown>) => (
+              <ExperienceCard
+                key={String(item._id || item.id)}
+                data={item}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+    </>
   );
 }
