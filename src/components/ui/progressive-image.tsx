@@ -82,9 +82,9 @@ export function ProgressiveImage({
         isAvatar ? "rounded-full shrink-0" : `w-full ${aspectRatio}`
       } bg-neutral-100 dark:bg-neutral-800 ${containerClassName}`}
     >
-      {/* Shimmer Placeholder while loading */}
+      {/* Placeholder while loading (static, zero CPU overhead) */}
       {!isLoaded && (
-        <div className="absolute inset-0 bg-neutral-200/70 dark:bg-neutral-800/80 animate-pulse pointer-events-none" />
+        <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-800 pointer-events-none" />
       )}
 
       {/* Real Image */}

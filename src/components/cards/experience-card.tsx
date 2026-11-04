@@ -87,7 +87,7 @@ export const ExperienceCard = memo(function ExperienceCard({
       className={`snap-start cursor-pointer group block h-full ${className || (compact ? "min-w-[160px] max-w-[160px]" : "home-card-size")}`}
     >
       <div
-        className="h-full flex flex-col bg-white dark:bg-neutral-900 rounded-2xl md:rounded-[1.5rem] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all duration-300 overflow-hidden profile-experience-card"
+        className="h-full flex flex-col bg-white dark:bg-neutral-900 rounded-2xl md:rounded-[1.5rem] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-shadow duration-200 overflow-hidden profile-experience-card"
         style={isThemed ? { background: "transparent", borderColor: "rgba(255, 255, 255, 0.16)" } : undefined}
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
@@ -98,42 +98,42 @@ export const ExperienceCard = memo(function ExperienceCard({
             cardIndex={cardIndex}
             priority={priority}
             aspectRatio="aspect-[4/3]"
-            className="group-hover:scale-105 transition-transform duration-500"
+            className="group-hover:opacity-95 transition-opacity duration-200"
             onLoad={onImageLoad}
           />
           {data?.discounts?.length > 0 && (
-            <div onClick={(e) => { e.stopPropagation(); setShowDiscountModal(true); }} className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-md bg-[#C59A2F] text-white text-[9px] md:text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer hover:bg-[#A67F26] shadow-md">
+            <div onClick={(e) => { e.stopPropagation(); setShowDiscountModal(true); }} className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-md bg-[#C59A2F] text-white text-[9px] md:text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer hover:bg-[#A67F26] shadow-sm">
               <Tag className="w-3.5 h-3.5 shrink-0" /><span>Discount</span>
             </div>
           )}
           <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
-            {meta.isNew && <span className="px-2 py-0.5 rounded-md bg-[#C59A2F] text-white text-[9px] md:text-[10px] font-black uppercase tracking-wider shadow-md border border-white dark:border-neutral-950">New</span>}
+            {meta.isNew && <span className="px-2 py-0.5 rounded-md bg-[#C59A2F] text-white text-[9px] md:text-[10px] font-black uppercase tracking-wider shadow-sm border border-white dark:border-neutral-950">New</span>}
             {showActions && !data?.deleteRequested && (
               <div className="flex gap-1.5">
-                <button onClick={(e) => { e.stopPropagation(); router.push(`/post?edit=${meta.id}`); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center"><Edit size={13} /></button>
-                <button onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center"><Trash2 size={13} /></button>
+                <button onClick={(e) => { e.stopPropagation(); router.push(`/post?edit=${meta.id}`); }} className="w-8 h-8 rounded-full bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-sm flex items-center justify-center"><Edit size={13} /></button>
+                <button onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }} className="w-8 h-8 rounded-full bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-sm flex items-center justify-center"><Trash2 size={13} /></button>
               </div>
             )}
             {onDeleteSchedule && (
               <div className="flex gap-1.5">
                 {onEditSchedule && (
-                  <button onClick={onEditSchedule} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center"><Edit size={13} /></button>
+                  <button onClick={onEditSchedule} className="w-8 h-8 rounded-full bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-sm flex items-center justify-center"><Edit size={13} /></button>
                 )}
-                <button onClick={onDeleteSchedule} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center"><Trash2 size={13} /></button>
+                <button onClick={onDeleteSchedule} className="w-8 h-8 rounded-full bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-sm flex items-center justify-center"><Trash2 size={13} /></button>
               </div>
             )}
             {showBookmark && !showActions && !onDeleteSchedule && (
-              <button onClick={handleSave} className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 shadow-md flex items-center justify-center">
+              <button onClick={handleSave} className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 shadow-sm flex items-center justify-center">
                 <Bookmark size={14} className={isSaved ? "fill-[#C59A2F] text-[#C59A2F]" : "text-neutral-500 dark:text-neutral-300 group-hover:text-[#C59A2F]"} />
               </button>
             )}
           </div>
           {scheduledDate && (
-            <div className="absolute top-3 left-3 z-20 bg-black/70 backdrop-blur-md border border-white/20 px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-md">
+            <div className="absolute top-3 left-3 z-20 bg-black/85 border border-white/20 px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-sm">
               <Calendar className="text-[#C59A2F] shrink-0" size={12} /><span className="text-white text-[10px] font-bold uppercase tracking-tight">{scheduledDate}</span>
             </div>
           )}
-          <div className="absolute bottom-3 left-3 z-10 bg-black/75 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-md shadow-sm">
+          <div className="absolute bottom-3 left-3 z-10 bg-black/85 border border-white/10 px-2.5 py-1 rounded-md shadow-sm">
             <span className="text-white text-xs md:text-sm font-bold leading-none">{meta.displayDuration}</span>
           </div>
         </div>

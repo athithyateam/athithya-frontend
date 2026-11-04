@@ -89,7 +89,7 @@ export function TopRatedHostsSection({
         <button
           type="button"
           onClick={() => scroll("left")}
-          className="absolute left-2 sm:left-3 md:left-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border border-neutral-200/80 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-white dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-white transition-all flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 cursor-pointer opacity-90 hover:opacity-100"
+          className="absolute left-2 sm:left-3 md:left-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-colors flex items-center justify-center shadow-md cursor-pointer"
           aria-label="Scroll left"
         >
           <FaChevronLeft size={12} />
@@ -137,10 +137,10 @@ export function TopRatedHostsSection({
                 <div
                   key={id}
                   onClick={() => router.push(`/profile/${host._id || host.id}`)}
-                  className="w-full sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 snap-start bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-4 sm:p-5 shadow-xs hover:shadow-md hover:border-[#C59A2F]/40 transition-all duration-300 cursor-pointer flex items-center gap-3.5 sm:gap-4 group"
+                  className="w-full sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 snap-start bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-4 sm:p-5 shadow-xs hover:border-[#C59A2F]/40 transition-colors duration-200 cursor-pointer flex items-center gap-3.5 sm:gap-4 group"
                 >
                   <div className="relative shrink-0">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 border border-neutral-200 dark:border-neutral-700 shadow-xs group-hover:scale-105 transition-transform duration-300">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 border border-neutral-200 dark:border-neutral-700 shadow-xs transition-colors">
                       <ProgressiveImage
                         src={avatar}
                         alt={name}
@@ -220,7 +220,7 @@ export function TopRatedHostsSection({
         <button
           type="button"
           onClick={() => scroll("right")}
-          className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border border-neutral-200/80 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-white dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-white transition-all flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 cursor-pointer opacity-90 hover:opacity-100"
+          className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-colors flex items-center justify-center shadow-md cursor-pointer"
           aria-label="Scroll right"
         >
           <FaChevronRight size={12} />

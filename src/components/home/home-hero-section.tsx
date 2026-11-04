@@ -85,13 +85,13 @@ export function HomeHeroSection() {
       </div>
 
       <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center justify-center w-full my-auto">
-        <h1 className="text-[1.85rem] xs:text-[2.25rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif italic font-black tracking-[0.02em] leading-tight md:leading-none mb-4 sm:mb-8 drop-shadow-2xl px-2 w-full max-w-5xl mx-auto text-center select-none text-white">
+        <h1 className="text-[1.85rem] xs:text-[2.25rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif italic font-black tracking-[0.02em] leading-tight md:leading-none mb-4 sm:mb-8 [text-shadow:_0_2px_12px_rgba(0,0,0,0.75)] px-2 w-full max-w-5xl mx-auto text-center select-none text-white">
           <span className="text-[#C59A2F]">Athithya</span>
           <span> - Your Travel Experience Platform</span>
         </h1>
 
         <div ref={searchRef} className="relative w-full max-w-3xl mx-auto">
-          <div className="w-full bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md rounded-full shadow-2xl p-1.5 md:p-2 flex items-center border border-white/40 dark:border-neutral-800 transition-all">
+          <div className="w-full bg-white dark:bg-neutral-900 rounded-full shadow-xl p-1.5 md:p-2 flex items-center border border-white/20 dark:border-neutral-800 transition-colors">
             <div className="flex-1 flex items-center px-2.5 sm:px-4 md:px-5 py-1.5 sm:py-2 w-full">
               <Search className="text-[#C59A2F] mr-2.5 sm:mr-3 shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
               <input
