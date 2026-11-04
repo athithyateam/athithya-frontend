@@ -1,117 +1,52 @@
 "use client";
 
-import { useRef, useMemo, useState, useEffect } from "react";
-import Link from "next/link";
-import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
-import { useExploreStore } from "@/stores/explore-store";
-
-interface Category {
-  id: string;
-  label: string;
-  slug: string;
-  keywords: string[];
-  image?: string;
-  isCollage?: boolean;
-  images?: string[];
-  count: string;
-}
-
-const categories: Category[] = [
-  { id: "bungee", label: "Bungee Jumping", slug: "bungee-jumping", keywords: ["bungee", "bungee jumping"], image: "/images/bungee/bungee-1.jpeg", count: "Nervously Excited" },
-  { id: "paragliding", label: "Paragliding", slug: "paragliding", keywords: ["paragliding"], image: "/images/paragliding/paragliding-3.jpeg", count: "Freedom in Skies" },
-  { id: "trek", label: "Trek", slug: "trek", keywords: ["trek", "trekking"], image: "/images/trek/trek-1.jpeg", count: "Find Yourself" },
-  { id: "camping", label: "Camping", slug: "camping", keywords: ["camping", "camp"], image: "/images/camping/camping-1.jpeg", count: "Slow Down" },
-  { id: "rafting", label: "Rafting", slug: "rafting", keywords: ["rafting"], image: "/images/rafting/rafting-2.jpeg", count: "Feel Alive" },
-  { id: "safari", label: "Safari", slug: "safari", keywords: ["safari", "wildlife", "jungle safari", "jeep safari"], image: "/images/about-1.jpeg", count: "Explore Wild" },
-  {
-    id: "other",
-    label: "Others",
-    slug: "other",
-    keywords: ["rock climbing", "rock-climbing", "climbing", "bouldering", "flyboarding", "guide", "experience guide", "other", "others"],
-    isCollage: true,
-    images: ["/images/rock-climbing/rock-climbing-1.jpeg", "/images/flyboarding/flyboarding-1.jpeg"],
-    count: "Surprise Yourself",
-  },
-];
+import { useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CATEGORIES_DATA } from "@/data/categories";
+import { CategoryCircleItem } from "./category-circle-item";
 
 export function HomeCategoriesSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { categoryActivity } = useExploreStore();
-  const [now, setNow] = useState(0);
-
-  useEffect(() => {
-    setNow(Date.now());
-  }, []);
-
-  const visibleCategories = useMemo(() => {
-    const activityMap = new Map<string, any>();
-    if (Array.isArray(categoryActivity)) {
-      categoryActivity.forEach((item) => {
-        if (item?.normalizedCategory) activityMap.set(String(item.normalizedCategory).toLowerCase(), item);
-        if (item?.category) activityMap.set(String(item.category).toLowerCase(), item);
-      });
-    }
-    const DAY_MS = 24 * 60 * 60 * 1000;
-    const mapped = categories.map((cat) => {
-      let latestApprovedTime = 0;
-      for (const kw of cat.keywords) {
-        const act = activityMap.get(kw.toLowerCase());
-        if (act?.latestApprovedAt) {
-          const t = new Date(act.latestApprovedAt).getTime();
-          if (t > latestApprovedTime) latestApprovedTime = t;
-        }
-      }
-      const isNew = now > 0 && latestApprovedTime > 0 && now - latestApprovedTime <= DAY_MS;
-      return { ...cat, latestApprovedTime, isNew };
-    });
-    const newCats = mapped.filter((c) => c.isNew).sort((a, b) => b.latestApprovedTime - a.latestApprovedTime);
-    const regCats = mapped.filter((c) => !c.isNew);
-    return [...newCats, ...regCats];
-  }, [categoryActivity, now]);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: direction === "left" ? -260 : 260, behavior: "smooth" });
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -260 : 260,
+        behavior: "smooth",
+      });
     }
   };
 
   return (
     <section className="py-4 md:py-8 bg-white dark:bg-neutral-950 transition-colors">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 relative w-full group/slider">
-        <button type="button" onClick={() => scroll("left")} className="hidden md:flex lg:hidden absolute left-2 top-[38%] -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 items-center justify-center shadow-md cursor-pointer" aria-label="Scroll left">
+        {/* Scroll Left Button */}
+        <button
+          type="button"
+          onClick={() => scroll("left")}
+          className="hidden md:flex lg:hidden absolute left-2 top-[38%] -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 items-center justify-center shadow-md cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+          aria-label="Scroll left"
+        >
           <ChevronLeft className="w-4 h-4" />
         </button>
 
-        <div ref={scrollRef} className="flex flex-nowrap lg:justify-between gap-4 sm:gap-6 md:gap-8 lg:gap-4 overflow-x-auto w-full pt-2 pb-4 scrollbar-hide snap-x snap-mandatory px-1 sm:px-2">
-          {visibleCategories.map((cat) => (
-            <Link key={cat.id} href={`/${cat.slug}`} className="group flex flex-col items-center cursor-pointer shrink-0 snap-start transition-colors w-[100px] sm:w-[120px] md:w-[140px] lg:flex-1 lg:max-w-[210px]">
-              <div className={`relative w-22 h-22 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 xl:w-40 xl:h-40 rounded-full p-1 border-2 ${cat.isNew ? "border-[#C59A2F] shadow-md" : "border-[#C59A2F]/30 dark:border-[#C59A2F]/40"} group-hover:border-[#C59A2F] bg-white dark:bg-neutral-850 shadow-sm shrink-0 transition-colors`}>
-                <div className="w-full h-full rounded-full overflow-hidden relative bg-neutral-100 dark:bg-neutral-800">
-                  {cat.isCollage && cat.images ? (
-                    <div className="w-full h-full relative overflow-hidden rounded-full">
-                      <div className="w-full h-full flex overflow-hidden">
-                        <div className="w-1/2 h-full overflow-hidden relative border-r border-white/40"><img src={cat.images[0]} alt="Activity 1" className="w-full h-full object-cover" loading="lazy" decoding="async" /></div>
-                        <div className="w-1/2 h-full overflow-hidden relative"><img src={cat.images[1]} alt="Activity 2" className="w-full h-full object-cover" loading="lazy" decoding="async" /></div>
-                      </div>
-                      <div className="absolute inset-0 bg-black/45 flex items-center justify-center text-[#C59A2F]"><HelpCircle className="w-8 h-8" /></div>
-                    </div>
-                  ) : (
-                    <img src={cat.image} alt={cat.label} className="w-full h-full object-cover rounded-full" loading="lazy" decoding="async" />
-                  )}
-                </div>
-                {cat.isNew && (
-                  <span className="absolute -top-1 right-1 px-2 py-0.5 rounded-full bg-[#C59A2F] text-white text-[9px] font-black uppercase tracking-wider shadow-md border border-white dark:border-neutral-900">New</span>
-                )}
-              </div>
-              <div className="flex flex-col items-center text-center px-1 max-w-full mt-3 sm:mt-3.5">
-                <h3 className="text-xs sm:text-sm md:text-base font-extrabold text-neutral-800 dark:text-neutral-100 group-hover:text-[#C59A2F] transition-colors leading-tight tracking-tight uppercase line-clamp-1 w-full">{cat.label}</h3>
-                <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-neutral-500 dark:text-neutral-400 mt-0.5 group-hover:text-[#C59A2F]/80 transition-colors line-clamp-1 w-full">{cat.count}</span>
-              </div>
-            </Link>
+        {/* Categories Strip */}
+        <div
+          ref={scrollRef}
+          className="flex flex-nowrap lg:justify-between gap-4 sm:gap-6 md:gap-8 lg:gap-4 overflow-x-auto w-full pt-2 pb-4 scrollbar-hide snap-x snap-mandatory px-1 sm:px-2"
+        >
+          {CATEGORIES_DATA.map((cat) => (
+            <CategoryCircleItem key={cat.id} category={cat} />
           ))}
         </div>
 
-        <button type="button" onClick={() => scroll("right")} className="hidden md:flex lg:hidden absolute right-2 top-[38%] -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 items-center justify-center shadow-md cursor-pointer" aria-label="Scroll right">
+        {/* Scroll Right Button */}
+        <button
+          type="button"
+          onClick={() => scroll("right")}
+          className="hidden md:flex lg:hidden absolute right-2 top-[38%] -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 items-center justify-center shadow-md cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+          aria-label="Scroll right"
+        >
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>
