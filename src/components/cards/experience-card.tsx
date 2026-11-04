@@ -84,6 +84,12 @@ export const ExperienceCard = memo(function ExperienceCard({
   return (
     <div
       onClick={() => router.push(`/post/${meta.id}`)}
+      onMouseEnter={() => {
+        if (meta.id) router.prefetch?.(`/post/${meta.id}`);
+      }}
+      onTouchStart={() => {
+        if (meta.id) router.prefetch?.(`/post/${meta.id}`);
+      }}
       className={`snap-start cursor-pointer group block h-full ${className || (compact ? "min-w-[160px] max-w-[160px]" : "home-card-size")}`}
     >
       <div
