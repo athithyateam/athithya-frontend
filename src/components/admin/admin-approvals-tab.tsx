@@ -19,7 +19,7 @@ interface AdminApprovalsTabProps {
 
 export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
   const { showToast } = useFeedbackStore();
-  const [pendingPosts, setPendingPosts] = useState<any[]>([]);
+  const [pendingExperiences, setPendingExperiences] = useState<any[]>([]);
   const [pendingKyc, setPendingKyc] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,18 +30,21 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
   const loadApprovals = useCallback(async () => {
     setLoading(true);
     try {
-      const [postsRes, kycRes] = await Promise.all([
+      const [experiencesRes, kycRes] = await Promise.all([
         getAdminPendingExperiencesApi(),
         getAdminPendingVerificationsApi(),
       ]);
-      setPendingPosts(
-        postsRes?.experiences || postsRes?.data?.experiences || (Array.isArray(postsRes) ? postsRes : [])
+      setPendingExperiences(
+        experiencesRes?.experiences ||
+        experiencesRes?.data?.experiences ||
+        experiencesRes?.data ||
+        (Array.isArray(experiencesRes) ? experiencesRes : [])
       );
       setPendingKyc(
         kycRes?.data || kycRes?.verifications || kycRes?.users || kycRes?.data?.verifications || (Array.isArray(kycRes) ? kycRes : [])
       );
     } catch {
-      setPendingPosts([]);
+      setPendingExperiences([]);
       setPendingKyc([]);
     } finally {
       setLoading(false);
@@ -52,7 +55,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
     loadApprovals();
   }, [loadApprovals]);
 
-  const handlePostDecision = async (id: string, status: "approved" | "rejected") => {
+  const handleExperienceDecision = async (id: string, status: "approved" | "rejected") => {
     try {
       const backendStatus = status === "approved" ? "active" : "inactive";
       await updateAdminExperienceStatusApi(id, {
@@ -66,7 +69,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
       await loadApprovals();
       onRefreshCounts?.();
     } catch (err: any) {
-      showToast(err?.message || "Failed to update post status", "error");
+      showToast(err?.message || "Failed to update experience status", "error");
     }
   };
 
@@ -92,7 +95,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
     );
   }
 
-  const isEmpty = pendingPosts.length === 0 && pendingKyc.length === 0;
+  const isEmpty = pendingExperiences.length === 0 && pendingKyc.length === 0;
 
   return (
     <div className="space-y-8 sm:space-y-10">
@@ -207,19 +210,19 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
           )}
 
           {/* Pending Experiences Section matching athithya-app */}
-          {pendingPosts.length > 0 && (
+          {pendingExperiences.length > 0 && (
             <div className="space-y-4 sm:space-y-6">
               <div className="flex items-center gap-3 sm:gap-4 px-2 sm:px-4">
                 <span className="w-8 sm:w-12 h-[2px] bg-[#C59A2F]" />
                 <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-neutral-100 uppercase tracking-[0.2em] sm:tracking-[0.3em]">
-                  Experience Submissions ({pendingPosts.length})
+                  Experience Submissions ({pendingExperiences.length})
                 </h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                {pendingPosts.map((post) => {
-                  const id = post._id || post.id;
+                {pendingExperiences.map((exp) => {
+                  const id = exp._id || exp.id;
                   const coverPhoto =
-                    post.photos?.[0]?.url || post.coverImage?.url || post.images?.[0] || "";
+                    exp.photos?.[0]?.url || exp.coverImage?.url || exp.images?.[0] || "";
 
                   return (
                     <div
@@ -234,21 +237,21 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
                         )}
                         <div className="flex items-center gap-2 mb-2">
                           <span className="px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-amber-50 text-[#C59A2F] border border-amber-100 dark:bg-amber-950/20">
-                            {post.postType || post.category || "Experience"}
+                            {exp.category || exp.postType || "Experience"}
                           </span>
                           <span className="text-[10px] font-bold text-slate-400">
-                            By {post.user?.firstname || post.host?.firstname || "Host"}
+                            By {exp.user?.firstname || exp.host?.firstname || "Host"}
                           </span>
                         </div>
                         <h4 className="text-lg font-black text-slate-900 dark:text-neutral-100 leading-tight mb-2">
-                          {post.title}
+                          {exp.title}
                         </h4>
                         <p className="text-xs text-slate-500 dark:text-neutral-400 line-clamp-2 mb-4">
-                          {post.description}
+                          {exp.description}
                         </p>
                         <div className="flex items-center justify-between text-xs font-bold text-slate-400 mb-6">
-                          <span>₹{post.price?.perPerson || post.price || 0} / person</span>
-                          <span>{post.location?.city || "Uttarakhand"}</span>
+                          <span>₹{exp.price?.perPerson || exp.price || 0} / person</span>
+                          <span>{exp.location?.city || "Uttarakhand"}</span>
                         </div>
                       </div>
 
@@ -261,7 +264,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
                         </Link>
                         <button
                           type="button"
-                          onClick={() => setSelectedExperience(post)}
+                          onClick={() => setSelectedExperience(exp)}
                           className="w-full bg-[#C59A2F] text-white rounded-xl py-3 text-[10px] font-black uppercase tracking-widest transition-all hover:bg-[#a67f26] flex items-center justify-center gap-1 cursor-pointer"
                         >
                           Review Experience
@@ -290,7 +293,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
         <ReviewExperienceModal
           experience={selectedExperience}
           onClose={() => setSelectedExperience(null)}
-          onUpdateStatus={handlePostDecision}
+          onUpdateStatus={handleExperienceDecision}
         />
       )}
     </div>

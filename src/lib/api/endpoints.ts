@@ -136,7 +136,6 @@ export const ENDPOINTS = {
   ADMIN_STATS: "/api/admin/stats",
   ADMIN_PENDING_EXPERIENCES: "/api/admin/experiences/pending",
   ADMIN_UPDATE_EXPERIENCE_STATUS: (id: string) => `/api/admin/experiences/${id}/status`,
-  ADMIN_UPDATE_POST_STATUS: (id: string) => `/api/admin/experiences/${id}/status`,
   ADMIN_EXPERIENCE_HIDE: (id: string) => `/api/admin/experiences/${id}/hide`,
   ADMIN_USERS: "/api/admin/users",
   ADMIN_UPDATE_USER: (id: string) => `/api/admin/users/${id}`,

@@ -361,6 +361,7 @@ export function HostProfile({
     .toUpperCase();
   const about = user?.description || user?.about || user?.bio || "";
   const experiencesCount =
+    postStats?.totalExperiences ||
     postStats?.totalPosts ||
     localPosts.filter((p) => p.postType === "service").length ||
     localPosts.length ||
