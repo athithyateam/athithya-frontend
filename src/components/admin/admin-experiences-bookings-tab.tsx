@@ -56,7 +56,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
           limit: 10,
           search,
         });
-        const list = res?.experiences || res?.posts || res?.data?.experiences || (Array.isArray(res) ? res : []);
+        const list = res?.experiences || res?.data?.experiences || (Array.isArray(res) ? res : []);
         setExperiences(list);
         setExpTotalPages(res?.totalPages || 1);
       } else {
@@ -515,7 +515,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
 
                     <div>
                       <h4 className="font-bold text-base text-slate-900 dark:text-neutral-100">
-                        {j.post?.title || j.postTitle || "Experience"}
+                        {j.experience?.title || j.post?.title || j.postTitle || "Experience"}
                       </h4>
                       <p className="text-xs text-slate-500">
                         Guest: <strong>{j.guest?.firstname || "Guest"}</strong> • Host:{" "}
@@ -644,7 +644,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
                       </div>
                     </td>
                     <td className="px-8 py-4 text-xs font-bold text-slate-900 dark:text-neutral-100">
-                      {b.post?.title || b.postTitle || "Experience"}
+                      {b.experience?.title || b.post?.title || b.postTitle || "Experience"}
                     </td>
                     <td className="px-8 py-4 text-xs font-bold text-slate-500">
                       {b.startDate ? new Date(b.startDate).toLocaleDateString() : "—"}

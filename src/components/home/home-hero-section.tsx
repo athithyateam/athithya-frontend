@@ -50,7 +50,7 @@ export function HomeHeroSection() {
           const res = await searchAll(address.trim(), "all", 8);
           if (res?.success || res?.data) {
             const payload = res.data || res;
-            setSuggestions({ people: payload.people || [], experiences: payload.posts || [] });
+            setSuggestions({ people: payload.people || [], experiences: payload.experiences || [] });
             setShowSuggestions(true);
           }
         } catch {

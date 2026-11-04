@@ -64,13 +64,13 @@ export function BookingWidget({ post }: { post: any }) {
           ? res
           : [];
         const match = bookings.some((b: any) => {
-          const bPostId = b.post?._id || b.post?.id || b.post || b.postId;
+          const bExpId = b.experience?._id || b.experience?.id || b.experience || b.post?._id || b.post?.id || b.post || b.postId;
           const isConfirmed =
             b.status === "confirmed" ||
             b.status === "completed" ||
             b.paymentStatus === "completed" ||
             b.paymentStatus === "paid";
-          return String(bPostId) === String(postId) && isConfirmed;
+          return String(bExpId) === String(postId) && isConfirmed;
         });
         if (match) {
           setHasExistingBooking(true);

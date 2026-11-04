@@ -1139,7 +1139,7 @@ export function GuestProfile({
                             </div>
                           </div>
 
-                          {r.post && (
+                          {(r.experience || r.post) && (
                             <p
                               className="text-[10px] mt-2 font-bold uppercase tracking-wider"
                               style={
@@ -1156,7 +1156,7 @@ export function GuestProfile({
                                     : undefined
                                 }
                               >
-                                {r.post.title}
+                                {(r.experience || r.post).title}
                               </span>
                             </p>
                           )}

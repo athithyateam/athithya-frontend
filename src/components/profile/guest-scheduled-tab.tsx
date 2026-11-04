@@ -223,20 +223,21 @@ export function ScheduledExperiencesTab({
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {schedules.map((sch) => {
-            if (!sch.post) return null;
+            const exp = sch.experience || sch.post;
+            if (!exp) return null;
             return (
               <div
                 key={sch._id}
                 className="snap-start shrink-0 min-w-[calc(50%-8px)] max-w-[calc(50%-8px)] md:min-w-[280px] md:max-w-[280px] lg:min-w-[310px] lg:max-w-[310px] relative group"
               >
                 <ExperienceCard
-                  data={sch.post}
+                  data={exp}
                   className="w-full !h-auto"
                   showBookmark={false}
                   scheduledDate={`${sch.scheduledDate} at ${formatTimeTo12Hour(
                     sch.scheduledTime
                   )}`}
-                  onEditSchedule={(e: any) => handleEditSchedule(e, sch.post)}
+                  onEditSchedule={(e: any) => handleEditSchedule(e, exp)}
                   onDeleteSchedule={(e: any) => {
                     e.stopPropagation();
                     setScheduleToUnschedule(sch._id);

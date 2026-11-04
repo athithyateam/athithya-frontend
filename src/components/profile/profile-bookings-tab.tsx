@@ -149,7 +149,7 @@ export function ProfileBookingsTab({ isHost, mode = "bookings" }: ProfileBooking
     <div className="space-y-4">
       {bookings.map((b) => {
         const id = b._id || b.id;
-        const post = b.post || b.service || {};
+        const exp = b.experience || b.post || b.service || {};
         const status = b.status || b.bookingStatus || "pending";
         return (
           <div
@@ -163,7 +163,7 @@ export function ProfileBookingsTab({ isHost, mode = "bookings" }: ProfileBooking
                 </span>
                 <span className="text-xs text-neutral-400">#{String(id).slice(-6)}</span>
               </div>
-              <h4 className="font-bold text-base">{post.title || b.experienceTitle || "Himalayan Experience"}</h4>
+              <h4 className="font-bold text-base">{exp.title || b.experienceTitle || "Himalayan Experience"}</h4>
               <p className="text-xs text-neutral-500">
                 Date: {b.startDate ? new Date(b.startDate).toLocaleDateString() : "Flexible"} • Guests: {b.guests || b.numberOfPeople || 1} • Total: ₹{b.totalAmount || b.amount || 0}
               </p>

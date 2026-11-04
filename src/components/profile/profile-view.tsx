@@ -99,8 +99,8 @@ export function ProfileView({ userId }: ProfileViewProps) {
   }
 
   const user = profileData.user;
-  const experiences = profileData.experiences || profileData.posts || [];
-  const experienceStats = profileData.experienceStats || profileData.postStats || {};
+  const experiences = profileData.experiences || [];
+  const experienceStats = profileData.experienceStats || {};
   const reviewStats = profileData.reviewStats || {};
   const pagination = profileData.pagination || {};
   const isOwner =
