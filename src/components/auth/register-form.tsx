@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 import { signupInitiateApi, signupCompleteApi, googleSigninApi } from "@/lib/api/auth-api";
+import { promptGoogleLogin } from "@/lib/google-auth";
 import { GoogleIcon } from "./google-icon";
 
 const GOLD = "#d4af37";
@@ -50,30 +51,41 @@ export function RegisterForm({ onSwitchToLogin, onClose }: RegisterFormProps) {
   };
 
   const handleGoogleSignup = async () => {
+    if (loading) return;
     setErr("");
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    if (!clientId) {
-      setErr("Google OAuth is not configured on this environment. Please sign up with email.");
-      return;
-    }
     setLoading(true);
-    try {
-      const res = await googleSigninApi({ token: clientId, role });
-      if (!res?.ok) {
-        setErr(res?.message || "Google register failed");
-        return;
-      }
-      const token = res?.data?.token || res?.data?.data?.token;
-      if (token) {
-        localStorage.setItem("auth_token", token);
-        await fetchUser();
-        onClose();
-      }
-    } catch {
-      setErr("Google register error");
-    } finally {
-      setLoading(false);
-    }
+
+    await promptGoogleLogin({
+      onSuccess: async (accessToken) => {
+        try {
+          const res = await googleSigninApi({ token: accessToken, role });
+          if (!res?.ok) {
+            setErr(res?.message || "Google register failed");
+            setLoading(false);
+            return;
+          }
+          const token = res?.data?.token || res?.data?.data?.token;
+          const userObj = res?.data?.user || res?.data?.data?.user;
+          if (token) {
+            localStorage.setItem("auth_token", token);
+            if (userObj) setUser(userObj, token);
+            await fetchUser();
+            onClose();
+          }
+        } catch {
+          setErr("Google register error");
+        } finally {
+          setLoading(false);
+        }
+      },
+      onError: (error) => {
+        setLoading(false);
+        if (error?.type === "popup_closed" || error?.error === "popup_closed_by_user") {
+          return;
+        }
+        setErr(error?.message || "Google registration failed. Please try again or use email.");
+      },
+    });
   };
 
   const submitOtp = async (e: React.FormEvent) => {
