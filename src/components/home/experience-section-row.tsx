@@ -82,7 +82,7 @@ export function ExperienceSectionRow({
         <button
           type="button"
           onClick={() => scroll("left")}
-          className="absolute left-0 sm:left-1 md:left-2 top-[calc(50%-32px)] -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border border-neutral-200/80 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-white dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-white transition-all flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 cursor-pointer opacity-90 hover:opacity-100"
+          className="absolute left-0 sm:left-1 md:left-2 top-[calc(50%-32px)] -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-colors flex items-center justify-center shadow-md cursor-pointer"
           aria-label="Scroll left"
         >
           <FaChevronLeft size={12} />
@@ -110,7 +110,7 @@ export function ExperienceSectionRow({
         <button
           type="button"
           onClick={() => scroll("right")}
-          className="absolute right-0 sm:right-1 md:right-2 top-[calc(50%-32px)] -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border border-neutral-200/80 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-white dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-white transition-all flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 cursor-pointer opacity-90 hover:opacity-100"
+          className="absolute right-0 sm:right-1 md:right-2 top-[calc(50%-32px)] -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-colors flex items-center justify-center shadow-md cursor-pointer"
           aria-label="Scroll right"
         >
           <FaChevronRight size={12} />
