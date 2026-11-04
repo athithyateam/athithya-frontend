@@ -81,9 +81,46 @@ export const ExperienceCard = memo(function ExperienceCard({
     }
   };
 
+  const handleCardClick = () => {
+    try {
+      if (typeof window !== "undefined" && meta.id) {
+        sessionStorage.setItem(
+          `post_preview_${meta.id}`,
+          JSON.stringify({
+            _id: meta.id,
+            id: meta.id,
+            title: data?.title || "",
+            photos: meta.firstImage ? [{ url: meta.firstImage }] : [],
+            location: {
+              city: meta.displayLocation,
+              district: meta.displayLocation,
+              address: meta.displayLocation,
+            },
+            categories: Array.isArray(data?.categories)
+              ? data.categories
+              : data?.category
+              ? [data.category]
+              : [],
+            postType: meta.postType,
+            price: meta.totalPrice || meta.basePrice || 0,
+            days: data?.days || data?.duration || 1,
+            averageRating: data?.averageRating || data?.rating || null,
+            totalReviews: data?.totalReviews || data?.reviewsCount || 0,
+            description: data?.description || data?.overview || data?.caption || "",
+            user: data?.user || data?.hostDetails || data?.host || null,
+            ...data,
+          })
+        );
+      }
+    } catch {
+      // sessionStorage unavailable or quota exceeded
+    }
+    router.push(`/post/${meta.id}`);
+  };
+
   return (
     <div
-      onClick={() => router.push(`/post/${meta.id}`)}
+      onClick={handleCardClick}
       className={`snap-start cursor-pointer group block h-full ${className || (compact ? "min-w-[160px] max-w-[160px]" : "home-card-size")}`}
     >
       <div
@@ -110,20 +147,20 @@ export const ExperienceCard = memo(function ExperienceCard({
             {meta.isNew && <span className="px-2 py-0.5 rounded-md bg-[#C59A2F] text-white text-[9px] md:text-[10px] font-black uppercase tracking-wider shadow-md border border-white dark:border-neutral-950">New</span>}
             {showActions && !data?.deleteRequested && (
               <div className="flex gap-1.5">
-                <button onClick={(e) => { e.stopPropagation(); router.push(`/post?edit=${meta.id}`); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center"><Edit size={13} /></button>
-                <button onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center"><Trash2 size={13} /></button>
+                <button onClick={(e) => { e.stopPropagation(); router.push(`/post?edit=${meta.id}`); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center cursor-pointer"><Edit size={13} /></button>
+                <button onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center cursor-pointer"><Trash2 size={13} /></button>
               </div>
             )}
             {onDeleteSchedule && (
               <div className="flex gap-1.5">
                 {onEditSchedule && (
-                  <button onClick={onEditSchedule} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center"><Edit size={13} /></button>
+                  <button onClick={onEditSchedule} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-[#C59A2F] shadow-md flex items-center justify-center cursor-pointer"><Edit size={13} /></button>
                 )}
-                <button onClick={onDeleteSchedule} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center"><Trash2 size={13} /></button>
+                <button onClick={onDeleteSchedule} className="w-8 h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-red-500 shadow-md flex items-center justify-center cursor-pointer"><Trash2 size={13} /></button>
               </div>
             )}
             {showBookmark && !showActions && !onDeleteSchedule && (
-              <button onClick={handleSave} className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 shadow-md flex items-center justify-center">
+              <button onClick={handleSave} className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-100 dark:border-neutral-800 shadow-md flex items-center justify-center cursor-pointer">
                 <Bookmark size={14} className={isSaved ? "fill-[#C59A2F] text-[#C59A2F]" : "text-neutral-500 dark:text-neutral-300 group-hover:text-[#C59A2F]"} />
               </button>
             )}
@@ -156,15 +193,20 @@ export const ExperienceCard = memo(function ExperienceCard({
                 Hosted by <strong className="text-neutral-800 dark:text-neutral-200 font-semibold group-hover/host:text-[#C59A2F]">{meta.hostName}</strong>
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mb-3" style={isThemed ? { color: "rgba(255,255,255,0.75)" } : undefined}>
-              <MapPin className="shrink-0 text-neutral-400" size={14} /><span className="truncate">{meta.displayLocation}</span>
+            <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+              <MapPin className="text-[#C59A2F] shrink-0" size={12} />
+              <span className="truncate" style={isThemed ? { color: "rgba(255,255,255,0.75)" } : undefined}>{meta.displayLocation}</span>
             </div>
           </div>
-          <div className="flex items-center justify-between pt-2 border-t border-neutral-100 dark:border-neutral-800/80 mt-auto" style={isThemed ? { borderTopColor: "rgba(255,255,255,0.14)" } : undefined}>
-            <div className="text-left flex items-baseline gap-1">
-              <span className="text-sm sm:text-base font-black text-[#C59A2F]">₹{meta.totalPrice.toLocaleString("en-IN", { minimumFractionDigits: meta.totalPrice % 1 !== 0 ? 2 : 0, maximumFractionDigits: 2 })}</span>
-              <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">/ {meta.pricePeriod}</span>
+          <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between mt-3" style={isThemed ? { borderColor: "rgba(255, 255, 255, 0.12)" } : undefined}>
+            <div className="flex flex-col">
+              <span className="text-[10px] md:text-[11px] uppercase tracking-wider text-neutral-500 font-bold" style={isThemed ? { color: "rgba(255,255,255,0.6)" } : undefined}>Starting from</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-sm md:text-base font-black text-neutral-900 dark:text-neutral-100" style={isThemed ? { color: "#ffffff" } : undefined}>₹{meta.totalPrice.toLocaleString("en-IN")}</span>
+                <span className="text-[11px] text-neutral-500 font-medium" style={isThemed ? { color: "rgba(255,255,255,0.7)" } : undefined}>{meta.pricePeriod}</span>
+              </div>
             </div>
+            <span className="text-xs font-bold text-[#C59A2F] group-hover:underline">View Details</span>
           </div>
         </div>
       </div>
@@ -173,5 +215,3 @@ export const ExperienceCard = memo(function ExperienceCard({
     </div>
   );
 });
-
-export default ExperienceCard;

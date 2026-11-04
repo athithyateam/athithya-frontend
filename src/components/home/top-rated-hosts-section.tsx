@@ -19,15 +19,6 @@ const getHostYears = (host: any) => {
   return "0 years experience";
 };
 
-const hasValidProfilePicture = (host: any) => {
-  if (!host) return false;
-  const url =
-    typeof host.avatar === "string"
-      ? host.avatar
-      : host.avatar?.url || host.profilePic;
-  return typeof url === "string" && url.trim().length > 0;
-};
-
 export function TopRatedHostsSection({
   initialHosts,
 }: {
@@ -35,7 +26,7 @@ export function TopRatedHostsSection({
 } = {}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { hosts, homeLoading, homeLoaded } = useExploreStore();
+  const { hosts, sectionLoading, homeLoading, homeLoaded } = useExploreStore();
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -53,10 +44,10 @@ export function TopRatedHostsSection({
   const rawHosts =
     initialHosts && initialHosts.length > 0 ? initialHosts : hosts;
   const validHosts = Array.isArray(rawHosts)
-    ? rawHosts.filter(hasValidProfilePicture)
+    ? rawHosts.filter((h: any) => Boolean(h && (h._id || h.id || h.firstname || h.name)))
     : [];
   const hasRealHosts = validHosts.length > 0;
-  const isLoading = !initialHosts && (homeLoading || !homeLoaded);
+  const isLoading = !initialHosts && (sectionLoading?.hosts ?? (homeLoading || !homeLoaded));
 
   return (
     <section className="py-6 md:py-12 relative z-10 bg-white dark:bg-neutral-950 transition-colors">
@@ -124,8 +115,8 @@ export function TopRatedHostsSection({
               const rawRating = host.averageRating;
               const rating =
                 rawRating !== undefined &&
-                rawRating !== null &&
-                Number(rawRating) > 0
+                  rawRating !== null &&
+                  Number(rawRating) > 0
                   ? Number(rawRating).toFixed(1)
                   : null;
               const expCount =
@@ -158,40 +149,21 @@ export function TopRatedHostsSection({
                         className="absolute -bottom-1 -right-1 bg-white dark:bg-neutral-900 rounded-full p-0.5 shadow-sm"
                         title="Verified Host"
                       >
-                        <svg
-                          className="w-4 h-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <path
-                            d="M22.25 12c0-1.43-.88-2.67-2.19-3.19.16-.43.25-.9.25-1.39 0-2.25-1.83-4.08-4.08-4.08-.49 0-.96.09-1.39.25C14.32 2.28 13.25 1.5 12 1.5s-2.32.78-2.84 2.09c-.43-.16-.9-.25-1.39-.25-2.25 0-4.08 1.83-4.08 4.08 0 .49.09.96.25 1.39C2.63 9.33 1.75 10.57 1.75 12c0 1.43.88 2.67 2.19 3.19-.16.43-.25.9-.25 1.39 0 2.25 1.83 4.08 4.08 4.08.49 0 .96-.09 1.39-.25.52 1.31 1.59 2.09 2.84 2.09s2.32-.78 2.84-2.09c.43.16.9.25 1.39.25 2.25 0 4.08-1.83 4.08-4.08 0-.49-.09-.96-.25-1.39 1.31-.52 2.09-1.59 2.09-2.84z"
-                            fill="#C59A2F"
-                          />
-                          <path
-                            d="M10.22 16.75l-3.32-3.32 1.42-1.42 1.9 1.9 5.68-5.68 1.42 1.42-7.1 7.1z"
-                            fill="#fff"
-                          />
-                        </svg>
+                        <div className="w-5 h-5 rounded-full bg-[#C59A2F] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white dark:border-neutral-900">
+                          ✓
+                        </div>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-neutral-900 dark:text-neutral-100 text-sm sm:text-base leading-snug truncate group-hover:text-[#C59A2F] transition-colors">
+                  <div className="flex-1 min-w-0 text-left">
+                    <h3 className="font-extrabold text-neutral-900 dark:text-neutral-100 text-sm sm:text-base truncate group-hover:text-[#C59A2F] transition-colors">
                       {name}
                     </h3>
-
-                    <div className="my-1.5">
-                      <span className="inline-flex items-center gap-1 bg-[#FFF8E7] dark:bg-[#C59A2F]/15 border border-[#F3E2B4] dark:border-[#C59A2F]/30 text-[#C59A2F] text-xs font-bold uppercase tracking-wide px-2.5 py-0.5 rounded-full">
-                        <FiHome size={11} className="shrink-0" />
-                        <span>Local Host</span>
-                      </span>
-                    </div>
-
-                    <p className="text-sm font-bold text-neutral-700 dark:text-neutral-300 truncate">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate mb-1">
                       {city}
                     </p>
-                    <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mb-1.5">
+                    <p className="text-[11px] font-medium text-neutral-400 dark:text-neutral-500 truncate mb-1.5">
                       {years}
                     </p>
 

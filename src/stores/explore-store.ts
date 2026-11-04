@@ -12,6 +12,16 @@ import {
 } from "@/lib/api/experiences-api";
 import { getLatestReviews } from "@/lib/api/bookings-api";
 
+export interface ExploreSectionLoading {
+  latest: boolean;
+  featured: boolean;
+  mostLoved: boolean;
+  topRated: boolean;
+  nearby: boolean;
+  hosts: boolean;
+  reviews: boolean;
+}
+
 interface ExploreState {
   latest: any[];
   topRated: any[];
@@ -23,6 +33,7 @@ interface ExploreState {
   reviews: any[];
   homeLoaded: boolean;
   homeLoading: boolean;
+  sectionLoading: ExploreSectionLoading;
   // Explore Page Filters
   selectedCategories: string[];
   selectedLocation: string;
@@ -44,6 +55,16 @@ interface ExploreState {
 const extractList = (res: any): any[] =>
   res?.experiences || res?.treks || res?.hosts || res?.reviews || res?.services || res?.posts || res?.data || (Array.isArray(res) ? res : []);
 
+const initialSectionLoading: ExploreSectionLoading = {
+  latest: true,
+  featured: true,
+  mostLoved: true,
+  topRated: true,
+  nearby: true,
+  hosts: true,
+  reviews: true,
+};
+
 export const useExploreStore = create<ExploreState>((set, get) => ({
   latest: [],
   topRated: [],
@@ -55,6 +76,7 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
   reviews: [],
   homeLoaded: false,
   homeLoading: false,
+  sectionLoading: { ...initialSectionLoading },
   selectedCategories: [],
   selectedLocation: "all",
   priceRange: "all",
@@ -68,7 +90,7 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
 
   fetchHomeData: async (force = false) => {
     if (get().homeLoaded && !force) return;
-    set({ homeLoading: true });
+    set({ homeLoading: true, sectionLoading: { ...initialSectionLoading } });
     let coords: { latitude?: number; longitude?: number } = {};
     if (typeof window !== "undefined") {
       try {
@@ -79,30 +101,170 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
       }
     }
 
-    const [latestRes, topRatedRes, featuredRes, mostLovedRes, nearbyRes, hostsRes, catActRes, reviewsRes] =
-      await Promise.allSettled([
-        getLatestExperiences(16, 1, "latest"),
-        getTopRatedTreks(16, 1, "rating"),
-        getFeaturedExperiences(16, 1, "clicks"),
-        getMostLovedExperiences(16, 1, "bookings"),
-        getNearbyTreks({ ...coords, limit: 16 }),
-        getTopRatedHosts(16, 1),
-        getCategoryActivity(),
-        getLatestReviews(16),
-      ]);
+    // Phase 1 (Above-the-fold / Priority): Fetch first 6 cards for top sections immediately
+    const fetchLatestP1 = getLatestExperiences(6, 1, "latest")
+      .then((res) => {
+        const items = extractList(res);
+        set((state) => ({
+          latest: items,
+          sectionLoading: { ...state.sectionLoading, latest: false },
+          homeLoading: false,
+        }));
+        return items;
+      })
+      .catch(() => {
+        set((state) => ({
+          sectionLoading: { ...state.sectionLoading, latest: false },
+          homeLoading: false,
+        }));
+        return [];
+      });
 
-    set({
-      latest: latestRes.status === "fulfilled" ? extractList(latestRes.value) : [],
-      topRated: topRatedRes.status === "fulfilled" ? extractList(topRatedRes.value) : [],
-      featured: featuredRes.status === "fulfilled" ? extractList(featuredRes.value) : [],
-      mostLoved: mostLovedRes.status === "fulfilled" ? extractList(mostLovedRes.value) : [],
-      nearby: nearbyRes.status === "fulfilled" ? extractList(nearbyRes.value) : [],
-      hosts: hostsRes.status === "fulfilled" ? extractList(hostsRes.value) : [],
-      categoryActivity: catActRes.status === "fulfilled" && Array.isArray(catActRes.value?.data) ? catActRes.value.data : [],
-      reviews: reviewsRes.status === "fulfilled" ? extractList(reviewsRes.value) : [],
-      homeLoaded: true,
-      homeLoading: false,
-    });
+    const fetchFeaturedP1 = getFeaturedExperiences(6, 1, "clicks")
+      .then((res) => {
+        const items = extractList(res);
+        set((state) => ({
+          featured: items,
+          sectionLoading: { ...state.sectionLoading, featured: false },
+        }));
+        return items;
+      })
+      .catch(() => {
+        set((state) => ({
+          sectionLoading: { ...state.sectionLoading, featured: false },
+        }));
+        return [];
+      });
+
+    // Phase 2 (Progressive Below-the-fold): Concurrently load remaining sections independently
+    const fetchMostLoved = getMostLovedExperiences(6, 1, "bookings")
+      .then((res) => {
+        set((state) => ({
+          mostLoved: extractList(res),
+          sectionLoading: { ...state.sectionLoading, mostLoved: false },
+        }));
+      })
+      .catch(() => {
+        set((state) => ({
+          sectionLoading: { ...state.sectionLoading, mostLoved: false },
+        }));
+      });
+
+    const fetchTopRated = getTopRatedTreks(6, 1, "rating")
+      .then((res) => {
+        set((state) => ({
+          topRated: extractList(res),
+          sectionLoading: { ...state.sectionLoading, topRated: false },
+        }));
+      })
+      .catch(() => {
+        set((state) => ({
+          sectionLoading: { ...state.sectionLoading, topRated: false },
+        }));
+      });
+
+    const fetchNearby = getNearbyTreks({ ...coords, limit: 6 })
+      .then((res) => {
+        set((state) => ({
+          nearby: extractList(res),
+          sectionLoading: { ...state.sectionLoading, nearby: false },
+        }));
+      })
+      .catch(() => {
+        set((state) => ({
+          sectionLoading: { ...state.sectionLoading, nearby: false },
+        }));
+      });
+
+    const fetchHosts = getTopRatedHosts(8, 1)
+      .then((res) => {
+        set((state) => ({
+          hosts: extractList(res),
+          sectionLoading: { ...state.sectionLoading, hosts: false },
+        }));
+      })
+      .catch(() => {
+        set((state) => ({
+          sectionLoading: { ...state.sectionLoading, hosts: false },
+        }));
+      });
+
+    const fetchCatAct = getCategoryActivity()
+      .then((res) => {
+        set({
+          categoryActivity: Array.isArray(res?.data) ? res.data : [],
+        });
+      })
+      .catch(() => {});
+
+    const fetchReviews = getLatestReviews(8)
+      .then((res) => {
+        set((state) => ({
+          reviews: extractList(res),
+          sectionLoading: { ...state.sectionLoading, reviews: false },
+        }));
+      })
+      .catch(() => {
+        set((state) => ({
+          sectionLoading: { ...state.sectionLoading, reviews: false },
+        }));
+      });
+
+    // Await all initial queries to finalize homeLoaded status
+    await Promise.allSettled([
+      fetchLatestP1,
+      fetchFeaturedP1,
+      fetchMostLoved,
+      fetchTopRated,
+      fetchNearby,
+      fetchHosts,
+      fetchCatAct,
+      fetchReviews,
+    ]);
+
+    set({ homeLoaded: true, homeLoading: false });
+
+    // Phase 3 (Progressive Expansion): Fetch additional records in background for smooth horizontal sliding
+    setTimeout(async () => {
+      try {
+        const [latestMore, featuredMore, mostLovedMore, topRatedMore, nearbyMore] =
+          await Promise.allSettled([
+            getLatestExperiences(16, 1, "latest"),
+            getFeaturedExperiences(16, 1, "clicks"),
+            getMostLovedExperiences(16, 1, "bookings"),
+            getTopRatedTreks(16, 1, "rating"),
+            getNearbyTreks({ ...coords, limit: 16 }),
+          ]);
+
+        const updates: Partial<ExploreState> = {};
+        if (latestMore.status === "fulfilled") {
+          const list = extractList(latestMore.value);
+          if (list.length > 0) updates.latest = list;
+        }
+        if (featuredMore.status === "fulfilled") {
+          const list = extractList(featuredMore.value);
+          if (list.length > 0) updates.featured = list;
+        }
+        if (mostLovedMore.status === "fulfilled") {
+          const list = extractList(mostLovedMore.value);
+          if (list.length > 0) updates.mostLoved = list;
+        }
+        if (topRatedMore.status === "fulfilled") {
+          const list = extractList(topRatedMore.value);
+          if (list.length > 0) updates.topRated = list;
+        }
+        if (nearbyMore.status === "fulfilled") {
+          const list = extractList(nearbyMore.value);
+          if (list.length > 0) updates.nearby = list;
+        }
+
+        if (Object.keys(updates).length > 0) {
+          set(updates);
+        }
+      } catch {
+        // Non-blocking background fetch
+      }
+    }, 1200);
   },
 
   setFilter: (key, value) => set({ [key]: value } as any),
@@ -136,4 +298,3 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
       page: 1,
     }),
 }));
-

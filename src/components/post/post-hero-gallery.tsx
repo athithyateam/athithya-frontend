@@ -16,6 +16,50 @@ interface PostHeroGalleryProps {
   onToggleSave?: () => void;
 }
 
+function GalleryImage({
+  src,
+  alt,
+  className = "",
+  imgClassName = "",
+  loading = "lazy",
+  fetchPriority = "low",
+  sizes,
+  onLoad,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  imgClassName?: string;
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
+  sizes?: string;
+  onLoad?: () => void;
+}) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div className={`relative w-full h-full overflow-hidden bg-neutral-200 dark:bg-neutral-800 ${className}`}>
+      {!loaded && (
+        <div className="absolute inset-0 bg-neutral-200 dark:bg-neutral-800 animate-pulse z-[1]" />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading={loading}
+        fetchPriority={fetchPriority}
+        decoding="async"
+        sizes={sizes}
+        onLoad={() => {
+          setLoaded(true);
+          onLoad?.();
+        }}
+        className={`w-full h-full object-cover transition-all duration-500 ${loaded ? "opacity-100" : "opacity-0"
+          } ${imgClassName}`}
+      />
+    </div>
+  );
+}
+
 export function PostHeroGallery({
   post,
   onBack,
@@ -38,7 +82,7 @@ export function PostHeroGallery({
       const idStr =
         item && typeof item === "object"
           ? (item as { _id?: string; id?: string })._id ||
-            (item as { _id?: string; id?: string }).id
+          (item as { _id?: string; id?: string }).id
           : item;
       return String(idStr) === String(postId);
     });
@@ -48,14 +92,18 @@ export function PostHeroGallery({
     controlledIsSaved !== undefined
       ? controlledIsSaved
       : optimisticSaved !== null
-      ? optimisticSaved
-      : computedSaved;
+        ? optimisticSaved
+        : computedSaved;
 
   const handleBack = () => {
     if (onBack) {
       onBack();
-    } else {
+      return;
+    }
+    if (typeof window !== "undefined" && window.history.length > 1) {
       router.back();
+    } else {
+      router.push("/");
     }
   };
 
@@ -75,10 +123,11 @@ export function PostHeroGallery({
       );
       return;
     }
-    const nextSavedState = !isSaved;
-    setOptimisticSaved(nextSavedState);
+    if (!postId) return;
+    const nextSaved = !isSaved;
+    setOptimisticSaved(nextSaved);
     try {
-      if (nextSavedState) {
+      if (nextSaved) {
         await saveExperienceApi(postId);
         showToast("Experience saved to your profile!", "success");
       } else {
@@ -87,8 +136,8 @@ export function PostHeroGallery({
       }
       await fetchUser();
     } catch {
-      setOptimisticSaved(!nextSavedState);
-      showToast("Failed to save experience", "error");
+      setOptimisticSaved(!nextSaved);
+      showToast("Failed to update saved experience", "error");
     }
   };
 
@@ -141,31 +190,34 @@ export function PostHeroGallery({
         await navigator.clipboard.writeText(window.location.href);
         showToast("Link copied to clipboard!", "success");
       }
-    } catch {}
+    } catch { }
   };
 
   const mainMedia = mediaList[0];
   const secondaryMedia = mediaList.slice(1, 5);
-  const hasMultiple = mediaList.length > 1;
+  const totalCount = mediaList.length;
 
   return (
     <div className="relative w-full">
+      {/* Desktop Gallery Grid */}
       <div className="hidden md:block relative rounded-2xl md:rounded-3xl overflow-hidden shadow-xs border border-neutral-200/60 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900">
+        {/* Back Button */}
         <button
           type="button"
           onClick={handleBack}
           className="absolute top-4 left-4 z-10 w-10 h-10 rounded-full bg-white/90 dark:bg-neutral-900/90 text-neutral-800 dark:text-neutral-100 border border-neutral-200/70 dark:border-neutral-700 shadow-md backdrop-blur-md flex items-center justify-center hover:scale-105 transition-all cursor-pointer"
           title="Go back"
         >
-          <ArrowLeft size={15} />
+          <ArrowLeft size={16} />
         </button>
 
+        {/* Action Controls */}
         <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
           <button
             type="button"
             onClick={handleShare}
             className="w-10 h-10 rounded-full bg-white/90 dark:bg-neutral-900/90 text-neutral-800 dark:text-neutral-100 border border-neutral-200/70 dark:border-neutral-700 shadow-md backdrop-blur-md flex items-center justify-center hover:scale-105 transition-all cursor-pointer"
-            title="Share this experience"
+            title="Share"
           >
             <Share2 size={15} />
           </button>
@@ -185,7 +237,84 @@ export function PostHeroGallery({
           </button>
         </div>
 
-        {hasMultiple ? (
+        {/* Gallery Layout based on count */}
+        {totalCount === 1 ? (
+          <div
+            onClick={() => openLightboxAt(0)}
+            className="w-full h-[420px] lg:h-[480px] relative cursor-pointer overflow-hidden"
+          >
+            <GalleryImage
+              src={getOptimizedImage(mainMedia.url, { width: 1400 })}
+              alt={postTitle}
+              loading="eager"
+              fetchPriority="high"
+              sizes="100vw"
+            />
+          </div>
+        ) : totalCount === 2 ? (
+          <div className="grid grid-cols-2 gap-2 h-[420px] lg:h-[480px]">
+            <div
+              onClick={() => openLightboxAt(0)}
+              className="relative cursor-pointer overflow-hidden group/main"
+            >
+              <GalleryImage
+                src={getOptimizedImage(mainMedia.url, { width: 900 })}
+                alt={postTitle}
+                loading="eager"
+                fetchPriority="high"
+                sizes="50vw"
+                imgClassName="group-hover/main:scale-105"
+              />
+            </div>
+            <div
+              onClick={() => openLightboxAt(1)}
+              className="relative cursor-pointer overflow-hidden group/tile"
+            >
+              <GalleryImage
+                src={getOptimizedImage(mediaList[1].url, { width: 900 })}
+                alt={`${postTitle} 2`}
+                loading="eager"
+                fetchPriority="auto"
+                sizes="50vw"
+                imgClassName="group-hover/tile:scale-105"
+              />
+            </div>
+          </div>
+        ) : totalCount === 3 ? (
+          <div className="grid grid-cols-3 gap-2 h-[420px] lg:h-[480px]">
+            <div
+              onClick={() => openLightboxAt(0)}
+              className="col-span-2 relative cursor-pointer overflow-hidden group/main"
+            >
+              <GalleryImage
+                src={getOptimizedImage(mainMedia.url, { width: 1000 })}
+                alt={postTitle}
+                loading="eager"
+                fetchPriority="high"
+                sizes="66vw"
+                imgClassName="group-hover/main:scale-105"
+              />
+            </div>
+            <div className="col-span-1 grid grid-rows-2 gap-2">
+              {[mediaList[1], mediaList[2]].map((item, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => openLightboxAt(idx + 1)}
+                  className="relative cursor-pointer overflow-hidden group/tile"
+                >
+                  <GalleryImage
+                    src={getOptimizedImage(item.url, { width: 500 })}
+                    alt={`${postTitle} ${idx + 2}`}
+                    loading={idx === 0 ? "eager" : "lazy"}
+                    fetchPriority={idx === 0 ? "auto" : "low"}
+                    sizes="33vw"
+                    imgClassName="group-hover/tile:scale-105"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
           <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[420px] lg:h-[480px]">
             <div
               onClick={() => openLightboxAt(0)}
@@ -206,10 +335,13 @@ export function PostHeroGallery({
                   </div>
                 </>
               ) : (
-                <img
+                <GalleryImage
                   src={getOptimizedImage(mainMedia.url, { width: 900 })}
-                  className="w-full h-full object-cover group-hover/main:scale-105 transition-transform duration-500"
                   alt={postTitle}
+                  loading="eager"
+                  fetchPriority="high"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 660px"
+                  imgClassName="group-hover/main:scale-105"
                 />
               )}
             </div>
@@ -217,50 +349,50 @@ export function PostHeroGallery({
             {[0, 1, 2, 3].map((slotIndex) => {
               const item = secondaryMedia[slotIndex] || mainMedia;
               const actualIndex = slotIndex + 1 < mediaList.length ? slotIndex + 1 : 0;
+              const isTopRow = slotIndex < 2;
               return (
                 <div
                   key={slotIndex}
                   onClick={() => openLightboxAt(actualIndex)}
                   className="col-span-1 row-span-1 relative cursor-pointer overflow-hidden group/tile"
                 >
-                  <img
+                  <GalleryImage
                     src={getOptimizedImage(item.url, { width: 500 })}
-                    className="w-full h-full object-cover group-hover/tile:scale-105 transition-transform duration-500"
                     alt={`Gallery ${slotIndex + 2}`}
+                    loading={isTopRow ? "eager" : "lazy"}
+                    fetchPriority={isTopRow ? "auto" : "low"}
+                    sizes="(max-width: 1280px) 25vw, 330px"
+                    imgClassName="group-hover/tile:scale-105"
                   />
                 </div>
               );
             })}
           </div>
-        ) : (
-          <div
-            onClick={() => openLightboxAt(0)}
-            className="w-full h-[420px] lg:h-[480px] relative cursor-pointer overflow-hidden"
-          >
-            <img
-              src={getOptimizedImage(mainMedia.url, { width: 1400 })}
-              className="w-full h-full object-cover"
-              alt={postTitle}
-            />
-          </div>
         )}
 
+        {/* View All Photos Button */}
         <button
           type="button"
           onClick={() => openLightboxAt(0)}
-          className="absolute bottom-5 right-5 z-10 inline-flex items-center gap-2 px-4 py-2 bg-white/95 dark:bg-neutral-900/95 text-neutral-900 dark:text-neutral-100 rounded-xl text-xs font-black uppercase tracking-wider border border-neutral-200/80 dark:border-neutral-700 shadow-md backdrop-blur-md cursor-pointer"
+          className="absolute bottom-5 right-5 z-10 inline-flex items-center gap-2 px-4 py-2 bg-white/95 dark:bg-neutral-900/95 text-neutral-900 dark:text-neutral-100 rounded-xl text-xs font-black uppercase tracking-wider border border-neutral-200/80 dark:border-neutral-700 shadow-md backdrop-blur-md cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
         >
           <Grid size={14} className="text-[#C59A2F]" />
           <span>Show all {mediaList.length} photos</span>
         </button>
       </div>
 
-      <div className="block md:hidden relative rounded-2xl overflow-hidden shadow-sm aspect-[4/3] bg-neutral-100 dark:bg-neutral-800">
-        <img
+      {/* Mobile Hero Banner */}
+      <div className="block md:hidden relative rounded-2xl overflow-hidden shadow-sm aspect-[4/3]">
+        <GalleryImage
           src={getOptimizedImage(mainMedia.url, { width: 800 })}
-          className="w-full h-full object-cover"
           alt={postTitle}
+          loading="eager"
+          fetchPriority="high"
+          sizes="100vw"
+        />
+        <div
           onClick={() => openLightboxAt(0)}
+          className="absolute inset-0 cursor-pointer"
         />
         <button
           type="button"
@@ -286,8 +418,19 @@ export function PostHeroGallery({
             <Bookmark size={14} className={isSaved ? "fill-[#C59A2F] text-[#C59A2F]" : ""} />
           </button>
         </div>
+
+        {totalCount > 1 && (
+          <button
+            type="button"
+            onClick={() => openLightboxAt(0)}
+            className="absolute bottom-3 right-3 z-10 px-3 py-1 bg-black/60 backdrop-blur-md text-white rounded-full text-[11px] font-bold tracking-wider cursor-pointer"
+          >
+            1 / {totalCount} photos
+          </button>
+        )}
       </div>
 
+      {/* Lightbox Modal */}
       <MediaLightbox
         isOpen={isLightboxOpen}
         onClose={() => setIsLightboxOpen(false)}

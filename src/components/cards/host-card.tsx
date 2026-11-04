@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Star, MapPin } from "lucide-react";
 import { getOptimizedImage } from "@/lib/image-helper";
 
@@ -18,6 +18,7 @@ export interface HostCardProps {
   onClick?: () => void;
   className?: string;
   verifyBadge?: { enabled?: boolean };
+  priority?: boolean;
 }
 
 export function HostCard({
@@ -29,7 +30,9 @@ export function HostCard({
   onClick,
   className = "",
   verifyBadge,
+  priority = false,
 }: HostCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const rawAvatar = (typeof image === "string" ? image : image?.url) || "";
   const avatarUrl = rawAvatar ? getOptimizedImage(rawAvatar, { width: 800, height: 1000 }) : DEFAULT_HOST_AVATAR;
 
@@ -39,14 +42,23 @@ export function HostCard({
       className={`group w-full bg-white rounded-[1.2rem] md:rounded-[2rem] overflow-hidden border border-neutral-100 dark:border-neutral-800/80 cursor-pointer shadow-xs hover:shadow-md transition-all duration-300 flex flex-col h-full dark:bg-neutral-900 ${className}`}
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 transition-colors">
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-neutral-200 dark:bg-neutral-800 animate-pulse z-[1]" />
+        )}
         <img
           src={avatarUrl}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = DEFAULT_HOST_AVATAR;
+            setImageLoaded(true);
           }}
+          onLoad={() => setImageLoaded(true)}
           alt={name}
-          className="w-full h-full object-cover transition-transform duration-500"
-          loading="lazy"
+          className={`w-full h-full object-cover transition-all duration-500 ${
+            imageLoaded ? "opacity-100" : "opacity-0"
+          }`}
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "low"}
+          decoding={priority ? "sync" : "async"}
         />
         {Number(rating || 0) > 0 && (
           <div className="absolute top-3 right-3 md:top-4 md:right-4 z-10">
@@ -81,4 +93,3 @@ export function HostCard({
 }
 
 export default HostCard;
-

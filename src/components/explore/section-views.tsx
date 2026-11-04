@@ -23,15 +23,40 @@ function extractList(res: any): any[] {
   );
 }
 
-export function LatestExperiencesView() {
+function useSectionList(fetchFn: () => Promise<any>, deps: any[] = []) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+
+    fetchFn()
+      .then((res) => {
+        if (!isMounted) return;
+        setItems(extractList(res));
+      })
+      .catch(() => {
+        if (isMounted) setItems([]);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+
+  return { items, loading };
+}
+
+export function LatestExperiencesView() {
+  const { items, loading } = useSectionList(() =>
     getLatestExperiences(100, 1, "latest")
-      .then((res) => setItems(extractList(res)))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, []);
+  );
+
   return (
     <ExplorePageView
       type="explore-experience"
@@ -46,14 +71,10 @@ export function LatestExperiencesView() {
 }
 
 export function FeaturedExperiencesView() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
+  const { items, loading } = useSectionList(() =>
     getFeaturedExperiences(100, 1, "clicks")
-      .then((res) => setItems(extractList(res)))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, []);
+  );
+
   return (
     <ExplorePageView
       type="featured-experience"
@@ -68,14 +89,10 @@ export function FeaturedExperiencesView() {
 }
 
 export function MostLovedExperiencesView() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
+  const { items, loading } = useSectionList(() =>
     getMostLovedExperiences(100, 1, "bookings")
-      .then((res) => setItems(extractList(res)))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, []);
+  );
+
   return (
     <ExplorePageView
       type="most-loved-experience"
@@ -90,14 +107,10 @@ export function MostLovedExperiencesView() {
 }
 
 export function TopRatedExperiencesView() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
+  const { items, loading } = useSectionList(() =>
     getTopRatedTreks(100, 1, "rating")
-      .then((res) => setItems(extractList(res)))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, []);
+  );
+
   return (
     <ExplorePageView
       type="top-rated-experience"
@@ -112,26 +125,26 @@ export function TopRatedExperiencesView() {
 }
 
 export function NearbyExperiencesView() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    let coords: Record<string, any> = {};
+  const getCoords = () => {
     try {
       const cached = localStorage.getItem("user_coords");
-      if (cached) coords = JSON.parse(cached);
-    } catch {}
-    getNearbyTreks({ ...coords, limit: 100, page: 1 })
-      .then((res) => setItems(extractList(res)))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, []);
+      return cached ? JSON.parse(cached) : {};
+    } catch {
+      return {};
+    }
+  };
+
+  const { items, loading } = useSectionList(() =>
+    getNearbyTreks({ ...getCoords(), limit: 100, page: 1 })
+  );
+
   return (
     <ExplorePageView
       type="nearby-experience"
       breadcrumb="Nearby Experiences"
       title="Nearby"
       highlight="Experiences"
-      subtitle="Explore experiences near you"
+      subtitle="Explore experiences around your location"
       items={items}
       loading={loading}
     />
@@ -139,14 +152,8 @@ export function NearbyExperiencesView() {
 }
 
 export function TopRatedHostsView() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    getTopRatedHosts(100, 1)
-      .then((res) => setItems(extractList(res)))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, []);
+  const { items, loading } = useSectionList(() => getTopRatedHosts(100, 1));
+
   return (
     <ExplorePageView
       type="top-rated-host"
@@ -170,14 +177,17 @@ export function CategoryExperiencesView({
   categoryName: string;
   subtitle: string;
 }) {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    listExperiences({ category: categoryName, limit: 100, page: 1 })
-      .then((res) => setItems(extractList(res)))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, [categoryName]);
+  const fetchAllExperiences = async () => {
+    try {
+      const res = await listExperiences({ limit: 100, page: 1 });
+      return res;
+    } catch {
+      return [];
+    }
+  };
+
+  const { items, loading } = useSectionList(fetchAllExperiences, []);
+
   return (
     <ExplorePageView
       type={slug}
@@ -187,7 +197,7 @@ export function CategoryExperiencesView({
       initialCategory={categoryName === "Others" ? "Other" : categoryName}
       items={items}
       loading={loading}
+      hideHeader={true}
     />
   );
 }
-

@@ -15,6 +15,8 @@ interface ExperienceSectionRowProps {
   items: any[];
   loading?: boolean;
   rowIndex?: number;
+  isPrioritySection?: boolean;
+  priorityCardsCount?: number;
 }
 
 export function ExperienceSectionRow({
@@ -25,6 +27,8 @@ export function ExperienceSectionRow({
   items,
   loading = false,
   rowIndex,
+  isPrioritySection = false,
+  priorityCardsCount = 6,
 }: ExperienceSectionRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -105,7 +109,7 @@ export function ExperienceSectionRow({
                   data={item}
                   rowIndex={rowIndex}
                   cardIndex={idx}
-                  priority={rowIndex === 0 && idx < 2}
+                  priority={Boolean(rowIndex === 0 && idx < 2) || Boolean(isPrioritySection && idx < priorityCardsCount)}
                 />
               </div>
             ))

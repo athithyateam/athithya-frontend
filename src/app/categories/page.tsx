@@ -75,6 +75,94 @@ export const CATEGORIES_DATA = [
   },
 ];
 
+function CategoryCardItem({
+  cat,
+  isAboveTheFold,
+  onClick,
+}: {
+  cat: any;
+  isAboveTheFold: boolean;
+  onClick: () => void;
+}) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div
+      onClick={onClick}
+      className={`group relative rounded-2xl md:rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col aspect-[4/5] sm:aspect-[3/4] bg-neutral-200 dark:bg-neutral-800 ${
+        cat.isNew ? "ring-2 ring-[#C59A2F] shadow-[0_0_20px_rgba(197,154,47,0.35)]" : "border border-neutral-100 dark:border-neutral-800"
+      }`}
+    >
+      {!loaded && (
+        <div className="absolute inset-0 bg-neutral-200 dark:bg-neutral-800 animate-pulse z-[1]" />
+      )}
+      {cat.isCollage && Array.isArray(cat.images) ? (
+        <div className="w-full h-full relative overflow-hidden group-hover:scale-105 transition-transform duration-700 ease-out">
+          <div className="w-full h-full flex overflow-hidden opacity-80 group-hover:opacity-95 transition-all duration-700">
+            <div className="w-1/2 h-full overflow-hidden relative border-r border-white/30">
+              <img
+                src={cat.images[0]}
+                alt="Rock Climbing"
+                loading={isAboveTheFold ? "eager" : "lazy"}
+                fetchPriority={isAboveTheFold ? "high" : "low"}
+                decoding="async"
+                onLoad={() => setLoaded(true)}
+                className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+              />
+            </div>
+            <div className="w-1/2 h-full overflow-hidden relative">
+              <img
+                src={cat.images[1]}
+                alt="Flyboarding"
+                loading={isAboveTheFold ? "eager" : "lazy"}
+                fetchPriority={isAboveTheFold ? "high" : "low"}
+                decoding="async"
+                className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+              />
+            </div>
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center text-center p-4 z-10 bg-black/40 group-hover:bg-black/25 transition-all">
+            <div className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-md border border-[#C59A2F]/80 flex items-center justify-center text-[#C59A2F] shadow-[0_0_20px_rgba(197,154,47,0.6)] group-hover:scale-115 transition-all">
+              <HelpCircle className="w-7 h-7" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <img
+          src={cat.image}
+          alt={cat.label}
+          loading={isAboveTheFold ? "eager" : "lazy"}
+          fetchPriority={isAboveTheFold ? "high" : "low"}
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+          className={`w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out ${loaded ? "opacity-100" : "opacity-0"}`}
+        />
+      )}
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity group-hover:from-black/95 z-[2]" />
+
+      {cat.isNew && (
+        <div className="absolute top-3.5 right-3.5 z-20">
+          <span className="px-2.5 py-1 rounded-full bg-[#C59A2F] text-white text-[9px] md:text-[10px] font-black uppercase tracking-wider shadow-lg border border-white dark:border-neutral-950">
+            New
+          </span>
+        </div>
+      )}
+
+      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 text-white flex flex-col justify-end text-left z-[3]">
+        <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white group-hover:text-[#C59A2F] transition-colors leading-tight">
+          {cat.label}
+        </h3>
+        {cat.count && <p className="text-xs sm:text-sm font-extrabold text-[#C59A2F] tracking-wide mt-1 mb-3 drop-shadow">{cat.count}</p>}
+        <div className="inline-flex items-center gap-2 text-xs font-bold text-[#C59A2F] uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">
+          <span>Explore {cat.label}</span>
+          <ArrowRight size={14} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CategoriesPage() {
   const router = useRouter();
   const [categoryActivity, setCategoryActivity] = useState<any[]>([]);
@@ -139,55 +227,13 @@ export default function CategoriesPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-          {visibleCategories.map((cat) => (
-            <div
+          {visibleCategories.map((cat, idx) => (
+            <CategoryCardItem
               key={cat.id}
+              cat={cat}
+              isAboveTheFold={idx < 3}
               onClick={() => router.push(`/${cat.slug}`)}
-              className={`group relative rounded-2xl md:rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col aspect-[4/5] sm:aspect-[3/4] ${
-                cat.isNew ? "ring-2 ring-[#C59A2F] shadow-[0_0_20px_rgba(197,154,47,0.35)]" : "border border-neutral-100 dark:border-neutral-800"
-              }`}
-            >
-              {cat.isCollage && Array.isArray(cat.images) ? (
-                <div className="w-full h-full relative overflow-hidden group-hover:scale-105 transition-transform duration-700 ease-out">
-                  <div className="w-full h-full flex overflow-hidden opacity-80 group-hover:opacity-95 transition-all duration-700">
-                    <div className="w-1/2 h-full overflow-hidden relative border-r border-white/30">
-                      <img src={cat.images[0]} alt="Rock Climbing" loading="lazy" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-1/2 h-full overflow-hidden relative">
-                      <img src={cat.images[1]} alt="Flyboarding" loading="lazy" className="w-full h-full object-cover" />
-                    </div>
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center text-center p-4 z-10 bg-black/40 group-hover:bg-black/25 transition-all">
-                    <div className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-md border border-[#C59A2F]/80 flex items-center justify-center text-[#C59A2F] shadow-[0_0_20px_rgba(197,154,47,0.6)] group-hover:scale-115 transition-all">
-                      <HelpCircle className="w-7 h-7" />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <img src={cat.image} alt={cat.label} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
-              )}
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity group-hover:from-black/95" />
-
-              {cat.isNew && (
-                <div className="absolute top-3.5 right-3.5 z-20">
-                  <span className="px-2.5 py-1 rounded-full bg-[#C59A2F] text-white text-[9px] md:text-[10px] font-black uppercase tracking-wider shadow-lg border border-white dark:border-neutral-950">
-                    New
-                  </span>
-                </div>
-              )}
-
-              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 text-white flex flex-col justify-end text-left">
-                <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white group-hover:text-[#C59A2F] transition-colors leading-tight">
-                  {cat.label}
-                </h3>
-                {cat.count && <p className="text-xs sm:text-sm font-extrabold text-[#C59A2F] tracking-wide mt-1 mb-3 drop-shadow">{cat.count}</p>}
-                <div className="inline-flex items-center gap-2 text-xs font-bold text-[#C59A2F] uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">
-                  <span>Explore {cat.label}</span>
-                  <ArrowRight size={14} />
-                </div>
-              </div>
-            </div>
+            />
           ))}
         </div>
       </main>

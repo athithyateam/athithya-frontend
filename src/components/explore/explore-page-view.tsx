@@ -15,7 +15,6 @@ import {
 } from "@/lib/experience-helpers";
 import { ExperienceCard } from "@/components/cards/experience-card";
 import { HostCard } from "@/components/cards/host-card";
-import { ExperienceCardPlaceholder } from "@/components/home/experience-card-placeholder";
 import { HostCardPlaceholder } from "./host-card-placeholder";
 import { ExploreFilterSidebar } from "./explore-filter-sidebar";
 
@@ -29,6 +28,7 @@ export interface ExplorePageViewProps {
   initialCategory?: string | null;
   items: any[];
   loading: boolean;
+  hideHeader?: boolean;
 }
 
 const normalizeCategoryToMain = (catStr: string) => {
@@ -42,19 +42,21 @@ const normalizeCategoryToMain = (catStr: string) => {
   return "Other";
 };
 
-const dummySlots = Array.from({ length: 6 }).map((_, i) => ({
-  id: `slot-${i + 1}`,
-  title: "No title",
-  location: "No location",
-  price: "No price",
-  rating: "No rating",
-  reviewCount: "No reviews",
-  image: "",
-  postType: "No type",
-  duration: "No duration",
-  hostName: "No host",
-  description: "No description",
-}));
+function ExperienceCardGridSkeleton() {
+  return (
+    <div className="w-full flex flex-col bg-white dark:bg-neutral-900 rounded-2xl md:rounded-[1.5rem] border border-neutral-200/80 dark:border-neutral-800 shadow-xs overflow-hidden">
+      <div className="relative aspect-[4/3] w-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+      <div className="p-4 sm:p-5 flex flex-col gap-3">
+        <div className="h-5 w-3/4 bg-neutral-200 dark:bg-neutral-800 rounded-md animate-pulse" />
+        <div className="h-4 w-1/2 bg-neutral-200 dark:bg-neutral-800 rounded-md animate-pulse" />
+        <div className="pt-2 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800">
+          <div className="h-4 w-20 bg-neutral-200 dark:bg-neutral-800 rounded-md animate-pulse" />
+          <div className="h-4 w-14 bg-neutral-200 dark:bg-neutral-800 rounded-md animate-pulse" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function ExplorePageView({
   type,
@@ -66,6 +68,7 @@ export function ExplorePageView({
   initialCategory = null,
   items,
   loading,
+  hideHeader = false,
 }: ExplorePageViewProps) {
   const router = useRouter();
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
@@ -82,6 +85,14 @@ export function ExplorePageView({
     setFilter,
     resetFilters,
   } = useExploreStore();
+
+  const [currentViewType, setCurrentViewType] = useState(type);
+
+  // Synchronously reset category filters when switching between explore/category views
+  if (currentViewType !== type) {
+    setCurrentViewType(type);
+    resetFilters(initialCategory);
+  }
 
   useEffect(() => {
     resetFilters(initialCategory);
@@ -104,16 +115,23 @@ export function ExplorePageView({
 
   const filteredResults = useMemo(() => {
     let list = [...items];
+
     if (!isHostDiscovery && selectedCategories.length > 0) {
       list = list.filter((item) => {
         const cats = getItemCategories(item);
+        if (cats.length === 0) return false;
         return selectedCategories.some((sc) => {
-          const scLow = sc.toLowerCase();
-          return cats.some(
-            (ic) =>
-              normalizeCategoryToMain(ic).toLowerCase() === scLow ||
-              ic.toLowerCase().includes(scLow)
-          );
+          const scLow = sc.toLowerCase().trim();
+          return cats.some((ic) => {
+            const norm = normalizeCategoryToMain(ic).toLowerCase().trim();
+            const icLow = ic.toLowerCase().trim();
+            return (
+              norm === scLow ||
+              icLow === scLow ||
+              icLow.includes(scLow) ||
+              scLow.includes(icLow)
+            );
+          });
         });
       });
     }
@@ -156,6 +174,7 @@ export function ExplorePageView({
   }, [
     items,
     isHostDiscovery,
+    initialCategory,
     selectedCategories,
     selectedLocation,
     priceRange,
@@ -169,27 +188,31 @@ export function ExplorePageView({
     (page - 1) * ITEMS_PER_PAGE,
     page * ITEMS_PER_PAGE
   );
-  const showPlaceholders = !loading && items.length === 0;
+
 
   return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors pt-24 md:pt-28 pb-16">
+    <div className={`bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors ${hideHeader ? "w-full pb-16" : "min-h-screen pt-24 md:pt-28 pb-16"}`}>
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8">
-        <div className="flex items-center gap-2 text-xs font-bold text-neutral-400 mb-4 text-left">
-          <Link href={routes.home} className="hover:text-[#C59A2F] transition-colors">
-            Home
-          </Link>
-          <span>/</span>
-          <span className="text-[#C59A2F] font-extrabold capitalize">{breadcrumb}</span>
-        </div>
+        {!hideHeader && (
+          <>
+            <div className="flex items-center gap-2 text-xs font-bold text-neutral-400 mb-4 text-left">
+              <Link href={routes.home} className="hover:text-[#C59A2F] transition-colors">
+                Home
+              </Link>
+              <span>/</span>
+              <span className="text-[#C59A2F] font-extrabold capitalize">{breadcrumb}</span>
+            </div>
 
-        <div className="mb-6 text-left">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-neutral-900 dark:text-neutral-100 leading-tight">
-            {title} {highlight && <span className="text-[#C59A2F]">{highlight}</span>}
-          </h1>
-          <p className="text-neutral-500 dark:text-neutral-400 text-xs sm:text-sm font-bold mt-2">
-            {subtitle}
-          </p>
-        </div>
+            <div className="mb-6 text-left">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-neutral-900 dark:text-neutral-100 leading-tight">
+                {title} {highlight && <span className="text-[#C59A2F]">{highlight}</span>}
+              </h1>
+              <p className="text-neutral-500 dark:text-neutral-400 text-xs sm:text-sm font-bold mt-2">
+                {subtitle}
+              </p>
+            </div>
+          </>
+        )}
 
         <div className="lg:hidden flex items-center gap-3 mb-6">
           <button
@@ -212,9 +235,15 @@ export function ExplorePageView({
 
           <main className="lg:col-span-3 space-y-6 text-left">
             <div className="bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <span className="font-extrabold text-sm text-neutral-900 dark:text-neutral-100">
-                {showPlaceholders ? dummySlots.length : filteredResults.length}{" "}
-                {isHostDiscovery ? "Hosts" : "Experiences"} Found
+              <span className="font-extrabold text-sm text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                {loading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="w-16 h-4 bg-neutral-200 dark:bg-neutral-800 rounded-md animate-pulse" />
+                    <span>{isHostDiscovery ? "Hosts" : "Experiences"} Found</span>
+                  </span>
+                ) : (
+                  `${filteredResults.length} ${isHostDiscovery ? "Hosts" : "Experiences"} Found`
+                )}
               </span>
 
               <div className="flex items-center gap-2">
@@ -244,60 +273,75 @@ export function ExplorePageView({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {showPlaceholders
-                ? dummySlots.map((item) =>
-                    isHostDiscovery ? (
-                      <HostCardPlaceholder key={item.id} />
-                    ) : (
-                      <ExperienceCardPlaceholder key={item.id} item={item} />
-                    )
+              {loading ? (
+                Array.from({ length: 6 }).map((_, i) =>
+                  isHostDiscovery ? (
+                    <HostCardPlaceholder key={`skeleton-${i}`} />
+                  ) : (
+                    <ExperienceCardGridSkeleton key={`skeleton-${i}`} />
                   )
-                : paginatedItems.map((item: any) =>
-                    isHostDiscovery ? (
-                      <HostCard
-                        key={item._id || item.id}
-                        id={item._id || item.id}
-                        image={item.avatar || item.profilePic}
-                        name={
-                          [item.firstname, item.lastname].filter(Boolean).join(" ") ||
-                          item.name ||
-                          "Local Host"
-                        }
-                        location={item.city || item.district || "Uttarakhand"}
-                        tripsHosted={item.tripsHosted ?? item.experienceCount ?? 0}
-                        rating={item.averageRating || item.rating?.average || item.rating}
-                        verifyBadge={item.verifyBadge}
-                        onClick={() => router.push(`/profile/${item._id || item.id}`)}
-                      />
-                    ) : (
-                      <ExperienceCard key={item._id || item.id} data={item} showBookmark className="w-full" />
-                    )
-                  )}
+                )
+              ) : filteredResults.length === 0 && !loading ? (
+                <div className="col-span-full py-16 text-center text-neutral-500 font-bold">
+                  No {isHostDiscovery ? "hosts" : "experiences"} found matching your criteria.
+                </div>
+              ) : (
+                paginatedItems.map((item: any, idx: number) =>
+                  isHostDiscovery ? (
+                    <HostCard
+                      key={item._id || item.id}
+                      id={item._id || item.id}
+                      image={item.avatar || item.profilePic}
+                      name={
+                        [item.firstname, item.lastname].filter(Boolean).join(" ") ||
+                        item.name ||
+                        "Local Host"
+                      }
+                      location={item.city || item.district || "Uttarakhand"}
+                      tripsHosted={item.tripsHosted ?? item.experienceCount ?? 0}
+                      rating={item.averageRating || item.rating?.average || item.rating}
+                      verifyBadge={item.verifyBadge}
+                      priority={page === 1 && idx < 6}
+                      onClick={() => router.push(`/profile/${item._id || item.id}`)}
+                    />
+                  ) : (
+                    <ExperienceCard
+                      key={item._id || item.id}
+                      data={item}
+                      showBookmark
+                      className="w-full"
+                      priority={page === 1 && idx < 6}
+                    />
+                  )
+                )
+              )}
             </div>
 
-            <div className="pt-6 border-t border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between">
-              <button
-                type="button"
-                disabled={page <= 1}
-                onClick={() => setFilter("page", Math.max(1, page - 1))}
-                className="px-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs flex items-center gap-1 disabled:opacity-50 cursor-pointer"
-              >
-                <ChevronLeft size={14} />
-                <span>Previous</span>
-              </button>
-              <span className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
-                Page {page} of {totalPages}
-              </span>
-              <button
-                type="button"
-                disabled={page >= totalPages}
-                onClick={() => setFilter("page", Math.min(totalPages, page + 1))}
-                className="px-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs flex items-center gap-1 disabled:opacity-50 cursor-pointer"
-              >
-                <span>Next</span>
-                <ChevronRight size={14} />
-              </button>
-            </div>
+            {totalPages > 1 && (
+              <div className="pt-6 border-t border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between">
+                <button
+                  type="button"
+                  disabled={page <= 1}
+                  onClick={() => setFilter("page", Math.max(1, page - 1))}
+                  className="px-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs flex items-center gap-1 disabled:opacity-50 cursor-pointer"
+                >
+                  <ChevronLeft size={14} />
+                  <span>Previous</span>
+                </button>
+                <span className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
+                  Page {page} of {totalPages}
+                </span>
+                <button
+                  type="button"
+                  disabled={page >= totalPages}
+                  onClick={() => setFilter("page", Math.min(totalPages, page + 1))}
+                  className="px-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs flex items-center gap-1 disabled:opacity-50 cursor-pointer"
+                >
+                  <span>Next</span>
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            )}
           </main>
         </div>
       </div>

@@ -42,7 +42,7 @@ export default function BungeeJumpingCategoryPage() {
       </div>
 
       {/* Experience Listings (Left Filter Sidebar + Right Cards Grid) */}
-      <div className="-mt-16 sm:-mt-20 [&_h1]:hidden [&_.text-neutral-400.mb-4]:hidden">
+      <div className="w-full">
         <CategoryExperiencesView
           slug="bungee-jumping"
           categoryName="Bungee Jumping"
