@@ -145,8 +145,6 @@ export const ExperienceCard = memo(function ExperienceCard({
                 <ProgressiveImage
                   src={meta.hostAvatar}
                   alt={meta.hostName}
-                  rowIndex={rowIndex}
-                  cardIndex={cardIndex}
                   isAvatar
                   containerClassName="w-6 h-6 shrink-0 border border-neutral-200 dark:border-neutral-700"
                   fallbackSrc="https://ui-avatars.com/api/?name=Host&background=C59A2F&color=fff"
