@@ -97,3 +97,4 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     ],
   },
 ];
+
