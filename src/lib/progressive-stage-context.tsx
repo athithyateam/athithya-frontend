@@ -26,7 +26,11 @@ interface ProgressiveStageContextValue {
 const ProgressiveStageContext = createContext<ProgressiveStageContextValue>({
   activeStage: -1,
   reportImageLoaded: () => {},
-  shouldLoadImage: () => false,
+  shouldLoadImage: (rowIndex, _cardIndex, inView, priority) => {
+    // When outside of ProgressiveStageProvider, allow standalone images and priority items to load
+    if (priority || rowIndex === undefined) return true;
+    return Boolean(inView);
+  },
 });
 
 export function ProgressiveStageProvider({
@@ -83,24 +87,20 @@ export function ProgressiveStageProvider({
       inView = false,
       priority = false
     ): boolean => {
-      // Priority cards (e.g. top 2 cards of Row 0) load as soon as pipeline starts (stage >= 0)
-      if (priority) return activeStage >= 0;
+      // Priority cards or standalone images load immediately
+      if (priority || rowIndex === undefined) return true;
 
-      // Standalone images (not part of the home waterfall rows) load when in view
-      if (rowIndex === undefined) return inView || activeStage >= 0;
+      // Any card in view or scrolled into view loads immediately
+      if (inView) return true;
 
-      // A card is visible in the row if within the first 4 cards
+      // Cards within the first 4 slots of a row load when their row's stage arrives
       const isVisibleInRow = cardIndex === undefined || cardIndex < 4;
-
       if (isVisibleInRow) {
-        // Visible cards only load when their row's turn arrives in the top-to-bottom waterfall
-        // (Row 0 -> Row 1 -> Row 2 -> Row 3 -> Row 4 -> Hosts -> Reviews)
         return activeStage >= rowIndex;
       }
 
-      // Off-screen cards (cardIndex >= 4, to the right side of the carousel):
-      // Only load once ALL visible rows have finished (activeStage >= MAX_PROGRESSIVE_STAGE)
-      return activeStage >= MAX_PROGRESSIVE_STAGE;
+      // Off-screen cards load when active stage reaches their row or higher
+      return activeStage >= rowIndex;
     },
     [activeStage]
   );

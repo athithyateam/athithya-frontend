@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, memo, useMemo } from "react";
+import React, { useState, memo, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Bookmark, Tag, MapPin, Edit, Trash2, Calendar } from "lucide-react";
+import { Tag, MapPin, Edit, Trash2, Calendar } from "lucide-react";
 import { extractExperienceCardMeta } from "@/lib/experience-helpers";
-import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
-import { deleteExperience, saveExperienceApi, unsaveExperienceApi } from "@/lib/api/experiences-api";
+import { deleteExperience } from "@/lib/api/experiences-api";
 import { ConfirmModal, DiscountInfoModal } from "@/components/ui/modal";
 import { ProgressiveImage } from "@/components/ui/progressive-image";
+import { BookmarkButton } from "@/components/ui/bookmark-button";
 
 export interface ExperienceCardProps {
   data: Record<string, any>;
@@ -35,39 +35,11 @@ export const ExperienceCard = memo(function ExperienceCard({
   onImageLoad, scheduledDate, onEditSchedule, onDeleteSchedule, isThemed = false,
 }: ExperienceCardProps) {
   const router = useRouter();
-  const { user, openAuthModal } = useAuthStore();
   const { showToast } = useFeedbackStore();
   const [showDiscountModal, setShowDiscountModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
 
   const meta = useMemo(() => extractExperienceCardMeta(data, compact, defaultType), [data, compact, defaultType]);
-
-  useEffect(() => {
-    const saved = user?.savedExperiences || (user as any)?.savedPosts;
-    if (!Array.isArray(saved)) return setIsSaved(false);
-    setIsSaved(saved.some((item: any) => String(typeof item === "object" ? item._id || item.id : item) === String(meta.id)));
-  }, [user, meta.id]);
-
-  const handleSave = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!user) return openAuthModal("login");
-    if (user.role === "host") return showToast("You can't save another host experience, if you are already a host.", "error");
-    try {
-      if (!isSaved) {
-        await saveExperienceApi(meta.id);
-        setIsSaved(true);
-        showToast("Saved to your profile!", "success");
-      } else {
-        await unsaveExperienceApi(meta.id);
-        setIsSaved(false);
-        showToast("Removed from saved", "success");
-        onUnsave?.(meta.id);
-      }
-    } catch {
-      showToast("Failed to update bookmark", "error");
-    }
-  };
 
   const performDelete = async () => {
     try {
@@ -129,9 +101,12 @@ export const ExperienceCard = memo(function ExperienceCard({
               </div>
             )}
             {showBookmark && !showActions && !onDeleteSchedule && (
-              <button onClick={handleSave} className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 shadow-sm flex items-center justify-center">
-                <Bookmark size={14} className={isSaved ? "fill-[#C59A2F] text-[#C59A2F]" : "text-neutral-500 dark:text-neutral-300 group-hover:text-[#C59A2F]"} />
-              </button>
+              <BookmarkButton
+                experienceId={meta.id}
+                variant="card-badge"
+                size={14}
+                onUnsave={onUnsave}
+              />
             )}
           </div>
           {scheduledDate && (
