@@ -1,9 +1,8 @@
-"use client";
-
-import { useState } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { Mail, Phone, Clock, Check, Send, ArrowRight, MessageSquare } from "lucide-react";
+import { Mail, Phone, Clock, Check, ArrowRight, MessageSquare } from "lucide-react";
 import { routes } from "@/config/navigation";
+import { SupportContactForm } from "@/components/marketing/support-contact-form";
 
 const SUPPORT_CONTACT = {
   whatsapp: "+91 9389860637",
@@ -11,22 +10,23 @@ const SUPPORT_CONTACT = {
   phone: "+91 93898 60637",
 };
 
+export const metadata: Metadata = {
+  title: "Help & Support | Athithya",
+  description:
+    "Need help with bookings, host verification, cancellations, or travel experiences? Contact the Athithya local support team via WhatsApp, phone, or email.",
+  alternates: { canonical: "https://athithya.in/support" },
+  openGraph: {
+    title: "Help & Support | Athithya",
+    description:
+      "Need help with bookings, host verification, cancellations, or travel experiences? Contact the Athithya local support team via WhatsApp, phone, or email.",
+    url: "https://athithya.in/support",
+    type: "website",
+  },
+};
+
 export default function SupportPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
-
   return (
-    <main className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300 pb-16 md:pb-24">
+    <div className="text-neutral-900 dark:text-neutral-100 transition-colors duration-300 pb-16 md:pb-24">
       <section className="pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 relative overflow-hidden text-center">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 dark:bg-neutral-800 text-xs font-bold text-[#C59A2F] border border-amber-200 uppercase tracking-wider mb-3 mx-auto">
@@ -44,7 +44,7 @@ export default function SupportPage() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           {/* Form Card (7 Cols) */}
-          <div className="lg:col-span-7 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs  flex flex-col justify-between text-left">
+          <div className="lg:col-span-7 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs flex flex-col justify-between text-left">
             <div>
               <div className="flex items-center justify-between gap-4 mb-5">
                 <span className="px-3 py-1 rounded-full bg-amber-50 dark:bg-neutral-800 border border-amber-200 text-xs font-bold uppercase tracking-wider text-[#C59A2F]">
@@ -56,99 +56,14 @@ export default function SupportPage() {
                 </span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mb-1">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mb-1">
                 Send Us a Message
-              </h3>
+              </h2>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-6 leading-relaxed">
                 Available for travellers, hosts, and experience booking queries.
               </p>
 
-              {submitted ? (
-                <div className="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 text-center mb-6">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto mb-3">
-                    <Check size={24} />
-                  </div>
-                  <h4 className="text-lg font-bold text-emerald-900 dark:text-emerald-200 mb-1">
-                    Message Sent Successfully
-                  </h4>
-                  <p className="text-sm text-emerald-700 dark:text-emerald-300 mb-4">
-                    Thank you! Our support team will review your inquiry and get back to you shortly.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setSubmitted(false)}
-                    className="px-5 py-2 rounded-full bg-[#C59A2F] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#A67F26] transition cursor-pointer"
-                  >
-                    Send Another Message
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-3.5 mb-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 mb-1">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="Your name"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-[#C59A2F] text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 mb-1">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="your.email@example.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-[#C59A2F] text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 mb-1">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+91 Mobile number"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-[#C59A2F] text-sm"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 mb-1">
-                      Message *
-                    </label>
-                    <textarea
-                      required
-                      rows={3}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Describe your inquiry..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-[#C59A2F] text-sm resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="px-8 py-2.5 rounded-full bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shadow-md inline-flex items-center gap-2 cursor-pointer"
-                  >
-                    <span>Submit Inquiry</span>
-                    <Send size={13} />
-                  </button>
-                </form>
-              )}
+              <SupportContactForm />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-neutral-200/70 dark:border-neutral-800">
@@ -179,15 +94,15 @@ export default function SupportPage() {
           </div>
 
           {/* Info Card (5 Cols) */}
-          <div className="lg:col-span-5 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs  flex flex-col justify-between text-left">
+          <div className="lg:col-span-5 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 bg-[#FAF8F5] dark:bg-neutral-900 p-6 sm:p-8 md:p-10 shadow-xs flex flex-col justify-between text-left">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-neutral-800 border border-amber-200 text-[#C59A2F] flex items-center justify-center shrink-0">
                   <Clock size={18} />
                 </div>
-                <h4 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-neutral-100">
+                <h3 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-neutral-100">
                   Operational Hours
-                </h4>
+                </h3>
               </div>
 
               <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-neutral-800/80 border border-neutral-200/70 dark:border-neutral-700/70 mb-5">
@@ -233,6 +148,6 @@ export default function SupportPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
