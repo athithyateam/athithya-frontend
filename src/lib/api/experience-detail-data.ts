@@ -24,25 +24,8 @@ export const getCachedExperience = cache(
         return null;
       }
 
-      let similar: Record<string, unknown>[] = (res?.similarExperiences ||
+      const similar: Record<string, unknown>[] = (res?.similarExperiences ||
         []) as Record<string, unknown>[];
-      const categories = experience.categories;
-      if (!similar.length && Array.isArray(categories) && categories.length) {
-        try {
-          const catRes = await listExperiences({
-            categories: categories.join(","),
-            limit: 8,
-          });
-          const list = (catRes?.experiences || catRes?.data ||
-            []) as Record<string, unknown>[];
-          similar = list.filter(
-            (p) =>
-              String(p._id || p.id) !== String(id)
-          );
-        } catch {
-          similar = [];
-        }
-      }
 
       return {
         experience,

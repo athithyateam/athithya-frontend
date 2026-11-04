@@ -2,10 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
-import {
-  getCachedExperience,
-  getCachedHostReviews,
-} from "@/lib/api/experience-detail-data";
+import { getCachedExperience } from "@/lib/api/experience-detail-data";
 import { PostHeroGallery } from "@/components/post/post-hero-gallery";
 import { BookingWidget } from "@/components/post/booking-widget";
 import { HostReviewsSection } from "@/components/post/host-reviews-section";
@@ -108,7 +105,6 @@ export default async function PostDetailPage({
 
   const userObj = post.user as Record<string, unknown> | undefined;
   const hostId = (userObj?._id || userObj?.id) as string | undefined;
-  const initialReviewsData = hostId ? await getCachedHostReviews(hostId) : null;
 
   const titleStr = typeof post.title === "string" ? post.title : "Experience";
   const descStr = typeof post.description === "string" ? post.description : "";
@@ -225,7 +221,7 @@ export default async function PostDetailPage({
         host={userObj}
         hostId={hostId}
         postId={postId}
-        initialReviewsData={initialReviewsData}
+        initialReviewsData={null}
       />
 
       {similarExperiences.length > 0 && (
