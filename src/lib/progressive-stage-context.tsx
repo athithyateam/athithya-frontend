@@ -10,7 +10,7 @@ import React, {
 } from "react";
 
 export const MAX_PROGRESSIVE_STAGE = 7;
-const DEFAULT_STAGE_INTERVAL_MS = 120; // Watchdog interval to advance waterfall
+const DEFAULT_STAGE_INTERVAL_MS = 600; // Watchdog interval: advances if network image hangs
 
 interface ProgressiveStageContextValue {
   activeStage: number;
@@ -24,9 +24,9 @@ interface ProgressiveStageContextValue {
 }
 
 const ProgressiveStageContext = createContext<ProgressiveStageContextValue>({
-  activeStage: 0,
+  activeStage: -1,
   reportImageLoaded: () => {},
-  shouldLoadImage: () => true,
+  shouldLoadImage: () => false,
 });
 
 export function ProgressiveStageProvider({
@@ -34,12 +34,21 @@ export function ProgressiveStageProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [activeStage, setActiveStage] = useState(0);
+  // Start at -1 so text/HTML card details paint on screen before any image network requests start
+  const [activeStage, setActiveStage] = useState(-1);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Watchdog timer: progressively advances stages from 0 to MAX_PROGRESSIVE_STAGE
+  // Initial mount tick: ensure text content paints first, then kick off stage 0
   useEffect(() => {
-    if (activeStage >= MAX_PROGRESSIVE_STAGE) return;
+    const t = setTimeout(() => {
+      setActiveStage(0);
+    }, 40);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Watchdog timer: progressively advances stages if a network image stalls
+  useEffect(() => {
+    if (activeStage < 0 || activeStage >= MAX_PROGRESSIVE_STAGE) return;
 
     timerRef.current = setTimeout(() => {
       setActiveStage((prev) => Math.min(prev + 1, MAX_PROGRESSIVE_STAGE));
@@ -74,20 +83,23 @@ export function ProgressiveStageProvider({
       inView = false,
       priority = false
     ): boolean => {
-      // Tier 1: Forced priority or directly visible in viewport via IntersectionObserver
-      if (priority || inView) return true;
+      // Priority cards (e.g. top 2 cards of Row 0) load as soon as pipeline starts (stage >= 0)
+      if (priority) return activeStage >= 0;
 
-      // If no row index provided, allow loading once stage starts
-      if (rowIndex === undefined) return activeStage >= 0;
+      // Standalone images (not part of the home waterfall rows) load when in view
+      if (rowIndex === undefined) return inView || activeStage >= 0;
 
+      // A card is visible in the row if within the first 4 cards
       const isVisibleInRow = cardIndex === undefined || cardIndex < 4;
 
       if (isVisibleInRow) {
-        // Visible cards load when their row's turn comes in the waterfall
+        // Visible cards only load when their row's turn arrives in the top-to-bottom waterfall
+        // (Row 0 -> Row 1 -> Row 2 -> Row 3 -> Row 4 -> Hosts -> Reviews)
         return activeStage >= rowIndex;
       }
 
-      // Off-screen cards (cardIndex >= 4) only load once all visible stages are complete
+      // Off-screen cards (cardIndex >= 4, to the right side of the carousel):
+      // Only load once ALL visible rows have finished (activeStage >= MAX_PROGRESSIVE_STAGE)
       return activeStage >= MAX_PROGRESSIVE_STAGE;
     },
     [activeStage]

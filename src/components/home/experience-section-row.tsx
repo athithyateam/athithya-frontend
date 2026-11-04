@@ -5,7 +5,6 @@ import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 import { ExperienceCard } from "@/components/cards/experience-card";
-import { ExperienceCardSkeleton } from "./experience-card-placeholder";
 
 interface ExperienceSectionRowProps {
   title: string;
@@ -45,6 +44,8 @@ export function ExperienceSectionRow({
       items[0]?._id ||
         (items[0]?.id && !String(items[0].id).startsWith("slot-"))
     );
+
+  if (!hasRealItems) return null;
 
   return (
     <section className="py-6 md:py-12 relative z-10 bg-white dark:bg-neutral-950 transition-colors">
@@ -91,25 +92,19 @@ export function ExperienceSectionRow({
           ref={scrollRef}
           className="flex gap-4 overflow-x-auto w-full pt-3 md:pt-4 pb-4 md:pb-8 scrollbar-hide snap-x snap-mandatory px-1"
         >
-          {loading || !hasRealItems ? (
-            Array.from({ length: 4 }).map((_, idx) => (
-              <ExperienceCardSkeleton key={idx} />
-            ))
-          ) : (
-            items.map((item, idx) => (
-              <div
-                key={item._id || item.id || idx}
-                className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
-              >
-                <ExperienceCard
-                  data={item}
-                  rowIndex={rowIndex}
-                  cardIndex={idx}
-                  priority={rowIndex === 0 && idx < 2}
-                />
-              </div>
-            ))
-          )}
+          {items.map((item, idx) => (
+            <div
+              key={item._id || item.id || idx}
+              className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
+            >
+              <ExperienceCard
+                data={item}
+                rowIndex={rowIndex}
+                cardIndex={idx}
+                priority={rowIndex === 0 && idx < 2}
+              />
+            </div>
+          ))}
         </div>
 
         <button
