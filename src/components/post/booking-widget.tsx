@@ -202,6 +202,8 @@ export function BookingWidget({ post }: { post: any }) {
           },
           theme: { color: "#D4A017" },
         };
+          console.log("RZP key from env:", process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
+          console.log("RZP options.key:", options.key, "order:", options.order_id);
         const rzp = new (window as any).Razorpay(options);
         rzp.open();
       } else if (res.success) {
