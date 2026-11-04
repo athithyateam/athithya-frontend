@@ -91,9 +91,9 @@ function NavbarContent() {
     }
   };
 
-  const navBase = "fixed inset-x-0 top-0 z-[999] transition-all duration-300 w-full max-w-full";
+  const navBase = "fixed inset-x-0 top-0 z-[999] transition-colors duration-200 w-full max-w-full";
   const heroNav = scrolled
-    ? "bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-sm border-b border-neutral-100 dark:border-neutral-800"
+    ? "bg-white dark:bg-neutral-900 shadow-sm border-b border-neutral-200 dark:border-neutral-800"
     : "bg-transparent";
   const contentNav =
     "bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800";
@@ -105,7 +105,7 @@ function NavbarContent() {
 
   const pillBorder =
     isHome && !scrolled
-      ? "border-white/40 bg-black/20 hover:bg-black/30 backdrop-blur-sm text-white"
+      ? "border-white/40 bg-black/40 hover:bg-black/50 text-white"
       : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100";
 
   const avatarUrl =
@@ -279,7 +279,7 @@ function NavbarContent() {
 
 function NavbarSkeleton() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-20 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-100 dark:border-neutral-800 transition-colors" />
+    <header className="fixed top-0 left-0 right-0 z-50 h-20 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-neutral-800 transition-colors" />
   );
 }
 

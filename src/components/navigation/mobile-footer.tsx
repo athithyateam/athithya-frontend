@@ -21,7 +21,7 @@ function MobileFooterContent() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md border-t border-neutral-200/80 dark:border-neutral-800 z-[9999] md:hidden pt-2.5 pb-7 px-4 shadow-[0_-6px_24px_rgba(0,0,0,0.12)] transition-colors">
+    <div className="fixed bottom-0 left-0 right-0 w-full bg-white dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 z-[9999] md:hidden pt-2.5 pb-7 px-4 shadow-md transition-colors">
       <div className="flex justify-around items-center max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;

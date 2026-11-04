@@ -50,7 +50,7 @@ export function HostCard({
         />
         {Number(rating || 0) > 0 && (
           <div className="absolute top-3 right-3 md:top-4 md:right-4 z-10">
-            <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xs px-2.5 py-1 md:px-3 md:py-1.5 rounded-full flex items-center gap-1 shadow-sm border border-neutral-100/50 dark:border-neutral-800 text-[10px] md:text-xs font-black text-neutral-800 dark:text-neutral-100">
+            <div className="bg-white dark:bg-neutral-900 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full flex items-center gap-1 shadow-sm border border-neutral-200 dark:border-neutral-800 text-[10px] md:text-xs font-black text-neutral-800 dark:text-neutral-100">
               <Star className="text-yellow-400 fill-yellow-400" size={11} />
               <span>{rating}</span>
             </div>

@@ -58,7 +58,7 @@ export function HomeReviewsSection({
           <button
             type="button"
             onClick={() => scrollReviews("left")}
-            className="absolute -left-3 md:-left-5 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border border-neutral-200/80 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-neutral-800 hover:scale-105 active:scale-95 transition-all cursor-pointer opacity-90"
+            className="absolute -left-3 md:-left-5 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 flex items-center justify-center shadow-md hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
             aria-label="Scroll left"
           >
             <FaChevronLeft className="text-xs md:text-sm" />
@@ -135,7 +135,7 @@ export function HomeReviewsSection({
               return (
                 <div
                   key={rev._id || index}
-                  className="shrink-0 w-[280px] sm:w-[320px] md:w-[340px] bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:border-[#C59A2F]/40 transition-all duration-300 flex flex-col justify-between"
+                  className="shrink-0 w-[280px] sm:w-[320px] md:w-[340px] bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-6 shadow-sm hover:border-[#C59A2F]/40 transition-colors duration-200 flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
@@ -243,7 +243,7 @@ export function HomeReviewsSection({
           <button
             type="button"
             onClick={() => scrollReviews("right")}
-            className="absolute -right-3 md:-right-5 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border border-neutral-200/80 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-neutral-800 hover:scale-105 active:scale-95 transition-all cursor-pointer opacity-90"
+            className="absolute -right-3 md:-right-5 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 flex items-center justify-center shadow-md hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
             aria-label="Scroll right"
           >
             <FaChevronRight className="text-xs md:text-sm" />
