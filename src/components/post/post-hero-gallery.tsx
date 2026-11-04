@@ -195,7 +195,7 @@ export function PostHeroGallery({
                 <>
                   <video
                     src={mainMedia.url}
-                    className="w-full h-full object-cover group-hover/main:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover transition-opacity duration-300"
                     muted
                     preload="metadata"
                   />
@@ -208,8 +208,10 @@ export function PostHeroGallery({
               ) : (
                 <img
                   src={getOptimizedImage(mainMedia.url, { width: 900 })}
-                  className="w-full h-full object-cover group-hover/main:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover transition-opacity duration-300"
                   alt={postTitle}
+                  loading="eager"
+                  decoding="async"
                 />
               )}
             </div>
@@ -221,12 +223,14 @@ export function PostHeroGallery({
                 <div
                   key={slotIndex}
                   onClick={() => openLightboxAt(actualIndex)}
-                  className="col-span-1 row-span-1 relative cursor-pointer overflow-hidden group/tile"
+                  className="col-span-1 row-span-1 relative cursor-pointer overflow-hidden bg-neutral-100 dark:bg-neutral-850"
                 >
                   <img
                     src={getOptimizedImage(item.url, { width: 500 })}
-                    className="w-full h-full object-cover group-hover/tile:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover transition-opacity duration-300"
                     alt={`Gallery ${slotIndex + 2}`}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               );
@@ -235,12 +239,14 @@ export function PostHeroGallery({
         ) : (
           <div
             onClick={() => openLightboxAt(0)}
-            className="w-full h-[420px] lg:h-[480px] relative cursor-pointer overflow-hidden"
+            className="w-full h-[420px] lg:h-[480px] relative cursor-pointer overflow-hidden bg-neutral-100 dark:bg-neutral-850"
           >
             <img
               src={getOptimizedImage(mainMedia.url, { width: 1400 })}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-opacity duration-300"
               alt={postTitle}
+              loading="eager"
+              decoding="async"
             />
           </div>
         )}
@@ -260,6 +266,8 @@ export function PostHeroGallery({
           src={getOptimizedImage(mainMedia.url, { width: 800 })}
           className="w-full h-full object-cover"
           alt={postTitle}
+          loading="eager"
+          decoding="async"
           onClick={() => openLightboxAt(0)}
         />
         <button
