@@ -7,73 +7,9 @@ import { Navbar } from "@/components/navigation/navbar";
 import { Footer } from "@/components/navigation/footer";
 import { MobileFooter } from "@/components/navigation/mobile-footer";
 import { getCategoryActivity } from "@/lib/api/experiences-api";
+import { CATEGORIES_DATA } from "@/data/categories";
 
-export const CATEGORIES_DATA = [
-  {
-    id: "bungee",
-    label: "Bungee Jumping",
-    slug: "bungee-jumping",
-    keywords: ["bungee", "bungee jumping"],
-    description: "Feel the adrenaline rush with India's highest cliff jump in Rishikesh",
-    image: "/images/bungee/bungee-1.jpeg",
-    count: "Nervously Excited",
-  },
-  {
-    id: "paragliding",
-    label: "Paragliding",
-    slug: "paragliding",
-    keywords: ["paragliding"],
-    description: "Soar high over lush green valleys & snow-capped peaks",
-    image: "/images/paragliding/paragliding-3.jpeg",
-    count: "Freedom in Skies",
-  },
-  {
-    id: "trek",
-    label: "Trek",
-    slug: "trek",
-    keywords: ["trek", "trekking"],
-    description: "Conquer scenic Himalayan trails & high-altitude mountain passes",
-    image: "/images/trek/trek-1.jpeg",
-    count: "Find Yourself",
-  },
-  {
-    id: "camping",
-    label: "Camping",
-    slug: "camping",
-    keywords: ["camping", "camp"],
-    description: "Star-lit night camping amidst pristine valleys & pine woods",
-    image: "/images/camping/camping-1.jpeg",
-    count: "Slow Down",
-  },
-  {
-    id: "rafting",
-    label: "Rafting",
-    slug: "rafting",
-    keywords: ["rafting"],
-    description: "Thrilling white water rafting on the holy Ganges & Alaknanda rivers",
-    image: "/images/rafting/rafting-2.jpeg",
-    count: "Feel Alive",
-  },
-  {
-    id: "safari",
-    label: "Safari",
-    slug: "safari",
-    keywords: ["safari", "wildlife", "jungle safari", "jeep safari"],
-    description: "Experience thrilling wildlife safaris in Jim Corbett & Rajaji National Parks",
-    image: "/images/about-1.jpeg",
-    count: "Explore Wild",
-  },
-  {
-    id: "other",
-    label: "Others",
-    slug: "other",
-    keywords: ["rock climbing", "rock-climbing", "climbing", "bouldering", "flyboarding", "guide", "experience guide", "other", "others"],
-    description: "Rock climbing, flyboarding, and unique mountain activities",
-    isCollage: true,
-    images: ["/images/rock-climbing/rock-climbing-1.jpeg", "/images/flyboarding/flyboarding-1.jpeg"],
-    count: "Surprise Yourself",
-  },
-];
+export { CATEGORIES_DATA };
 
 export default function CategoriesPage() {
   const router = useRouter();
