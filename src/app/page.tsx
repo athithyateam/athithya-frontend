@@ -7,8 +7,6 @@ import { HomeHeroSection } from "@/components/home/home-hero-section";
 import { BrandIntroSection } from "@/components/home/brand-intro-section";
 import { HomeCategoriesSection } from "@/components/home/home-categories-section";
 import { FaqSection } from "@/components/home/faq-section";
-import { ExperienceSectionRowSkeleton } from "@/components/home/experience-section-row-skeleton";
-import { TopRatedHostsSectionSkeleton } from "@/components/home/top-rated-hosts-section";
 import {
   ExploreSectionServer,
   FeaturedSectionServer,
@@ -19,7 +17,6 @@ import {
   HomeReviewsSectionServer,
 } from "@/components/home/server-sections";
 import { ProgressiveStageProvider } from "@/lib/progressive-stage-context";
-import { routes } from "@/config/navigation";
 
 export const metadata: Metadata = {
   title: "Athithya | Your Travel Experience Platform",
@@ -39,72 +36,27 @@ export default function HomePage() {
 
         <ProgressiveStageProvider>
           <div className="md:pt-0 pb-2 md:pb-4">
-            <Suspense
-              fallback={
-                <ExperienceSectionRowSkeleton
-                  title="Explore"
-                  highlight="Experiences"
-                  subtitle="Explore recent and new experiences"
-                  viewAllHref={routes.exploreExperience}
-                />
-              }
-            >
+            <Suspense fallback={null}>
               <ExploreSectionServer />
             </Suspense>
 
-            <Suspense
-              fallback={
-                <ExperienceSectionRowSkeleton
-                  title="Featured"
-                  highlight="Experiences"
-                  subtitle="Explore most clicked experiences"
-                  viewAllHref={routes.featuredExperience}
-                />
-              }
-            >
+            <Suspense fallback={null}>
               <FeaturedSectionServer />
             </Suspense>
 
-            <Suspense
-              fallback={
-                <ExperienceSectionRowSkeleton
-                  title="Most Loved"
-                  highlight="Experiences"
-                  subtitle="Explore most booked experiences"
-                  viewAllHref={routes.mostLovedExperience}
-                />
-              }
-            >
+            <Suspense fallback={null}>
               <MostLovedSectionServer />
             </Suspense>
 
-            <Suspense
-              fallback={
-                <ExperienceSectionRowSkeleton
-                  title="Top Rated"
-                  highlight="Experiences"
-                  subtitle="Explore top rated experiences"
-                  viewAllHref={routes.topRatedExperience}
-                />
-              }
-            >
+            <Suspense fallback={null}>
               <TopRatedSectionServer />
             </Suspense>
 
-            <Suspense
-              fallback={
-                <ExperienceSectionRowSkeleton
-                  title="Nearby"
-                  highlight="Experiences"
-                  subtitle="Explore experiences near you"
-                  viewAllHref={routes.nearbyExperience}
-                />
-              }
-            >
+            <Suspense fallback={null}>
               <NearbySectionServer />
             </Suspense>
 
-            <Suspense fallback={<TopRatedHostsSectionSkeleton />}>
+            <Suspense fallback={null}>
               <TopRatedHostsSectionServer />
             </Suspense>
 

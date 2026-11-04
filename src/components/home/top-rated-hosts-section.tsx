@@ -56,7 +56,8 @@ export function TopRatedHostsSection({
     ? rawHosts.filter(hasValidProfilePicture)
     : [];
   const hasRealHosts = validHosts.length > 0;
-  const isLoading = !initialHosts && (homeLoading || !homeLoaded);
+
+  if (!hasRealHosts) return null;
 
   return (
     <section className="py-6 md:py-12 relative z-10 bg-white dark:bg-neutral-950 transition-colors">
@@ -98,8 +99,7 @@ export function TopRatedHostsSection({
           ref={scrollRef}
           className="flex gap-4 overflow-x-auto w-full pt-3 md:pt-4 pb-4 md:pb-8 scrollbar-hide snap-x snap-mandatory px-1"
         >
-          {hasRealHosts ? (
-            validHosts.map((host: any, idx: number) => {
+          {validHosts.map((host: any, idx: number) => {
               const id = host._id || host.id || idx;
               const name =
                 [host.firstname, host.lastname].filter(Boolean).join(" ") ||
@@ -214,28 +214,7 @@ export function TopRatedHostsSection({
                   </div>
                 </div>
               );
-            })
-          ) : isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="w-full sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 snap-start bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-4 sm:p-5 flex items-center gap-3.5 sm:gap-4"
-              >
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse shrink-0" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 w-3/4 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
-                  <div className="h-3 w-1/2 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
-                  <div className="h-3 w-2/3 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="flex justify-center items-center h-[160px] w-full bg-neutral-50/50 dark:bg-neutral-900/40 rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800">
-              <p className="text-sm font-semibold text-neutral-400 dark:text-neutral-500">
-                No rated hosts available
-              </p>
-            </div>
-          )}
+            })}
         </div>
 
         <button
@@ -246,43 +225,6 @@ export function TopRatedHostsSection({
         >
           <FaChevronRight size={12} />
         </button>
-      </div>
-    </section>
-  );
-}
-
-export function TopRatedHostsSectionSkeleton() {
-  return (
-    <section className="py-6 md:py-12 relative z-10 bg-white dark:bg-neutral-950 transition-colors">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 mb-4 md:mb-6">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-tight tracking-wide transition-colors">
-              Top Rated <span className="text-[#C59A2F]">Local Hosts</span>
-            </h2>
-            <p className="text-neutral-500 dark:text-neutral-400 text-xs sm:text-sm md:text-base font-semibold mt-1 md:mt-1.5 tracking-wide transition-colors">
-              Explore top rated hosts
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-[1400px] mx-auto relative px-4 sm:px-6 md:px-8">
-        <div className="flex gap-4 overflow-x-auto w-full pt-3 md:pt-4 pb-4 md:pb-8 scrollbar-hide snap-x snap-mandatory px-1">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="w-full sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 snap-start bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-4 sm:p-5 flex items-center gap-3.5 sm:gap-4"
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse shrink-0" />
-              <div className="flex-1 space-y-2">
-                <div className="h-4 w-3/4 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
-                <div className="h-3 w-1/2 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
-                <div className="h-3 w-2/3 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
