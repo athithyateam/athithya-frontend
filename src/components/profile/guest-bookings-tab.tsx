@@ -258,6 +258,7 @@ export function GuestBookingsTab({ isThemed }: GuestBookingsProps) {
                       loading="lazy"
                       decoding="async"
                       src={
+                        b.experience?.photos?.[0]?.url ||
                         b.post?.photos?.[0]?.url ||
                         "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1470&auto=format&fit=crop"
                       }
@@ -279,7 +280,7 @@ export function GuestBookingsTab({ isThemed }: GuestBookingsProps) {
                           className="font-bold text-gray-900 group-hover:text-[#C59A2F] transition-colors dark:text-neutral-100 break-words"
                           style={{ color: isThemed ? "#ffffff" : undefined }}
                         >
-                          {b.postTitle || b.post?.title}
+                          {b.experience?.title || b.postTitle || b.post?.title}
                         </h4>
                         <div
                           className="flex items-center gap-1 text-[10px] font-bold text-gray-400 uppercase tracking-tight mt-1"
@@ -290,7 +291,7 @@ export function GuestBookingsTab({ isThemed }: GuestBookingsProps) {
                           }}
                         >
                           <FiMapPin className="text-[#C59A2F]" />
-                          {b.post?.location?.city || "Uttarakhand"}
+                          {b.experience?.location?.city || b.post?.location?.city || "Uttarakhand"}
                         </div>
                       </div>
                       <div className="text-left sm:text-right shrink-0">

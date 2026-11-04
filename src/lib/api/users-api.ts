@@ -29,10 +29,12 @@ export async function getUserLocationApi() {
   return res.data;
 }
 
-export async function getSavedPostsApi() {
-  const res = await apiRequest(ENDPOINTS.GET_SAVED_POSTS, { method: "GET" });
+export async function getSavedExperiencesApi() {
+  const res = await apiRequest(ENDPOINTS.GET_SAVED_EXPERIENCES, { method: "GET" });
   return res.data;
 }
+
+export const getSavedPostsApi = getSavedExperiencesApi;
 
 export async function deleteAccountApi() {
   const res = await apiRequest(ENDPOINTS.UPDATE_PROFILE, { method: "DELETE" });

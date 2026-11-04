@@ -57,7 +57,7 @@ export async function updateAdminExperienceStatusApi(
   id: string,
   payload: { status: string; remarks?: string; adminComment?: string; rejectionReason?: string }
 ) {
-  const res = await apiRequest(ENDPOINTS.ADMIN_UPDATE_POST_STATUS(id), {
+  const res = await apiRequest(ENDPOINTS.ADMIN_UPDATE_EXPERIENCE_STATUS(id), {
     method: "PATCH",
     body: {
       status: payload.status,
