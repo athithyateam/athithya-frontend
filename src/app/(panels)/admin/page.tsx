@@ -58,15 +58,26 @@ export default function AdminPage() {
 
   const loadSummary = useCallback(async () => {
     try {
-      const [statsRes, postsRes, kycRes] = await Promise.all([
+      const [statsRes, experiencesRes, kycRes] = await Promise.all([
         getAdminStatsApi().catch(() => null),
         getAdminPendingExperiencesApi().catch(() => []),
         getAdminPendingVerificationsApi().catch(() => []),
       ]);
       if (statsRes) setStats(statsRes?.statistics || statsRes?.stats || statsRes?.data || statsRes);
+      const pendingExpList =
+        experiencesRes?.experiences ||
+        experiencesRes?.data?.experiences ||
+        experiencesRes?.data ||
+        (Array.isArray(experiencesRes) ? experiencesRes : []);
+      const pendingKycList =
+        kycRes?.data ||
+        kycRes?.verifications ||
+        kycRes?.users ||
+        kycRes?.data?.verifications ||
+        (Array.isArray(kycRes) ? kycRes : []);
       const pCount =
-        (postsRes?.experiences?.length ?? (Array.isArray(postsRes) ? postsRes.length : 0)) +
-        (kycRes?.data?.length ?? kycRes?.verifications?.length ?? kycRes?.users?.length ?? (Array.isArray(kycRes) ? kycRes.length : 0));
+        (Array.isArray(pendingExpList) ? pendingExpList.length : 0) +
+        (Array.isArray(pendingKycList) ? pendingKycList.length : 0);
       setPendingCount(pCount);
     } catch {
       // ignore
