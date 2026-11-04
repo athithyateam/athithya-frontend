@@ -121,26 +121,26 @@ export default function AdminPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 pt-28 pb-16 px-4 md:px-8 transition-colors">
+      <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 pt-20 sm:pt-24 md:pt-28 pb-16 px-3 sm:px-4 md:px-8 transition-colors">
         <div
           className={`${
             sidebarVisible ? "max-w-7xl" : "max-w-full"
-          } mx-auto flex flex-col lg:flex-row gap-8 transition-all duration-300`}
+          } mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8 w-full min-w-0 max-w-full transition-all duration-300`}
         >
           {/* Left Sidebar Navigation matching athithya-app */}
           <aside
-            className={`w-full ${
+            className={`w-full min-w-0 max-w-full ${
               sidebarVisible ? "lg:w-64" : "lg:hidden"
             } shrink-0 transition-all duration-300`}
           >
-            <div className="flex flex-col gap-4 sticky top-24">
+            <div className="flex flex-col gap-3 lg:gap-4 lg:sticky lg:top-24 w-full min-w-0 max-w-full">
               {/* Header */}
-              <div className="px-2 flex items-center justify-between">
+              <div className="px-1 sm:px-2 flex items-center justify-between">
                 <div>
-                  <h1 className="text-xl md:text-2xl font-black text-slate-900 dark:text-neutral-100 tracking-tight transition-colors">
+                  <h1 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 dark:text-neutral-100 tracking-tight transition-colors">
                     Athithya <span className="text-[#C59A2F]">Admin</span>
                   </h1>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-neutral-500 mt-0.5">
+                  <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-neutral-500 mt-0.5">
                     Control Panel
                   </p>
                 </div>
@@ -155,7 +155,7 @@ export default function AdminPage() {
               </div>
 
               {/* Vertical Navigation (Desktop) & Horizontal Scrollable Bar (Mobile) */}
-              <div className="flex lg:flex-col overflow-x-auto lg:overflow-x-visible bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-slate-100 dark:border-neutral-800 p-2 transition-colors gap-1 scrollbar-hide">
+              <div className="flex lg:flex-col overflow-x-auto lg:overflow-x-visible bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-slate-100 dark:border-neutral-800 p-1.5 sm:p-2 transition-colors gap-1 w-full min-w-0 max-w-full overscroll-contain touch-pan-x scrollbar-hide">
                 {NAV_ITEMS.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -164,20 +164,20 @@ export default function AdminPage() {
                       key={tab.id}
                       type="button"
                       onClick={() => setActiveTab(tab.id)}
-                      className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-all shrink-0 lg:shrink text-left z-10 cursor-pointer ${
+                      className={`relative flex items-center gap-2 sm:gap-3 px-3 py-2 sm:px-4 sm:py-3 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-all shrink-0 lg:shrink whitespace-nowrap text-left z-10 cursor-pointer ${
                         isActive
                           ? "bg-[#C59A2F] text-white shadow-sm"
                           : "text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-100 hover:bg-slate-50 dark:hover:bg-neutral-800/60"
                       }`}
                     >
-                      <span className="text-base flex items-center justify-center shrink-0">
+                      <span className="text-sm sm:text-base flex items-center justify-center shrink-0">
                         <Icon />
                       </span>
                       <span className="truncate">{tab.label}</span>
 
                       {tab.id === "approvals" && pendingCount > 0 && (
                         <span
-                          className={`ml-auto text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-black animate-pulse shrink-0 ${
+                          className={`ml-1.5 lg:ml-auto text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center font-black animate-pulse shrink-0 ${
                             isActive
                               ? "bg-white text-[#C59A2F]"
                               : "bg-red-500 text-white"
@@ -194,7 +194,7 @@ export default function AdminPage() {
           </aside>
 
           {/* Right Main Content Area */}
-          <main className="flex-1 min-w-0">
+          <main className="flex-1 min-w-0 w-full max-w-full">
             {!sidebarVisible && (
               <div className="hidden lg:flex mb-6 items-center justify-between bg-white dark:bg-neutral-900 p-3 rounded-2xl shadow-sm border border-slate-100 dark:border-neutral-800 transition-colors">
                 <button

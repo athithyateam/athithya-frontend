@@ -8,8 +8,8 @@ import {
   getTopRatedTreks,
   getNearbyTreks,
   getTopRatedHosts,
-  listServices,
-} from "@/lib/api/posts-api";
+  listExperiences,
+} from "@/lib/api/experiences-api";
 import { ExplorePageView } from "./explore-page-view";
 
 function extractList(res: any): any[] {
@@ -174,7 +174,7 @@ export function CategoryExperiencesView({
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    listServices({ category: categoryName, limit: 100, page: 1 })
+    listExperiences({ category: categoryName, limit: 100, page: 1 })
       .then((res) => setItems(extractList(res)))
       .catch(() => setItems([]))
       .finally(() => setLoading(false));

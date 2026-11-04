@@ -32,37 +32,37 @@ export function AdminSystemTab({ mode }: AdminSystemTabProps) {
 
   if (mode === "chat") {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6 w-full min-w-0 max-w-full">
         <div>
-          <h2 className="text-2xl font-black uppercase tracking-tight">Chat Activity Monitor</h2>
+          <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">Chat Activity Monitor</h2>
           <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest mt-1">
             Platform conversation volume and group expedition activity
           </p>
         </div>
 
         {loading ? (
-          <div className="h-40 rounded-3xl bg-neutral-100 dark:bg-neutral-900 animate-pulse" />
+          <div className="h-40 rounded-2xl sm:rounded-3xl bg-neutral-100 dark:bg-neutral-900 animate-pulse" />
         ) : chats.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+          <div className="p-8 sm:p-12 text-center rounded-2xl sm:rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
             <MessageSquare size={36} className="mx-auto text-neutral-400 mb-2" />
             <p className="text-sm font-bold">No recent chat activity logs.</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2.5 sm:space-y-3">
             {chats.map((c, idx) => (
               <div
                 key={c._id || idx}
-                className="p-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between"
+                className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-3"
               >
-                <div>
-                  <h4 className="font-bold text-sm">
+                <div className="min-w-0">
+                  <h4 className="font-bold text-sm truncate">
                     {c.groupName || c.name || "Direct Conversation"}
                   </h4>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-neutral-500 truncate">
                     Participants: {c.participants?.length || 2} • Messages: {c.messageCount ?? "Active"}
                   </p>
                 </div>
-                <span className="text-xs text-neutral-400">
+                <span className="text-xs text-neutral-400 shrink-0">
                   {c.updatedAt ? new Date(c.updatedAt).toLocaleDateString() : ""}
                 </span>
               </div>
@@ -75,28 +75,28 @@ export function AdminSystemTab({ mode }: AdminSystemTabProps) {
 
   if (mode === "traffic") {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6 w-full min-w-0 max-w-full">
         <div>
-          <h2 className="text-2xl font-black uppercase tracking-tight">Traffic & SEO Analytics</h2>
+          <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">Traffic & SEO Analytics</h2>
           <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest mt-1">
             Google Analytics 4 & route performance metrics
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          <div className="p-6 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
             <BarChart3 size={20} className="text-[#C59A2F] mb-2" />
-            <span className="block text-3xl font-black">{traffic.pageViews ?? 0}</span>
-            <span className="text-xs font-bold uppercase text-neutral-400">Total Page Views</span>
+            <span className="block text-2xl sm:text-3xl font-black">{traffic.pageViews ?? 0}</span>
+            <span className="text-[10px] sm:text-xs font-bold uppercase text-neutral-400">Total Page Views</span>
           </div>
-          <div className="p-6 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
             <Activity size={20} className="text-emerald-500 mb-2" />
-            <span className="block text-3xl font-black">{traffic.activeUsers ?? 0}</span>
-            <span className="text-xs font-bold uppercase text-neutral-400">Active Visitors</span>
+            <span className="block text-2xl sm:text-3xl font-black">{traffic.activeUsers ?? 0}</span>
+            <span className="text-[10px] sm:text-xs font-bold uppercase text-neutral-400">Active Visitors</span>
           </div>
-          <div className="p-6 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
             <Server size={20} className="text-sky-500 mb-2" />
-            <span className="block text-3xl font-black">{traffic.sessions ?? 0}</span>
-            <span className="text-xs font-bold uppercase text-neutral-400">Total Sessions</span>
+            <span className="block text-2xl sm:text-3xl font-black">{traffic.sessions ?? 0}</span>
+            <span className="text-[10px] sm:text-xs font-bold uppercase text-neutral-400">Total Sessions</span>
           </div>
         </div>
       </div>
@@ -104,14 +104,14 @@ export function AdminSystemTab({ mode }: AdminSystemTabProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 w-full min-w-0 max-w-full">
       <div>
-        <h2 className="text-2xl font-black uppercase tracking-tight">System Health & Media Integrity</h2>
+        <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">System Health & Media Integrity</h2>
         <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest mt-1">
           Database, S3 storage, and real-time socket diagnostics
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {[
           { name: "MongoDB Atlas Cluster", status: "Healthy • <12ms latency" },
           { name: "AWS S3 Media Bucket (eu-north-1)", status: "Healthy • Presigned URLs active" },
@@ -120,13 +120,13 @@ export function AdminSystemTab({ mode }: AdminSystemTabProps) {
         ].map((svc) => (
           <div
             key={svc.name}
-            className="p-5 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between"
+            className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-3"
           >
-            <div>
-              <h4 className="font-bold text-sm">{svc.name}</h4>
+            <div className="min-w-0">
+              <h4 className="font-bold text-sm truncate">{svc.name}</h4>
               <p className="text-xs text-emerald-500 font-semibold mt-0.5">{svc.status}</p>
             </div>
-            <span className="w-3 h-3 rounded-full bg-emerald-500" />
+            <span className="w-3 h-3 rounded-full bg-emerald-500 shrink-0" />
           </div>
         ))}
       </div>

@@ -151,13 +151,13 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
     const experienceDeletions = hostHistory.filter((log) => log.type === "experience_delete");
 
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-[2.5rem] md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors">
-        <div className="p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col gap-6 transition-colors">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors w-full min-w-0 max-w-full">
+        <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col gap-4 sm:gap-6 transition-colors">
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
+            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
               Host Audit Logs
             </h2>
-            <div className="text-[11px] font-semibold text-[#C59A2F] bg-[#FFF9EC]/80 dark:bg-neutral-800/30 border border-yellow-100/30 dark:border-neutral-800/50 rounded-xl p-4 leading-relaxed transition-colors flex items-start gap-2.5">
+            <div className="text-[11px] font-semibold text-[#C59A2F] bg-[#FFF9EC]/80 dark:bg-neutral-800/30 border border-yellow-100/30 dark:border-neutral-800/50 rounded-xl p-3 sm:p-4 leading-relaxed transition-colors flex items-start gap-2.5">
               <span className="text-sm">ℹ️</span>
               <span>
                 <strong>Audit Log Note:</strong> This tab stores historical records of host details, preserving only the last 10 records of updated or deleted activities.
@@ -166,11 +166,11 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
           </div>
 
           {/* Sub-tabs toggler */}
-          <div className="flex gap-1.5 bg-slate-100/80 dark:bg-neutral-950 p-1.5 rounded-2xl w-fit border border-slate-200/50 dark:border-neutral-800 transition-colors">
+          <div className="flex gap-1.5 bg-slate-100/80 dark:bg-neutral-950 p-1 sm:p-1.5 rounded-2xl w-full sm:w-fit overflow-x-auto scrollbar-none border border-slate-200/50 dark:border-neutral-800 transition-colors">
             <button
               type="button"
               onClick={() => setHistorySubTab("details")}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 historySubTab === "details"
                   ? "bg-white dark:bg-neutral-850 text-[#C59A2F] shadow-md shadow-slate-200/30 dark:shadow-none"
                   : "text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-200"
@@ -182,7 +182,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
             <button
               type="button"
               onClick={() => setHistorySubTab("experiences")}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 historySubTab === "experiences"
                   ? "bg-white dark:bg-neutral-850 text-[#C59A2F] shadow-md shadow-slate-200/30 dark:shadow-none"
                   : "text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-200"
@@ -195,7 +195,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
         </div>
 
         {/* Content Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto w-full min-w-0 max-w-full">
           {historyLoading ? (
             <div className="text-center py-16">
               <div className="w-8 h-8 border-4 border-[#C59A2F] border-t-transparent rounded-full animate-spin mx-auto" />
@@ -208,19 +208,19 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
               No audit logs recorded
             </div>
           ) : (
-            <table className="w-full">
+            <table className="w-full min-w-[640px]">
               <thead>
                 <tr className="border-b border-slate-50 dark:border-neutral-800 bg-slate-50/50 dark:bg-neutral-950/40">
-                  <th className="px-8 py-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
+                  <th className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
                     Host Info
                   </th>
-                  <th className="px-8 py-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
+                  <th className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
                     Action Type
                   </th>
-                  <th className="px-8 py-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
+                  <th className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
                     Changes / Details
                   </th>
-                  <th className="px-8 py-4 text-right text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
+                  <th className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 text-right text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
                     Timestamp
                   </th>
                 </tr>
@@ -228,19 +228,19 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
               <tbody className="divide-y divide-slate-50 dark:divide-neutral-800 text-xs">
                 {(historySubTab === "details" ? profileUpdates : experienceDeletions).map((log, i) => (
                   <tr key={log._id || i} className="hover:bg-slate-50/30 dark:hover:bg-neutral-800/30">
-                    <td className="px-8 py-4 font-bold text-slate-900 dark:text-neutral-100">
+                    <td className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 font-bold text-slate-900 dark:text-neutral-100">
                       {log.hostName || log.firstname ? `${log.firstname || ""} ${log.lastname || ""}` : log.userId || "Host"}
                       <p className="text-[10px] text-slate-400 font-normal">{log.email || ""}</p>
                     </td>
-                    <td className="px-8 py-4">
+                    <td className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4">
                       <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-50 text-[#C59A2F] border border-amber-100 dark:bg-amber-950/30 dark:border-amber-900/40">
                         {log.type || "update"}
                       </span>
                     </td>
-                    <td className="px-8 py-4 text-slate-600 dark:text-neutral-400">
+                    <td className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 text-slate-600 dark:text-neutral-400">
                       {log.details || log.reason || JSON.stringify(log.changes || log.data || "Host profile audit entry")}
                     </td>
-                    <td className="px-8 py-4 text-right text-slate-400">
+                    <td className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 text-right text-slate-400">
                       {log.createdAt ? new Date(log.createdAt).toLocaleString() : ""}
                     </td>
                   </tr>
@@ -259,21 +259,21 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
   const hostsCount = userCounts.hostsCount || 0;
 
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-[2.5rem] md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors w-full min-w-0 max-w-full">
       {/* Header matching athithya-app UserManagement.jsx */}
-      <div className="p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors">
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
+      <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 transition-colors">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
             Registered Users
           </h2>
-          <div className="flex gap-1.5 bg-slate-100/80 dark:bg-neutral-950 p-1.5 rounded-2xl w-fit border border-slate-200/50 dark:border-neutral-800 transition-colors">
+          <div className="flex gap-1.5 bg-slate-100/80 dark:bg-neutral-950 p-1 sm:p-1.5 rounded-2xl w-full sm:w-fit overflow-x-auto scrollbar-none border border-slate-200/50 dark:border-neutral-800 transition-colors">
             <button
               type="button"
               onClick={() => {
                 setUserRoleFilter("all");
                 setUserPage(1);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap cursor-pointer ${
                 userRoleFilter === "all"
                   ? "bg-white dark:bg-neutral-850 text-[#C59A2F] shadow-md shadow-slate-200/30 dark:shadow-none"
                   : "text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-200"
@@ -287,7 +287,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
                 setUserRoleFilter("hosts");
                 setUserPage(1);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap cursor-pointer ${
                 userRoleFilter === "hosts"
                   ? "bg-white dark:bg-neutral-850 text-[#C59A2F] shadow-md shadow-slate-200/30 dark:shadow-none"
                   : "text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-200"
@@ -301,7 +301,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
                 setUserRoleFilter("guests");
                 setUserPage(1);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap cursor-pointer ${
                 userRoleFilter === "guests"
                   ? "bg-white dark:bg-neutral-850 text-[#C59A2F] shadow-md shadow-slate-200/30 dark:shadow-none"
                   : "text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-200"
@@ -312,17 +312,17 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto">
           <button
             type="button"
             onClick={exportUsersToCSV}
             style={{ backgroundColor: "#C59A2F" }}
-            className="text-white font-black text-[10px] uppercase tracking-widest rounded-2xl px-5 py-3.5 hover:brightness-95 active:scale-[0.98] transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+            className="text-white font-black text-[10px] uppercase tracking-widest rounded-xl sm:rounded-2xl px-4 sm:px-5 py-2.5 sm:py-3.5 hover:brightness-95 active:scale-[0.98] transition-all shadow-md flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
           >
             📥 Export CSV
           </button>
-          <div className="relative w-full md:w-64">
-            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-neutral-600" />
+          <div className="relative w-full sm:w-64">
+            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300 dark:text-neutral-600" />
             <input
               type="text"
               placeholder={`Search ${userRoleFilter}...`}
@@ -331,27 +331,27 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
                 setUserSearch(e.target.value);
                 setUserPage(1);
               }}
-              className="pl-10 pr-6 py-3 bg-slate-50 dark:bg-neutral-950 rounded-2xl text-sm focus:outline-none focus:ring-2 ring-[#C59A2F]/20 border border-slate-100 dark:border-neutral-800 w-full text-slate-900 dark:text-neutral-100 transition-colors"
+              className="pl-9 pr-4 py-2.5 sm:py-3 bg-slate-50 dark:bg-neutral-950 rounded-xl sm:rounded-2xl text-xs sm:text-sm focus:outline-none focus:ring-2 ring-[#C59A2F]/20 border border-slate-100 dark:border-neutral-800 w-full text-slate-900 dark:text-neutral-100 transition-colors"
             />
           </div>
         </div>
       </div>
 
       {/* Users Datatable matching athithya-app */}
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[800px]">
+      <div className="overflow-x-auto w-full min-w-0 max-w-full">
+        <table className="w-full min-w-[700px]">
           <thead>
             <tr className="bg-slate-50/50 dark:bg-neutral-950/40 transition-colors">
-              <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
+              <th className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 md:py-5 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
                 User Info
               </th>
-              <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
+              <th className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 md:py-5 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
                 {userRoleFilter === "hosts" ? "Host Status" : "Role"}
               </th>
-              <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
+              <th className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 md:py-5 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
                 Joined
               </th>
-              <th className="px-8 py-5 text-right text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
+              <th className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 md:py-5 text-right text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
                 Actions
               </th>
             </tr>
@@ -383,9 +383,9 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
                     key={id}
                     className="hover:bg-slate-50/30 dark:hover:bg-neutral-800/30 transition-colors group border-b border-slate-50 dark:border-neutral-800 last:border-0"
                   >
-                    <td className="px-8 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-neutral-700 shadow-sm ring-1 ring-slate-100 dark:ring-neutral-800 transition-colors bg-neutral-100 shrink-0">
+                    <td className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-white dark:border-neutral-700 shadow-sm ring-1 ring-slate-100 dark:ring-neutral-800 transition-colors bg-neutral-100 shrink-0">
                           <img
                             src={
                               u.avatar?.url ||
@@ -403,14 +403,14 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
                             }}
                           />
                         </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <p className="font-bold text-slate-900 dark:text-neutral-100 group-hover:text-[#C59A2F] transition-colors">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="font-bold text-slate-900 dark:text-neutral-100 group-hover:text-[#C59A2F] transition-colors truncate">
                               {u.firstname} {u.lastname}
                             </p>
                             {(u.role === "host" || userRoleFilter === "hosts") && (
                               <span
-                                className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border transition-colors ${
+                                className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border transition-colors shrink-0 ${
                                   Number(u.hostDetails?.yearsOfExperience || 0) > 0
                                     ? "bg-amber-50 dark:bg-amber-950/40 text-[#C59A2F] border-[#C59A2F]/30"
                                     : "bg-slate-100 dark:bg-neutral-800 text-slate-500 dark:text-neutral-400 border-slate-200 dark:border-neutral-700"
@@ -420,17 +420,17 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
                               </span>
                             )}
                           </div>
-                          <p className="text-[10px] text-slate-400 dark:text-neutral-500 font-bold uppercase tracking-tight transition-colors">
+                          <p className="text-[10px] text-slate-400 dark:text-neutral-500 font-bold uppercase tracking-tight transition-colors truncate">
                             {u.email}
                           </p>
                         </div>
                       </div>
                     </td>
 
-                    <td className="px-8 py-4">
+                    <td className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4">
                       {userRoleFilter === "hosts" ? (
                         <span
-                          className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                          className={`inline-block px-2.5 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest border transition-all ${
                             u.hostStatus === "approved"
                               ? "bg-green-50 text-green-600 border-green-100 dark:bg-green-900/20 dark:border-green-900/40"
                               : u.hostStatus === "pending_approval" || u.hostStatus === "pending_verification"
@@ -444,7 +444,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
                         <select
                           value={u.role || "guest"}
                           onChange={(e) => handleRoleChange(id, e.target.value as any)}
-                          className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border cursor-pointer transition-all ${
+                          className={`px-2.5 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest border cursor-pointer transition-all ${
                             u.role === "admin"
                               ? "bg-red-50 text-red-600 border-red-100 dark:bg-red-900/20 dark:border-red-900/40"
                               : u.role === "host"
@@ -459,27 +459,27 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
                       )}
                     </td>
 
-                    <td className="px-8 py-4 text-xs font-bold text-slate-500 dark:text-neutral-400">
+                    <td className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 text-xs font-bold text-slate-500 dark:text-neutral-400 whitespace-nowrap">
                       {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—"}
                     </td>
 
-                    <td className="px-8 py-4 text-right">
+                    <td className="px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           type="button"
                           onClick={() => setEditUser(u)}
-                          className="p-2 text-slate-400 hover:text-[#C59A2F] hover:bg-amber-50 dark:hover:bg-amber-950/20 rounded-xl transition cursor-pointer"
+                          className="p-1.5 sm:p-2 text-slate-400 hover:text-[#C59A2F] hover:bg-amber-50 dark:hover:bg-amber-950/20 rounded-xl transition cursor-pointer"
                           title="Edit User Details"
                         >
-                          <FiEdit2 size={16} />
+                          <FiEdit2 size={15} />
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDeleteUser(id)}
-                          className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition cursor-pointer"
+                          className="p-1.5 sm:p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition cursor-pointer"
                           title="Delete User"
                         >
-                          <FiTrash2 size={16} />
+                          <FiTrash2 size={15} />
                         </button>
                       </div>
                     </td>
@@ -493,7 +493,7 @@ export function AdminUsersHostsTab({ mode = "users" }: AdminUsersHostsTabProps) 
 
       {/* Pagination matching athithya-app */}
       {userTotalPages > 1 && (
-        <div className="p-6 border-t border-slate-50 dark:border-neutral-800 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-t border-slate-50 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs font-bold text-slate-400 dark:text-neutral-500">
             Page {userPage} of {userTotalPages}
           </p>

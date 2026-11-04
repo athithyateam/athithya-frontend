@@ -90,13 +90,13 @@ export function HomeCategoriesSection() {
                   {cat.isCollage && cat.images ? (
                     <div className="w-full h-full relative overflow-hidden rounded-full group-hover:scale-110 transition-transform duration-500 ease-out">
                       <div className="w-full h-full flex overflow-hidden filter blur-[1.5px] scale-110 opacity-70 group-hover:opacity-90 transition-all duration-500">
-                        <div className="w-1/2 h-full overflow-hidden relative border-r border-white/40"><img src={cat.images[0]} alt="Activity 1" className="w-full h-full object-cover" /></div>
-                        <div className="w-1/2 h-full overflow-hidden relative"><img src={cat.images[1]} alt="Activity 2" className="w-full h-full object-cover" /></div>
+                        <div className="w-1/2 h-full overflow-hidden relative border-r border-white/40"><img src={cat.images[0]} alt="Activity 1" className="w-full h-full object-cover" loading="lazy" decoding="async" /></div>
+                        <div className="w-1/2 h-full overflow-hidden relative"><img src={cat.images[1]} alt="Activity 2" className="w-full h-full object-cover" loading="lazy" decoding="async" /></div>
                       </div>
                       <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-[#C59A2F]"><HelpCircle className="w-8 h-8" /></div>
                     </div>
                   ) : (
-                    <img src={cat.image} alt={cat.label} className="w-full h-full object-cover rounded-full group-hover:scale-115 transition-transform duration-500 ease-out" />
+                    <img src={cat.image} alt={cat.label} className="w-full h-full object-cover rounded-full group-hover:scale-115 transition-transform duration-500 ease-out" loading="lazy" decoding="async" />
                   )}
                 </div>
                 {cat.isNew && (

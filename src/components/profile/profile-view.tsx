@@ -98,7 +98,11 @@ export function ProfileView({ userId }: ProfileViewProps) {
     );
   }
 
-  const { user, posts, postStats, reviewStats, pagination } = profileData;
+  const user = profileData.user;
+  const experiences = profileData.experiences || profileData.posts || [];
+  const experienceStats = profileData.experienceStats || profileData.postStats || {};
+  const reviewStats = profileData.reviewStats || {};
+  const pagination = profileData.pagination || {};
   const isOwner =
     Boolean(loggedInUser) &&
     (loggedInUser?._id || loggedInUser?.id) === (user?._id || user?.id);
@@ -120,12 +124,12 @@ export function ProfileView({ userId }: ProfileViewProps) {
         hostId={user?._id || user?.id}
         userId={user?._id || user?.id}
         user={user}
-        posts={posts || []}
-        postStats={postStats || {}}
-        reviewStats={reviewStats || {}}
+        posts={experiences}
+        postStats={experienceStats}
+        reviewStats={reviewStats}
         isOwner={isOwner}
         onRatingSuccess={() => fetchProfile(page)}
-        pagination={pagination || {}}
+        pagination={pagination}
         onPageChange={fetchProfile}
         isProfileLoading={loading}
         isDark={isDark}
@@ -138,7 +142,7 @@ export function ProfileView({ userId }: ProfileViewProps) {
     <GuestProfile
       user={user}
       userId={user?._id || user?.id}
-      posts={posts || []}
+      posts={experiences}
       isOwner={isOwner}
       userRole={user.role}
       isDark={isDark}

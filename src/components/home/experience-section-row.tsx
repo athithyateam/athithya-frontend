@@ -14,6 +14,7 @@ interface ExperienceSectionRowProps {
   viewAllHref?: string;
   items: any[];
   loading?: boolean;
+  rowIndex?: number;
 }
 
 export function ExperienceSectionRow({
@@ -23,6 +24,7 @@ export function ExperienceSectionRow({
   viewAllHref,
   items,
   loading = false,
+  rowIndex,
 }: ExperienceSectionRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -99,7 +101,12 @@ export function ExperienceSectionRow({
                 key={item._id || item.id || idx}
                 className="w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start"
               >
-                <ExperienceCard data={item} priority={idx < 4} />
+                <ExperienceCard
+                  data={item}
+                  rowIndex={rowIndex}
+                  cardIndex={idx}
+                  priority={rowIndex === 0 && idx < 2}
+                />
               </div>
             ))
           )}

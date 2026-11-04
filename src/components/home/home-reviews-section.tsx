@@ -6,13 +6,20 @@ import { FaChevronLeft, FaChevronRight, FaStar, FaQuoteLeft } from "react-icons/
 import { FiCalendar } from "react-icons/fi";
 import { useExploreStore } from "@/stores/explore-store";
 
-export function HomeReviewsSection() {
+export function HomeReviewsSection({
+  initialReviews,
+}: {
+  initialReviews?: any[];
+} = {}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { reviews } = useExploreStore();
 
+  const activeReviews =
+    initialReviews && initialReviews.length > 0 ? initialReviews : reviews;
+
   const displayReviews = useMemo(() => {
-    return (reviews || []).filter(
+    return (activeReviews || []).filter(
       (r: any) =>
         r &&
         r.comment &&
@@ -20,7 +27,7 @@ export function HomeReviewsSection() {
         r.reviewer &&
         (r.reviewer._id || r.reviewer.id || r.reviewer.firstname)
     );
-  }, [reviews]);
+  }, [activeReviews]);
 
   const scrollReviews = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -152,26 +159,26 @@ export function HomeReviewsSection() {
                     </div>
 
                     {hostName && (
-                      <div className="mb-3 pb-2.5 border-b border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between gap-2 text-xs">
+                      <div className="mb-3">
                         <div
                           onClick={(e) => {
                             e.stopPropagation();
                             if (hostId) router.push(`/profile/${hostId}`);
                           }}
-                          className="flex items-center gap-1.5 min-w-0 cursor-pointer group/host hover:opacity-80 transition-opacity"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200/50 dark:border-neutral-700/50 text-[11px] cursor-pointer hover:border-[#C59A2F]/60 transition-colors"
                           title={`View Host ${hostName}`}
                         >
                           {hostAvatarUrl && (
                             <img
                               src={hostAvatarUrl}
                               alt={hostName}
-                              className="w-4 h-4 rounded-full object-cover border border-[#C59A2F]/40 shrink-0"
+                              className="w-4 h-4 rounded-full object-cover shrink-0 border border-[#C59A2F]/40"
                               loading="lazy"
                             />
                           )}
-                          <span className="text-[11px] font-bold text-neutral-600 dark:text-neutral-300 truncate">
+                          <span className="font-semibold text-neutral-600 dark:text-neutral-300">
                             Host:{" "}
-                            <strong className="text-neutral-900 dark:text-neutral-100 group-hover/host:text-[#C59A2F] transition-colors">
+                            <strong className="font-bold text-neutral-900 dark:text-neutral-100">
                               {hostName}
                             </strong>
                           </span>
@@ -189,14 +196,21 @@ export function HomeReviewsSection() {
                       e.stopPropagation();
                       if (reviewerId) router.push(`/profile/${reviewerId}`);
                     }}
-                    className="pt-4 border-t border-neutral-200/60 dark:border-neutral-800 flex items-center gap-3 cursor-pointer group/user"
+                    className="pt-3 flex items-center gap-3 cursor-pointer group/user"
                   >
-                    <img
-                      src={avatarUrl}
-                      alt={reviewerName}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-[#C59A2F]/30 shrink-0 shadow-xs group-hover/user:scale-110 transition-transform duration-300"
-                      loading="lazy"
-                    />
+                    <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-[#C59A2F]/30 shadow-xs group-hover/user:scale-110 transition-transform duration-300">
+                      <img
+                        src={avatarUrl}
+                        alt={reviewerName}
+                        className="w-10 h-10 rounded-full object-cover shrink-0"
+                        loading="lazy"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                            reviewerName
+                          )}&background=C59A2F&color=fff&bold=true`;
+                        }}
+                      />
+                    </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm sm:text-base font-extrabold text-neutral-900 dark:text-neutral-100 truncate group-hover/user:text-[#C59A2F] transition-colors">
                         {reviewerName}

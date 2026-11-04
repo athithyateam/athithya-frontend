@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { MapPin, AlertTriangle } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import uttarakhandBoundary from "@/data/uttarakhand-boundary.json";
+import { geocodeReverseApi, geocodeSearchApi } from "@/lib/api/chat-and-notifications-api";
 
 export interface PickedLocation {
   lat: number | null;
@@ -170,12 +171,21 @@ export function MapPicker({
     let active = true;
     setLoading(true);
 
-    const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}`;
+    const loadReverseData = async () => {
+      try {
+        const proxyData = await geocodeReverseApi(position.lat, position.lng);
+        if (proxyData && proxyData.address) return proxyData;
+      } catch {
+        // Fallback to direct OSM if proxy is unavailable
+      }
+      const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}`;
+      const res = await fetch(reverseUrl);
+      return res.json();
+    };
 
-    fetch(reverseUrl)
-      .then((res) => res.json())
+    loadReverseData()
       .then((data) => {
-        if (!active) return;
+        if (!active || !data) return;
         const addr = data.address || {};
         const state = addr.state || "";
 
@@ -243,12 +253,26 @@ export function MapPicker({
     setSearchError("");
 
     try {
-      // 1. Search bounded to Uttarakhand viewport
-      const searchUrl1 = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        searchQuery
-      )}&viewbox=77.3,31.5,81.1,28.7&bounded=1&addressdetails=1`;
-      let res = await fetch(searchUrl1);
-      let data = await res.json();
+      // 1. Search using backend geocoding proxy with OSM fallback
+      let data: any[] = [];
+      try {
+        const proxyData = await geocodeSearchApi(searchQuery);
+        if (Array.isArray(proxyData) && proxyData.length > 0) {
+          data = proxyData;
+        } else if (proxyData?.data && Array.isArray(proxyData.data)) {
+          data = proxyData.data;
+        }
+      } catch {
+        // Fallback to OSM
+      }
+
+      if (!data || data.length === 0) {
+        const searchUrl1 = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          searchQuery
+        )}&viewbox=77.3,31.5,81.1,28.7&bounded=1&addressdetails=1`;
+        const res = await fetch(searchUrl1);
+        data = await res.json();
+      }
 
       let foundValid = false;
       if (data && data.length > 0) {
@@ -291,8 +315,8 @@ export function MapPicker({
         const searchUrl2 = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
           targetQuery
         )}&viewbox=77.3,31.5,81.1,28.7&bounded=1&addressdetails=1`;
-        res = await fetch(searchUrl2);
-        data = await res.json();
+        const res2 = await fetch(searchUrl2);
+        data = await res2.json();
 
         if (data && data.length > 0) {
           const first = data[0];

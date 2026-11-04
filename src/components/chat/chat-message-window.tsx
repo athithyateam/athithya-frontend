@@ -14,7 +14,7 @@ import {
 import { useChatStore } from "@/stores/chat-store";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
-import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/posts-api";
+import { getPresignedUrl, uploadFileToS3 } from "@/lib/api/experiences-api";
 
 export function ChatMessageWindow({ className = "" }: { className?: string }) {
   const { user } = useAuthStore();

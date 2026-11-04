@@ -1,4 +1,5 @@
 export const ENDPOINTS = {
+  // Authentication & Users (Docs: auth-and-users.md)
   LOGOUT: "/api/auth/logout",
   SIGNIN: "/api/auth/signin",
   SIGNUP_INITIATE: "/api/auth/signup/initiate",
@@ -7,58 +8,6 @@ export const ENDPOINTS = {
   FORGOT_PASSWORD: "/api/auth/forgot-password",
   RESET_PASSWORD: "/api/auth/reset-password",
   ME: "/api/auth/me",
-
-  POSTS: "/api/posts/experiences",
-  POSTS_ROOT: "/api/posts",
-  GET_POST: (id: string) => `/api/posts/experiences/${id}`,
-  POST_BY_ID: (id: string) => `/api/posts/${id}`,
-  DELETE_POST: (id: string) => `/api/posts/experiences/${id}`,
-  USER_POST: (userId: string) => `/api/posts/experiences/user/${userId}`,
-  REACT_POST: (id: string) => `/api/posts/${id}/react`,
-  SAVE_POST: (id: string) => `/api/posts/${id}/save`,
-  REQUEST_HIDE_POST: (id: string) => `/api/posts/${id}/request-hide`,
-  PRESIGNED_URL: "/api/posts/presigned-url",
-
-  ITINERARIES: "/api/itineraries",
-  EXPLORE_ITINERARIES: "/api/itineraries/explore/complete",
-  COMBINED_LOCATION: "/api/itineraries/location/combined",
-  GET_ITINERARY: (id: string) => `/api/itineraries/${id}`,
-  USER_ITINERARIES: (userId: string) => `/api/itineraries/user/${userId}`,
-  DELETE_ITINERARY: (id: string) => `/api/itineraries/${id}`,
-  REACT_ITINERARY: (id: string) => `/api/itineraries/${id}/react`,
-  SAVE_ITINERARY: (id: string) => `/api/itineraries/${id}/save`,
-
-  POST_SERVICE: "/api/posts/services",
-  ALL_SERVICES: "/api/posts/services",
-  DELETE_SERVICE: (id: string) => `/api/posts/services/${id}`,
-  GET_SERVICE: (id: string) => `/api/posts/services/${id}`,
-  USER_SERVICE: (userId: string) => `/api/posts/services/user/${userId}`,
-
-  GET_FEATURED_TREKS: (limit = 10, page = 1) =>
-    `/api/posts/featured/treks?limit=${limit}&page=${page}`,
-  GET_FEATURED_EXPERIENCES: (limit = 10, page = 1) =>
-    `/api/posts/experiences/featured/list?limit=${limit}&page=${page}`,
-  GET_NEARBY_TREKS: ({
-    latitude,
-    longitude,
-    limit = 20,
-    page = 1,
-  }: {
-    latitude?: number | null;
-    longitude?: number | null;
-    limit?: number;
-    page?: number;
-  }) => {
-    let url = `/api/posts/nearby/treks?limit=${limit}&page=${page}`;
-    if (latitude !== undefined && latitude !== null) url += `&latitude=${latitude}`;
-    if (longitude !== undefined && longitude !== null) url += `&longitude=${longitude}`;
-    return url;
-  },
-  GET_TOPRATED_TREKS: "/api/posts/top-rated/treks",
-  GET_TOPRATED_HOSTS: "/api/users/top-rated/hosts",
-  GET_CATEGORY_ACTIVITY: "/api/posts/categories/activity",
-  GET_MOST_REACTED_EXPERIENCES: (limit = 10, page = 1) =>
-    `/api/posts/most-reacted/experiences?limit=${limit}&page=${page}`,
 
   GET_USER: (id: string) => `/api/users/${id}`,
   USER_PROFILE: (id: string) => `/api/users/profile/${id}`,
@@ -75,13 +24,9 @@ export const ENDPOINTS = {
   REJECT_FRIEND: (id: string) => `/api/users/${id}/friend-reject`,
   GET_GUESTS: "/api/users/guests",
   GET_SAVED_POSTS: "/api/users/me/saved",
+  GET_TOPRATED_HOSTS: "/api/users/top-rated/hosts",
 
-  COMMUNITY_POSTS: "/api/users/community-posts",
-  LIKE_COMMUNITY_POST: (id: string) => `/api/users/community-posts/${id}/like`,
-  COMMUNITY_POST_LIKERS: (id: string) => `/api/users/community-posts/${id}/likers`,
-  USER_COMMUNITY_POSTS: (userId: string) => `/api/users/profile/${userId}/community-posts`,
-  DELETE_COMMUNITY_POST: (id: string) => `/api/users/community-posts/${id}`,
-
+  // Host Media Grid (Docs: auth-and-users.md)
   HOST_GRID_MEDIA: (hostId: string) => `/api/users/profile/${hostId}/grid-media`,
   GRID_TAB_PREFERENCE: "/api/users/grid-tab-preference",
   PERSONAL_MEDIA: "/api/users/personal-media",
@@ -89,6 +34,49 @@ export const ENDPOINTS = {
   PIN_PERSONAL_MEDIA: (id: string) => `/api/users/personal-media/${id}/pin`,
   PIN_EXPERIENCE_MEDIA: "/api/users/experience-media/pin",
 
+  // Community Posts (Social Feed)
+  COMMUNITY_POSTS: "/api/users/community-posts",
+  LIKE_COMMUNITY_POST: (id: string) => `/api/users/community-posts/${id}/like`,
+  COMMUNITY_POST_LIKERS: (id: string) => `/api/users/community-posts/${id}/likers`,
+  USER_COMMUNITY_POSTS: (userId: string) => `/api/users/profile/${userId}/community-posts`,
+  DELETE_COMMUNITY_POST: (id: string) => `/api/users/community-posts/${id}`,
+
+  // Experiences (Docs: experiences.md)
+  EXPERIENCES: "/api/experiences",
+  EXPERIENCES_ROOT: "/api/experiences",
+  GET_EXPERIENCE: (id: string) => `/api/experiences/${id}`,
+  GET_EXPERIENCE_REVIEWS: (experienceId: string) => `/api/experiences/reviews/${experienceId}`,
+  GET_USER_EXPERIENCES: (userId: string) => `/api/experiences/user/${userId}`,
+  GET_MY_EXPERIENCES: "/api/experiences/my/experiences",
+  PRESIGNED_URL: "/api/experiences/presigned-url",
+  SAVE_EXPERIENCE: (id: string) => `/api/experiences/${id}/save`,
+  REQUEST_HIDE_EXPERIENCE: (id: string) => `/api/experiences/${id}/request-hide`,
+
+  GET_FEATURED_EXPERIENCES: (limit = 10, page = 1) =>
+    `/api/experiences/featured/list?limit=${limit}&page=${page}`,
+  GET_LATEST_EXPERIENCES: (limit = 10, page = 1, sort = "recent") =>
+    `/api/experiences/latest?limit=${limit}&page=${page}&sort=${sort}`,
+  GET_MOST_LOVED_EXPERIENCES: (limit = 10, page = 1) =>
+    `/api/experiences/most-loved?limit=${limit}&page=${page}`,
+  GET_NEARBY_TREKS: ({
+    latitude,
+    longitude,
+    limit = 20,
+    page = 1,
+  }: {
+    latitude?: number | null;
+    longitude?: number | null;
+    limit?: number;
+    page?: number;
+  }) => {
+    const lat = latitude !== undefined && latitude !== null ? latitude : 30.3165;
+    const lng = longitude !== undefined && longitude !== null ? longitude : 78.0322;
+    return `/api/experiences/nearby/treks?limit=${limit}&page=${page}&latitude=${lat}&longitude=${lng}`;
+  },
+  GET_TOPRATED_TREKS: "/api/experiences/top-rated/treks",
+  GET_CATEGORY_ACTIVITY: "/api/experiences/categories/activity",
+
+  // Search & Geocoding (Docs: search.md)
   SEARCH: "/api/search",
   SEARCH_ADVANCED: "/api/search/advanced",
   SEARCH_SUGGESTIONS: "/api/search/suggestions",
@@ -96,6 +84,7 @@ export const ENDPOINTS = {
   GEOCODE_REVERSE: "/api/search/geocode/reverse",
   GEOCODE_SEARCH: "/api/search/geocode/search",
 
+  // Notifications (Docs: notifications.md)
   NOTIFICATIONS: "/api/notifications",
   BOOKING_NOTIFICATIONS: "/api/notifications/bookings",
   FOLLOW_NOTIFICATIONS: "/api/notifications/follows",
@@ -103,6 +92,7 @@ export const ENDPOINTS = {
   MARK_ALL_READ: "/api/notifications/mark-all/read",
   CLEAR_ALL_NOTIFS: "/api/notifications/clear/all",
 
+  // Bookings & Payments (Docs: bookings.md)
   BOOKINGS: "/api/bookings",
   VERIFY_BOOKING: "/api/bookings/verify",
   HOST_BOOKINGS: "/api/bookings/host/requests",
@@ -113,32 +103,39 @@ export const ENDPOINTS = {
   CANCEL_BOOKING_REQUEST: (id: string) => `/api/bookings/${id}/request-cancel`,
   APPROVE_CANCELLATION: (id: string) => `/api/bookings/${id}/approve-cancel`,
 
-  CREATE_SCHEDULE: "/api/schedules",
-  MY_SCHEDULES: "/api/schedules/me",
-  SCHEDULE_INVITES: "/api/schedules/invites",
-  RESPOND_SCHEDULE: (id: string) => `/api/schedules/${id}/respond`,
-  SCHEDULE_STATUS: (postId: string) => `/api/schedules/post/${postId}/status`,
-  REMOVE_FRIEND: (postId: string, friendId: string) =>
-    `/api/schedules/post/${postId}/invite/${friendId}/remove`,
+  // Group Bookings (Docs: group-bookings.md)
+  GROUP_BOOKINGS: "/api/group-bookings",
+  MY_GROUP_BOOKINGS: "/api/group-bookings/me",
+  GROUP_INVITES: "/api/group-bookings/invites",
+  RESPOND_GROUP_INVITE: (id: string) => `/api/group-bookings/${id}/respond`,
+  GROUP_BOOKING_STATUS: (experienceId: string) => `/api/group-bookings/experience/${experienceId}/status`,
+  SEND_FRIEND_INVITE: "/api/group-bookings/send-friend-invite",
+  REMOVE_GROUP_FRIEND: (experienceId: string, friendId: string) =>
+    `/api/group-bookings/experience/${experienceId}/invite/${friendId}`,
 
-  GUEST_SCHEDULES: "/api/guest-schedules",
-  MY_GUEST_SCHEDULES: "/api/guest-schedules/me",
-  CHECK_GUEST_SCHEDULE: (postId: string) => `/api/guest-schedules/check/${postId}`,
-  DELETE_GUEST_SCHEDULE: (id: string) => `/api/guest-schedules/${id}`,
+  // Wishlist Schedules (Docs: wishlist-schedules.md)
+  WISHLIST_SCHEDULES: "/api/wishlist-schedules",
+  MY_WISHLIST_SCHEDULES: "/api/wishlist-schedules/me",
+  CHECK_WISHLIST_SCHEDULE: (experienceId: string) => `/api/wishlist-schedules/check/${experienceId}`,
+  DELETE_WISHLIST_SCHEDULE: (id: string) => `/api/wishlist-schedules/${id}`,
 
+  // Reviews & Ratings (Docs: reviews.md)
   REVIEWS: "/api/reviews",
   LATEST_REVIEWS: "/api/reviews/latest",
   HOST_REVIEWS: (hostId: string) => `/api/reviews/host/${hostId}`,
   REVIEW_ELIGIBILITY: "/api/reviews/check-eligibility",
 
+  // Real-time Chat & Messaging (Docs: chat.md)
   CHAT_CONVERSATIONS: "/api/chat/conversations",
   CHAT_GROUPS: "/api/chat/groups",
   CHAT_MESSAGES: "/api/chat/messages",
   CHAT_ELIGIBILITY: (conversationId: string) => `/api/chat/eligibility/${conversationId}`,
 
+  // Admin Operations (Docs: admin.md)
   ADMIN_STATS: "/api/admin/stats",
   ADMIN_PENDING_EXPERIENCES: "/api/admin/experiences/pending",
   ADMIN_UPDATE_POST_STATUS: (id: string) => `/api/admin/experiences/${id}/status`,
+  ADMIN_EXPERIENCE_HIDE: (id: string) => `/api/admin/experiences/${id}/hide`,
   ADMIN_USERS: "/api/admin/users",
   ADMIN_UPDATE_USER: (id: string) => `/api/admin/users/${id}`,
   ADMIN_UPDATE_USER_ROLE: (id: string) => `/api/admin/users/${id}/role`,
@@ -153,4 +150,3 @@ export const ENDPOINTS = {
   ADMIN_HOST_HISTORY: "/api/admin/host-history",
   ADMIN_CHAT_ACTIVITY: "/api/admin/chat-activity",
 } as const;
-

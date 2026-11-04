@@ -95,11 +95,11 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
   const isEmpty = pendingPosts.length === 0 && pendingKyc.length === 0;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 sm:space-y-10">
       {isEmpty ? (
-        <div className="bg-white dark:bg-neutral-900 rounded-[3rem] p-20 text-center border-2 border-dashed border-slate-100 dark:border-neutral-800 transition-colors">
-          <div className="w-20 h-20 bg-slate-50 dark:bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-6 transition-colors">
-            <FiCheckCircle size={40} className="text-[#C59A2F]" />
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] p-8 sm:p-12 md:p-20 text-center border-2 border-dashed border-slate-100 dark:border-neutral-800 transition-colors">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-50 dark:bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-6 transition-colors">
+            <FiCheckCircle size={32} className="text-[#C59A2F]" />
           </div>
           <h3 className="text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
             All caught up!
@@ -109,17 +109,17 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
           </p>
         </div>
       ) : (
-        <div className="space-y-12">
+        <div className="space-y-8 sm:space-y-12 w-full min-w-0 max-w-full">
           {/* Pending Host Verifications Section matching athithya-app */}
           {pendingKyc.length > 0 && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-4 px-4">
-                <span className="w-12 h-[2px] bg-[#C59A2F]" />
-                <h3 className="text-sm font-black text-slate-900 dark:text-neutral-100 uppercase tracking-[0.3em]">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex items-center gap-3 sm:gap-4 px-2 sm:px-4">
+                <span className="w-8 sm:w-12 h-[2px] bg-[#C59A2F]" />
+                <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-neutral-100 uppercase tracking-[0.2em] sm:tracking-[0.3em]">
                   Host Applications ({pendingKyc.length})
                 </h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {pendingKyc.map((user) => {
                   const id = user._id || user.id || user.userId;
                   const isProfileUpdate =
@@ -142,7 +142,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
                   return (
                     <div
                       key={id}
-                      className="bg-white dark:bg-neutral-900 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 transition-colors"
+                      className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 transition-colors"
                     >
                       <div className="flex items-center gap-4 mb-6">
                         <div className="w-16 h-16 rounded-2xl bg-slate-50 dark:bg-neutral-800 flex items-center justify-center text-[#C59A2F] text-xl font-black transition-colors overflow-hidden shrink-0">
@@ -208,14 +208,14 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
 
           {/* Pending Experiences Section matching athithya-app */}
           {pendingPosts.length > 0 && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-4 px-4">
-                <span className="w-12 h-[2px] bg-[#C59A2F]" />
-                <h3 className="text-sm font-black text-slate-900 dark:text-neutral-100 uppercase tracking-[0.3em]">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex items-center gap-3 sm:gap-4 px-2 sm:px-4">
+                <span className="w-8 sm:w-12 h-[2px] bg-[#C59A2F]" />
+                <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-neutral-100 uppercase tracking-[0.2em] sm:tracking-[0.3em]">
                   Experience Submissions ({pendingPosts.length})
                 </h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {pendingPosts.map((post) => {
                   const id = post._id || post.id;
                   const coverPhoto =
@@ -224,7 +224,7 @@ export function AdminApprovalsTab({ onRefreshCounts }: AdminApprovalsTabProps) {
                   return (
                     <div
                       key={id}
-                      className="bg-white dark:bg-neutral-900 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 transition-colors flex flex-col justify-between"
+                      className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-5 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-neutral-800 transition-colors flex flex-col justify-between"
                     >
                       <div>
                         {coverPhoto && (

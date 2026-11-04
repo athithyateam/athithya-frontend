@@ -12,15 +12,11 @@ import {
   Star,
 } from "lucide-react";
 import {
-  getPost,
-  getService,
-  getItinerary,
-  listPosts,
-  savePostApi,
-  unsavePostApi,
-  saveItineraryApi,
-  unsaveItineraryApi,
-} from "@/lib/api/posts-api";
+  getExperience,
+  listExperiences,
+  saveExperienceApi,
+  unsaveExperienceApi,
+} from "@/lib/api/experiences-api";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
 import { Navbar } from "@/components/navigation/navbar";
@@ -68,37 +64,28 @@ function PostDetailContent({
     const loadPost = async () => {
       setLoading(true);
       try {
-        const currentType = searchParams.get("type") || "experience";
-        let res: any;
-        if (currentType === "service") {
-          res = await getService(postId);
-        } else if (currentType === "plan") {
-          res = await getItinerary(postId);
-        } else {
-          res = await getPost(postId);
-        }
-
-        const data =
-          res?.experience ||
-          res?.service ||
-          res?.post ||
-          res?.trek ||
-          res?.itinerary ||
-          res?.data ||
-          res;
+        const res = await getExperience(postId);
+        const data = res?.experience || res?.data || res;
 
         if (isMounted && data?._id) {
           setPost(data);
-          const cats = data.categories || [];
-          if (cats.length > 0) {
-            listPosts({ categories: cats.join(","), limit: 8 })
-              .then((r: any) => {
-                const list = (r?.posts || r?.data || []).filter(
-                  (p: any) => p._id !== postId
-                );
-                if (isMounted) setRelatedPosts(list.slice(0, 4));
-              })
-              .catch(() => {});
+          if (res?.similarExperiences?.length) {
+            const list = res.similarExperiences.filter(
+              (p: any) => (p._id || p.id) !== postId
+            );
+            setRelatedPosts(list.slice(0, 4));
+          } else {
+            const cats = data.categories || [];
+            if (cats.length > 0) {
+              listExperiences({ categories: cats.join(","), limit: 8 })
+                .then((r: any) => {
+                  const list = (r?.experiences || r?.data || []).filter(
+                    (p: any) => (p._id || p.id) !== postId
+                  );
+                  if (isMounted) setRelatedPosts(list.slice(0, 4));
+                })
+                .catch(() => {});
+            }
           }
         } else if (isMounted) {
           setError("Experience not found");
@@ -113,7 +100,7 @@ function PostDetailContent({
     return () => {
       isMounted = false;
     };
-  }, [postId, searchParams]);
+  }, [postId]);
 
   const handleToggleSave = async () => {
     if (!currentUser) {
@@ -128,15 +115,11 @@ function PostDetailContent({
       return;
     }
     try {
-      const isPlan =
-        (searchParams.get("type") || post?.postType) === "plan";
       if (!isSaved) {
-        if (isPlan) await saveItineraryApi(postId);
-        else await savePostApi(postId);
+        await saveExperienceApi(postId);
         showToast("Experience saved to your profile!", "success");
       } else {
-        if (isPlan) await unsaveItineraryApi(postId);
-        else await unsavePostApi(postId);
+        await unsaveExperienceApi(postId);
         showToast("Experience removed from saved", "success");
       }
       await fetchUser();

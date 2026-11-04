@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, Users, Compass, MapPin, Calendar, MessageSquare, UserPlus, Plus } from "lucide-react";
-import { listExploreItineraries } from "@/lib/api/posts-api";
+import { listExperiences } from "@/lib/api/experiences-api";
 import { getGuestsApi, friendRequestApi } from "@/lib/api/users-api";
 import { useAuthStore } from "@/stores/auth-store";
 import { useFeedbackStore } from "@/stores/feedback-store";
@@ -14,27 +14,27 @@ export default function ConnectPage() {
   const { user, openAuthModal } = useAuthStore();
   const { showToast } = useFeedbackStore();
 
-  const [activeTab, setActiveTab] = useState<"plans" | "travelers">("plans");
+  const [activeTab, setActiveTab] = useState<"experiences" | "travelers">("experiences");
   const [search, setSearch] = useState("");
-  const [plans, setPlans] = useState<any[]>([]);
+  const [experiences, setExperiences] = useState<any[]>([]);
   const [travelers, setTravelers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchConnectData = useCallback(async () => {
     setLoading(true);
     try {
-      const [plansRes, guestsRes] = await Promise.all([
-        listExploreItineraries({ search, limit: 24 }),
+      const [expRes, guestsRes] = await Promise.all([
+        listExperiences({ search, limit: 24 }),
         getGuestsApi({ search, page: 1, limit: 24 }),
       ]);
-      const planList =
-        plansRes?.itineraries || plansRes?.data?.itineraries || plansRes?.posts || (Array.isArray(plansRes) ? plansRes : []);
+      const expList =
+        expRes?.experiences || expRes?.data?.experiences || (Array.isArray(expRes) ? expRes : []);
       const guestList =
         guestsRes?.guests || guestsRes?.users || guestsRes?.data?.guests || (Array.isArray(guestsRes) ? guestsRes : []);
-      setPlans(planList);
+      setExperiences(expList);
       setTravelers(guestList);
     } catch {
-      setPlans([]);
+      setExperiences([]);
       setTravelers([]);
     } finally {
       setLoading(false);
@@ -66,17 +66,17 @@ export default function ConnectPage() {
               Athithya Connect
             </span>
             <h1 className="text-2xl sm:text-4xl font-black">
-              Find Fellow Travelers & Join Mountain Plans
+              Find Fellow Travelers & Connect with Experiences
             </h1>
             <p className="text-xs sm:text-sm text-neutral-300">
-              Explore upcoming traveler itineraries across Uttarakhand, split group costs, and connect with like-minded explorers.
+              Explore authentic mountain experiences across Uttarakhand, connect with local hosts, and discover fellow explorers.
             </p>
           </div>
           <Link
-            href="/post?type=plan"
+            href="/post"
             className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#C59A2F] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A67F26] transition shrink-0"
           >
-            <Plus size={16} /> Post Travel Plan
+            <Plus size={16} /> Host an Experience
           </Link>
         </div>
 
@@ -85,12 +85,12 @@ export default function ConnectPage() {
           <div className="inline-flex p-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
             <button
               type="button"
-              onClick={() => setActiveTab("plans")}
+              onClick={() => setActiveTab("experiences")}
               className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-black uppercase tracking-wider transition ${
-                activeTab === "plans" ? "bg-[#C59A2F] text-white" : "text-neutral-500"
+                activeTab === "experiences" ? "bg-[#C59A2F] text-white" : "text-neutral-500"
               }`}
             >
-              <Compass size={14} /> Open Travel Plans ({plans.length})
+              <Compass size={14} /> Explore Experiences ({experiences.length})
             </button>
             <button
               type="button"
@@ -108,7 +108,7 @@ export default function ConnectPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search destination, plan, or traveler..."
+              placeholder="Search destination, experience, or traveler..."
               className="w-full pl-10 pr-4 py-2.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-xs"
             />
           </div>
@@ -120,16 +120,16 @@ export default function ConnectPage() {
               <div key={n} className="h-56 rounded-3xl bg-neutral-100 dark:bg-neutral-900 animate-pulse" />
             ))}
           </div>
-        ) : activeTab === "plans" ? (
-          plans.length === 0 ? (
+        ) : activeTab === "experiences" ? (
+          experiences.length === 0 ? (
             <div className="p-12 text-center rounded-3xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
-              <p className="text-sm font-bold">No public travel plans match your search.</p>
+              <p className="text-sm font-bold">No experiences match your search.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {plans.map((plan) => {
-                const id = plan._id || plan.id;
-                const author = plan.user || plan.author || plan.host || {};
+              {experiences.map((exp) => {
+                const id = exp._id || exp.id;
+                const author = exp.user || exp.author || exp.host || {};
                 return (
                   <div
                     key={id}
@@ -138,18 +138,18 @@ export default function ConnectPage() {
                     <div className="space-y-3">
                       <div className="flex items-center justify-between text-xs text-neutral-500">
                         <span className="inline-flex items-center gap-1 font-bold text-[#C59A2F]">
-                          <MapPin size={13} /> {plan.location?.city || plan.destination || "Uttarakhand"}
+                          <MapPin size={13} /> {exp.location?.city || exp.destination || "Uttarakhand"}
                         </span>
-                        {plan.startDate && (
+                        {exp.startDate && (
                           <span className="inline-flex items-center gap-1">
-                            <Calendar size={12} /> {new Date(plan.startDate).toLocaleDateString()}
+                            <Calendar size={12} /> {new Date(exp.startDate).toLocaleDateString()}
                           </span>
                         )}
                       </div>
-                      <Link href={`/post/${id}?type=plan`} className="block font-black text-lg hover:text-[#C59A2F]">
-                        {plan.title || "Himalayan Group Expedition"}
+                      <Link href={`/post/${id}`} className="block font-black text-lg hover:text-[#C59A2F]">
+                        {exp.title || "Himalayan Experience"}
                       </Link>
-                      <p className="text-xs text-neutral-500 line-clamp-2">{plan.description}</p>
+                      <p className="text-xs text-neutral-500 line-clamp-2">{exp.description}</p>
                     </div>
 
                     <div className="flex items-center justify-between pt-4 border-t border-neutral-100 dark:border-neutral-800">
@@ -157,13 +157,13 @@ export default function ConnectPage() {
                         <div className="w-8 h-8 rounded-full bg-[#C59A2F] text-white flex items-center justify-center text-xs font-bold">
                           {(author.firstname?.charAt(0) || "T").toUpperCase()}
                         </div>
-                        <span className="text-xs font-bold">{author.firstname || "Traveler"}</span>
+                        <span className="text-xs font-bold">{author.firstname || "Host"}</span>
                       </Link>
                       <Link
-                        href={`/post/${id}?type=plan`}
+                        href={`/post/${id}`}
                         className="px-4 py-1.5 rounded-full bg-[#C59A2F]/15 text-[#C59A2F] text-xs font-black uppercase"
                       >
-                        View Plan
+                        View Experience
                       </Link>
                     </div>
                   </div>
@@ -218,4 +218,5 @@ export default function ConnectPage() {
     </main>
   );
 }
+
 

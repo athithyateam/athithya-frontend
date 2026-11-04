@@ -8,6 +8,7 @@ import { FiArrowRight, FiHome } from "react-icons/fi";
 import { routes } from "@/config/navigation";
 import { useExploreStore } from "@/stores/explore-store";
 import { getOptimizedImage } from "@/lib/image-helper";
+import { ProgressiveImage } from "@/components/ui/progressive-image";
 
 const getHostYears = (host: any) => {
   const years = host.hostDetails?.yearsOfExperience;
@@ -27,7 +28,11 @@ const hasValidProfilePicture = (host: any) => {
   return typeof url === "string" && url.trim().length > 0;
 };
 
-export function TopRatedHostsSection() {
+export function TopRatedHostsSection({
+  initialHosts,
+}: {
+  initialHosts?: any[];
+} = {}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { hosts, homeLoading, homeLoaded } = useExploreStore();
@@ -45,11 +50,13 @@ export function TopRatedHostsSection() {
     }
   };
 
-  const validHosts = Array.isArray(hosts)
-    ? hosts.filter(hasValidProfilePicture)
+  const rawHosts =
+    initialHosts && initialHosts.length > 0 ? initialHosts : hosts;
+  const validHosts = Array.isArray(rawHosts)
+    ? rawHosts.filter(hasValidProfilePicture)
     : [];
   const hasRealHosts = validHosts.length > 0;
-  const isLoading = homeLoading || !homeLoaded;
+  const isLoading = !initialHosts && (homeLoading || !homeLoaded);
 
   return (
     <section className="py-6 md:py-12 relative z-10 bg-white dark:bg-neutral-950 transition-colors">
@@ -133,18 +140,19 @@ export function TopRatedHostsSection() {
                   className="w-full sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 snap-start bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-4 sm:p-5 shadow-xs hover:shadow-md hover:border-[#C59A2F]/40 transition-all duration-300 cursor-pointer flex items-center gap-3.5 sm:gap-4 group"
                 >
                   <div className="relative shrink-0">
-                    <img
-                      src={avatar}
-                      alt={name}
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border border-neutral-200 dark:border-neutral-700 shadow-xs group-hover:scale-105 transition-transform duration-300"
-                      onError={(e) => {
-                        (
-                          e.currentTarget as HTMLImageElement
-                        ).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 border border-neutral-200 dark:border-neutral-700 shadow-xs group-hover:scale-105 transition-transform duration-300">
+                      <ProgressiveImage
+                        src={avatar}
+                        alt={name}
+                        rowIndex={5}
+                        cardIndex={idx}
+                        isAvatar
+                        containerClassName="w-full h-full"
+                        fallbackSrc={`https://ui-avatars.com/api/?name=${encodeURIComponent(
                           name
-                        )}&background=C59A2F&color=fff`;
-                      }}
-                    />
+                        )}&background=C59A2F&color=fff`}
+                      />
+                    </div>
                     {host.verifyBadge?.enabled && (
                       <div
                         className="absolute -bottom-1 -right-1 bg-white dark:bg-neutral-900 rounded-full p-0.5 shadow-sm"
@@ -238,6 +246,43 @@ export function TopRatedHostsSection() {
         >
           <FaChevronRight size={12} />
         </button>
+      </div>
+    </section>
+  );
+}
+
+export function TopRatedHostsSectionSkeleton() {
+  return (
+    <section className="py-6 md:py-12 relative z-10 bg-white dark:bg-neutral-950 transition-colors">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 mb-4 md:mb-6">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-tight tracking-wide transition-colors">
+              Top Rated <span className="text-[#C59A2F]">Local Hosts</span>
+            </h2>
+            <p className="text-neutral-500 dark:text-neutral-400 text-xs sm:text-sm md:text-base font-semibold mt-1 md:mt-1.5 tracking-wide transition-colors">
+              Explore top rated hosts
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-[1400px] mx-auto relative px-4 sm:px-6 md:px-8">
+        <div className="flex gap-4 overflow-x-auto w-full pt-3 md:pt-4 pb-4 md:pb-8 scrollbar-hide snap-x snap-mandatory px-1">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="w-full sm:w-[48%] md:w-[32%] lg:w-[calc(25%-12px)] shrink-0 snap-start bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-4 sm:p-5 flex items-center gap-3.5 sm:gap-4"
+            >
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse shrink-0" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-3/4 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+                <div className="h-3 w-1/2 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+                <div className="h-3 w-2/3 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -23,19 +23,32 @@ function ChatContent() {
     openDirectChat,
   } = useChatStore();
 
+  const [mounted, setMounted] = useState(false);
   const [search, setSearch] = useState("");
   const [showFindFriendsModal, setShowFindFriendsModal] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
-    fetchConversations();
-  }, [user, fetchConversations]);
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
-    if (user && targetUserId) {
+    if (!user || !mounted) return;
+    fetchConversations();
+  }, [user, mounted, fetchConversations]);
+
+  useEffect(() => {
+    if (user && targetUserId && mounted) {
       openDirectChat(targetUserId);
     }
-  }, [user, targetUserId, openDirectChat]);
+  }, [user, targetUserId, mounted, openDirectChat]);
+
+  if (!mounted) {
+    return (
+      <main className="min-h-[80vh] flex items-center justify-center pt-24 pb-16 px-4 bg-white dark:bg-neutral-950">
+        <div className="w-10 h-10 border-4 border-[#C59A2F]/20 border-t-[#C59A2F] rounded-full animate-spin" />
+      </main>
+    );
+  }
 
   if (!user) {
     return (

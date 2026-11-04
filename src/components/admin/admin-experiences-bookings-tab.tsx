@@ -207,23 +207,23 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
   // ================= 1. EXPERIENCES MODE =================
   if (mode === "experiences") {
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-[2.5rem] md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative">
-        <div className="p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-4 flex-wrap">
-              <h2 className="text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors shrink-0">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative w-full min-w-0 max-w-full">
+        <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full md:w-auto">
+            <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors shrink-0">
                 Experiences
                 <span className="ml-2 text-xs font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
                   ({experiences.length} shown)
                 </span>
               </h2>
-              <div className="flex gap-1.5 bg-slate-100/80 dark:bg-neutral-950 p-1.5 rounded-2xl w-fit border border-slate-200/50 dark:border-neutral-800 transition-colors">
+              <div className="flex gap-1.5 bg-slate-100/80 dark:bg-neutral-950 p-1 sm:p-1.5 rounded-2xl w-full sm:w-fit overflow-x-auto scrollbar-none border border-slate-200/50 dark:border-neutral-800 transition-colors">
                 {(["all", "category", "host"] as const).map((tab) => (
                   <button
                     key={tab}
                     type="button"
                     onClick={() => setExpMainTab(tab)}
-                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer ${
+                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap cursor-pointer ${
                       expMainTab === tab
                         ? "bg-white dark:bg-neutral-850 text-[#C59A2F] shadow-md shadow-slate-200/30 dark:shadow-none"
                         : "text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-200"
@@ -239,7 +239,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
               <button
                 type="button"
                 onClick={handleBulkDelete}
-                className="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 px-4 py-2 rounded-xl text-xs font-bold transition-all border border-red-100 dark:border-red-900/30 cursor-pointer"
+                className="flex items-center gap-1.5 sm:gap-2 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all border border-red-100 dark:border-red-900/30 cursor-pointer whitespace-nowrap"
               >
                 <FiTrash2 size={14} />
                 Delete Selected ({selectedIds.length})
@@ -247,31 +247,31 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
             )}
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto">
             <button
               type="button"
               onClick={exportExperiencesToCSV}
               style={{ backgroundColor: "#C59A2F" }}
-              className="text-white font-black text-[10px] uppercase tracking-widest rounded-2xl px-5 py-3.5 hover:brightness-95 active:scale-[0.98] transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              className="text-white font-black text-[10px] uppercase tracking-widest rounded-xl sm:rounded-2xl px-4 sm:px-5 py-2.5 sm:py-3.5 hover:brightness-95 active:scale-[0.98] transition-all shadow-md flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
             >
               📥 Export CSV
             </button>
-            <div className="relative w-full md:w-64">
-              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-neutral-600" />
+            <div className="relative w-full sm:w-64">
+              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300 dark:text-neutral-600" />
               <input
                 type="text"
                 placeholder="Search experiences..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 pr-6 py-3 bg-slate-50 dark:bg-neutral-950 rounded-2xl text-sm focus:outline-none focus:ring-2 ring-[#C59A2F]/20 border border-slate-100 dark:border-neutral-800 w-full text-slate-900 dark:text-neutral-100 transition-colors"
+                className="pl-9 pr-4 py-2.5 sm:py-3 bg-slate-50 dark:bg-neutral-950 rounded-xl sm:rounded-2xl text-xs sm:text-sm focus:outline-none focus:ring-2 ring-[#C59A2F]/20 border border-slate-100 dark:border-neutral-800 w-full text-slate-900 dark:text-neutral-100 transition-colors"
               />
             </div>
           </div>
         </div>
 
         {/* Experiences Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px]">
+        <div className="overflow-x-auto w-full min-w-0 max-w-full">
+          <table className="w-full min-w-[800px]">
             <thead>
               <tr className="bg-slate-50/50 dark:bg-neutral-950/40 transition-colors">
                 <th className="px-6 py-5 text-left w-12">
@@ -436,16 +436,16 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
     });
 
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-[2.5rem] md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative">
-        <div className="p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full md:w-auto">
-            <h2 className="text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter shrink-0">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative w-full min-w-0 max-w-full">
+        <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full md:w-auto">
+            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter shrink-0">
               Live Journeys
               <span className="ml-2 text-xs font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest">
                 ({journeyList.length} tracked)
               </span>
             </h2>
-            <div className="flex gap-1.5 bg-slate-100/80 dark:bg-neutral-950 p-1.5 rounded-2xl w-fit border border-slate-200/50 dark:border-neutral-800 transition-colors">
+            <div className="flex gap-1.5 bg-slate-100/80 dark:bg-neutral-950 p-1 sm:p-1.5 rounded-2xl w-full sm:w-fit overflow-x-auto scrollbar-none border border-slate-200/50 dark:border-neutral-800 transition-colors">
               {[
                 { id: "active" as const, label: "Active", icon: <FiActivity className="text-blue-500" /> },
                 { id: "upcoming" as const, label: "Upcoming", icon: <FiClock className="text-amber-500" /> },
@@ -456,7 +456,7 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
                   key={tab.id}
                   type="button"
                   onClick={() => setJourneyTab(tab.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
                     journeyTab === tab.id
                       ? "bg-white dark:bg-neutral-850 text-[#C59A2F] shadow-md shadow-slate-200/30 dark:shadow-none"
                       : "text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-200"
@@ -470,25 +470,25 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
           </div>
 
           <div className="relative w-full md:w-64">
-            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300" />
             <input
               type="text"
               placeholder="Search journeys..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 pr-6 py-3 bg-slate-50 dark:bg-neutral-950 rounded-2xl text-sm focus:outline-none border border-slate-100 dark:border-neutral-800 w-full"
+              className="pl-9 pr-4 py-2.5 sm:py-3 bg-slate-50 dark:bg-neutral-950 rounded-xl sm:rounded-2xl text-xs sm:text-sm focus:outline-none border border-slate-100 dark:border-neutral-800 w-full"
             />
           </div>
         </div>
 
         {/* Live Journeys Grid */}
-        <div className="p-8">
+        <div className="p-4 sm:p-6 md:p-8">
           {journeyList.length === 0 ? (
             <div className="text-center py-16 text-xs text-slate-400 font-bold uppercase tracking-widest">
               No live journeys under {journeyTab}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {journeyList.map((j) => {
                 const id = j._id || j.id;
                 return (
@@ -539,17 +539,17 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
 
   // ================= 3. BOOKINGS MODE (BookingManagement.jsx) =================
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-[2.5rem] md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative">
-      <div className="p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
-        <div className="flex items-center gap-4">
-          <h2 className="text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-neutral-800 overflow-hidden transition-colors relative w-full min-w-0 max-w-full">
+      <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 dark:border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
+        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+          <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-neutral-100 uppercase tracking-tighter transition-colors">
             Booked Experiences
           </h2>
           {selectedIds.length > 0 && (
             <button
               type="button"
               onClick={handleBulkDelete}
-              className="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 px-4 py-2 rounded-xl text-xs font-bold transition-all border border-red-100 dark:border-red-900/30 cursor-pointer"
+              className="flex items-center gap-1.5 sm:gap-2 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all border border-red-100 dark:border-red-900/30 cursor-pointer whitespace-nowrap"
             >
               <FiTrash2 size={14} />
               Delete Selected ({selectedIds.length})
@@ -558,19 +558,19 @@ export function AdminExperiencesBookingsTab({ mode }: AdminExperiencesBookingsTa
         </div>
 
         <div className="relative w-full md:w-64">
-          <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+          <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300" />
           <input
             type="text"
             placeholder="Search bookings..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 pr-6 py-3 bg-slate-50 dark:bg-neutral-950 rounded-2xl text-sm focus:outline-none border border-slate-100 dark:border-neutral-800 w-full"
+            className="pl-9 pr-4 py-2.5 sm:py-3 bg-slate-50 dark:bg-neutral-950 rounded-xl sm:rounded-2xl text-xs sm:text-sm focus:outline-none border border-slate-100 dark:border-neutral-800 w-full"
           />
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[1000px]">
+      <div className="overflow-x-auto w-full min-w-0 max-w-full">
+        <table className="w-full min-w-[800px]">
           <thead>
             <tr className="bg-slate-50/50 dark:bg-neutral-950/40 border-b border-slate-100 dark:border-neutral-800">
               <th className="px-6 py-5 text-left w-12">
