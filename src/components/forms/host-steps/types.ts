@@ -18,3 +18,4 @@ export interface DiscountTier {
 export interface FormErrors {
   [key: string]: string | null | undefined;
 }
+

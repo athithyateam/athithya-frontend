@@ -143,3 +143,4 @@ export function Step1BasicDetails({
     </div>
   );
 }
+
