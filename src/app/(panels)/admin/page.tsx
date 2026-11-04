@@ -65,7 +65,7 @@ export default function AdminPage() {
       ]);
       if (statsRes) setStats(statsRes?.statistics || statsRes?.stats || statsRes?.data || statsRes);
       const pCount =
-        (postsRes?.experiences?.length ?? postsRes?.posts?.length ?? (Array.isArray(postsRes) ? postsRes.length : 0)) +
+        (postsRes?.experiences?.length ?? (Array.isArray(postsRes) ? postsRes.length : 0)) +
         (kycRes?.data?.length ?? kycRes?.verifications?.length ?? kycRes?.users?.length ?? (Array.isArray(kycRes) ? kycRes.length : 0));
       setPendingCount(pCount);
     } catch {

@@ -23,6 +23,7 @@ export const ENDPOINTS = {
   ACCEPT_FRIEND: (id: string) => `/api/users/${id}/friend-accept`,
   REJECT_FRIEND: (id: string) => `/api/users/${id}/friend-reject`,
   GET_GUESTS: "/api/users/guests",
+  GET_SAVED_EXPERIENCES: "/api/users/me/saved",
   GET_SAVED_POSTS: "/api/users/me/saved",
   GET_TOPRATED_HOSTS: "/api/users/top-rated/hosts",
 
@@ -134,6 +135,7 @@ export const ENDPOINTS = {
   // Admin Operations (Docs: admin.md)
   ADMIN_STATS: "/api/admin/stats",
   ADMIN_PENDING_EXPERIENCES: "/api/admin/experiences/pending",
+  ADMIN_UPDATE_EXPERIENCE_STATUS: (id: string) => `/api/admin/experiences/${id}/status`,
   ADMIN_UPDATE_POST_STATUS: (id: string) => `/api/admin/experiences/${id}/status`,
   ADMIN_EXPERIENCE_HIDE: (id: string) => `/api/admin/experiences/${id}/hide`,
   ADMIN_USERS: "/api/admin/users",

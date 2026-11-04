@@ -97,15 +97,16 @@ export function ProfileBookingsTab({ isHost, mode = "bookings" }: ProfileBooking
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {schedules.map((item) => {
-          const post = item.post || item.postId || {};
+          const exp = item.experience || item.post || {};
+          const expId = exp._id || exp.id || item.experienceId || item.postId;
           return (
             <div
               key={item._id || item.id}
               className="p-5 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-4"
             >
               <div>
-                <Link href={`/post/${post._id || post.id || item.postId}`} className="font-bold text-sm hover:text-[#C59A2F]">
-                  {post.title || "Scheduled Experience"}
+                <Link href={`/post/${expId}`} className="font-bold text-sm hover:text-[#C59A2F]">
+                  {exp.title || "Scheduled Experience"}
                 </Link>
                 <p className="text-xs text-neutral-500 flex items-center gap-2 mt-1">
                   <Calendar size={12} className="text-[#C59A2F]" />
@@ -148,7 +149,7 @@ export function ProfileBookingsTab({ isHost, mode = "bookings" }: ProfileBooking
     <div className="space-y-4">
       {bookings.map((b) => {
         const id = b._id || b.id;
-        const post = b.post || b.service || {};
+        const exp = b.experience || b.post || b.service || {};
         const status = b.status || b.bookingStatus || "pending";
         return (
           <div
@@ -162,7 +163,7 @@ export function ProfileBookingsTab({ isHost, mode = "bookings" }: ProfileBooking
                 </span>
                 <span className="text-xs text-neutral-400">#{String(id).slice(-6)}</span>
               </div>
-              <h4 className="font-bold text-base">{post.title || b.experienceTitle || "Himalayan Experience"}</h4>
+              <h4 className="font-bold text-base">{exp.title || b.experienceTitle || "Himalayan Experience"}</h4>
               <p className="text-xs text-neutral-500">
                 Date: {b.startDate ? new Date(b.startDate).toLocaleDateString() : "Flexible"} • Guests: {b.guests || b.numberOfPeople || 1} • Total: ₹{b.totalAmount || b.amount || 0}
               </p>

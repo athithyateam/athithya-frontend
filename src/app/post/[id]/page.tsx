@@ -48,8 +48,9 @@ function PostDetailContent({
   const [relatedPosts, setRelatedPosts] = useState<any[]>([]);
 
   useEffect(() => {
-    if (currentUser?.savedPosts) {
-      const saved = currentUser.savedPosts.some((item: any) => {
+    const savedList = currentUser?.savedExperiences || currentUser?.savedPosts;
+    if (savedList && Array.isArray(savedList)) {
+      const saved = savedList.some((item: any) => {
         const idStr = typeof item === "object" ? item._id || item.id : item;
         return String(idStr) === String(postId);
       });

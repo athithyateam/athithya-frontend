@@ -14,7 +14,6 @@ export function extractList(res: any): any[] {
     res?.treks ||
     res?.hosts ||
     res?.reviews ||
-    res?.posts ||
     res?.data ||
     (Array.isArray(res) ? res : [])
   );

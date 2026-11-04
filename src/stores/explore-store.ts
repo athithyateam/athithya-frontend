@@ -42,7 +42,7 @@ interface ExploreState {
 }
 
 const extractList = (res: any): any[] =>
-  res?.posts || res?.experiences || res?.treks || res?.services || res?.hosts || res?.reviews || res?.data || (Array.isArray(res) ? res : []);
+  res?.experiences || res?.treks || res?.hosts || res?.reviews || res?.services || res?.posts || res?.data || (Array.isArray(res) ? res : []);
 
 export const useExploreStore = create<ExploreState>((set, get) => ({
   latest: [],

@@ -204,7 +204,7 @@ function BookingDetailContent({
             <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-10">
               <div>
                 <h1 className="text-3xl md:text-4xl font-black text-neutral-900 mb-4 dark:text-neutral-100">
-                  {booking.postTitle || booking.post?.title || "Experience"}
+                  {booking.experience?.title || booking.postTitle || booking.post?.title || "Experience"}
                 </h1>
                 <div className="flex flex-wrap items-center gap-3 text-neutral-500 font-bold">
                   {booking.startDate && (

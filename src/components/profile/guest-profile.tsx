@@ -209,9 +209,9 @@ export function GuestProfile({
       (async () => {
         setLoadingSaved(true);
         try {
-          const res = await apiClient.get(ENDPOINTS.GET_SAVED_POSTS);
+          const res = await apiClient.get(ENDPOINTS.GET_SAVED_EXPERIENCES);
           if (res.data?.success) {
-            setSavedPosts(res.data.posts || res.data.savedPosts || []);
+            setSavedPosts(res.data.experiences || res.data.savedExperiences || res.data.posts || res.data.savedPosts || []);
           }
         } catch {
         } finally {
@@ -1139,7 +1139,7 @@ export function GuestProfile({
                             </div>
                           </div>
 
-                          {r.post && (
+                          {(r.experience || r.post) && (
                             <p
                               className="text-[10px] mt-2 font-bold uppercase tracking-wider"
                               style={
@@ -1156,7 +1156,7 @@ export function GuestProfile({
                                     : undefined
                                 }
                               >
-                                {r.post.title}
+                                {(r.experience || r.post).title}
                               </span>
                             </p>
                           )}

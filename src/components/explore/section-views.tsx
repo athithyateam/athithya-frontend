@@ -14,7 +14,6 @@ import { ExplorePageView } from "./explore-page-view";
 
 function extractList(res: any): any[] {
   return (
-    res?.posts ||
     res?.experiences ||
     res?.treks ||
     res?.services ||

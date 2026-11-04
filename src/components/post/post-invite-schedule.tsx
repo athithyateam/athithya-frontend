@@ -75,7 +75,7 @@ export function PostInviteAndSchedule({
     setSubmittingSchedule(true);
     try {
       const res = await scheduleExperienceApi({
-        postId,
+        experienceId: postId,
         scheduledDate,
         scheduledTime,
       });

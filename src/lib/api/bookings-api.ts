@@ -1,7 +1,18 @@
 import { apiRequest } from "./client";
 import { ENDPOINTS } from "./endpoints";
 
-export async function createBooking(bookingData: Record<string, any>) {
+export async function createBooking(bookingData: {
+  experienceId: string;
+  numberOfPeople: number;
+  startDate?: string;
+  endDate?: string;
+  selectedTime?: string;
+  guestMessage?: string;
+  invitedUserIds?: string[];
+  groupBookingId?: string;
+  useWallet?: boolean;
+  [key: string]: any;
+}) {
   const res = await apiRequest(ENDPOINTS.BOOKINGS, { method: "POST", body: bookingData });
   if (!res.ok) throw res.data || { message: res.message };
   return res.data;
@@ -96,12 +107,15 @@ export async function verifyCompletionOTP(bookingId: string, otp: string) {
 }
 
 // Group Bookings (Docs: group-bookings.md)
-export async function createSchedule(scheduleData: Record<string, any>) {
-  const payload = {
-    ...scheduleData,
-    experienceId: scheduleData.experienceId || scheduleData.postId,
-  };
-  const res = await apiRequest(ENDPOINTS.GROUP_BOOKINGS, { method: "POST", body: payload });
+export async function createSchedule(scheduleData: {
+  experienceId: string;
+  numberOfPeople?: number;
+  scheduledDate?: string;
+  scheduledTime?: string;
+  invitedUserIds?: string[];
+  [key: string]: any;
+}) {
+  const res = await apiRequest(ENDPOINTS.GROUP_BOOKINGS, { method: "POST", body: scheduleData });
   return res.data;
 }
 
@@ -161,17 +175,11 @@ export async function removeScheduleFriend(experienceId: string, friendId: strin
 
 // Wishlist Schedules (Docs: wishlist-schedules.md)
 export async function scheduleExperienceApi(payload: {
-  postId?: string;
-  experienceId?: string;
+  experienceId: string;
   scheduledDate: string;
   scheduledTime: string;
 }) {
-  const body = {
-    experienceId: payload.experienceId || payload.postId,
-    scheduledDate: payload.scheduledDate,
-    scheduledTime: payload.scheduledTime,
-  };
-  const res = await apiRequest(ENDPOINTS.WISHLIST_SCHEDULES, { method: "POST", body });
+  const res = await apiRequest(ENDPOINTS.WISHLIST_SCHEDULES, { method: "POST", body: payload });
   return res.data;
 }
 
@@ -191,12 +199,14 @@ export async function deleteGuestScheduleApi(id: string) {
 }
 
 // Reviews & Ratings (Docs: reviews.md)
-export async function submitReview(reviewData: Record<string, any>) {
-  const payload = {
-    ...reviewData,
-    experienceId: reviewData.experienceId || reviewData.postId,
-  };
-  const res = await apiRequest(ENDPOINTS.REVIEWS, { method: "POST", body: payload });
+export async function submitReview(reviewData: {
+  hostId?: string;
+  experienceId?: string;
+  rating: number;
+  comment?: string;
+  [key: string]: any;
+}) {
+  const res = await apiRequest(ENDPOINTS.REVIEWS, { method: "POST", body: reviewData });
   return res.data;
 }
 
@@ -212,7 +222,7 @@ export async function getHostReviewsApi(hostId: string, params: Record<string, a
 
 export async function checkReviewEligibilityApi(experienceId: string) {
   const res = await apiRequest(ENDPOINTS.REVIEW_ELIGIBILITY, {
-    params: { experienceId, postId: experienceId },
+    params: { experienceId },
   });
   return res.data;
 }

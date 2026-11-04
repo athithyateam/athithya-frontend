@@ -101,7 +101,7 @@ export async function checkChatEligibilityApi(conversationId: string) {
 
 export async function updateConversationItineraryPinApi(
   conversationId: string,
-  payload: { action: "add" | "remove"; lat?: number; lng?: number; cityName?: string; postId?: string }
+  payload: { action: "add" | "remove"; lat?: number; lng?: number; cityName?: string; experienceId?: string }
 ) {
   const res = await apiRequest(`${ENDPOINTS.CHAT_CONVERSATIONS}/${conversationId}/itinerary`, {
     method: "POST",
