@@ -72,7 +72,7 @@ export function HostReviewsSection({
     setSubmittingReview(true);
     try {
       const res = await submitReview({
-        postId,
+        experienceId: postId,
         rating: ratingInput,
         comment: commentInput,
       });

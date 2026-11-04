@@ -158,10 +158,11 @@ export function BookingWidget({ post }: { post: any }) {
     if (!currentUser) return;
     setBookingSubmitting(true);
     try {
-      const bookingData: any = {
-        postId,
+      const bookingData = {
+        experienceId: postId,
         numberOfPeople,
         startDate: selectedDate,
+        endDate: selectedDate,
         selectedTime,
         discountAmount: appliedDiscount?.discountAmount || 0,
         discountPercentage: appliedDiscount?.percentage || 0,
