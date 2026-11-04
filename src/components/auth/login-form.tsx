@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 import { signinApi, forgotPasswordApi, resetPasswordApi, googleSigninApi } from "@/lib/api/auth-api";
+import { promptGoogleLogin } from "@/lib/google-auth";
 import { GoogleIcon } from "./google-icon";
 
 const GOLD = "#d4af37";
@@ -57,29 +58,39 @@ export function LoginForm({ onSwitchToRegister, onClose }: LoginFormProps) {
   const handleGoogleLogin = async () => {
     if (loading) return;
     setErr("");
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    if (!clientId) {
-      setErr("Google OAuth is not configured on this environment. Please login with email & password.");
-      return;
-    }
     setLoading(true);
-    try {
-      const res = await googleSigninApi({ token: clientId });
-      if (!res?.ok) {
-        setErr(res?.message || "Google login failed");
-        return;
-      }
-      const token = res?.data?.token || res?.data?.data?.token;
-      if (token) {
-        localStorage.setItem("auth_token", token);
-        await fetchUser();
-        onClose();
-      }
-    } catch {
-      setErr("Google login error");
-    } finally {
-      setLoading(false);
-    }
+
+    await promptGoogleLogin({
+      onSuccess: async (accessToken) => {
+        try {
+          const res = await googleSigninApi({ token: accessToken });
+          if (!res?.ok) {
+            setErr(res?.message || "Google login failed");
+            setLoading(false);
+            return;
+          }
+          const token = res?.data?.token || res?.data?.data?.token;
+          const userObj = res?.data?.user || res?.data?.data?.user;
+          if (token) {
+            localStorage.setItem("auth_token", token);
+            if (userObj) setUser(userObj, token);
+            await fetchUser();
+            onClose();
+          }
+        } catch {
+          setErr("Google login error");
+        } finally {
+          setLoading(false);
+        }
+      },
+      onError: (error) => {
+        setLoading(false);
+        if (error?.type === "popup_closed" || error?.error === "popup_closed_by_user") {
+          return;
+        }
+        setErr(error?.message || "Google sign in failed. Please try again or use email.");
+      },
+    });
   };
 
   const handleForgotEmailSubmit = async (e: React.FormEvent) => {
