@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FiUsers, FiMap, FiShoppingCart, FiGrid, FiSearch } from "react-icons/fi";
+import { FiUsers, FiMap, FiShoppingCart, FiGrid, FiSearch, FiCheckCircle } from "react-icons/fi";
 import { getAdminStatsApi } from "@/lib/api/admin-api";
 
 interface AdminOverviewTabProps {
@@ -52,7 +52,7 @@ function StatCard({
   );
 }
 
-export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
+export function AdminOverviewTab({ stats: propStats, pendingCount, onSelectTab }: AdminOverviewTabProps) {
   const [stats, setStats] = useState<Record<string, any>>(() => {
     if (!propStats) return {};
     return propStats.statistics || propStats.stats || propStats.data || propStats;
@@ -100,26 +100,39 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
 
   return (
     <div className="space-y-8 sm:space-y-10 w-full min-w-0 max-w-full">
-      {/* 3 Main Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full min-w-0 max-w-full">
+      {/* 4 Main Stat Cards matching API stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full min-w-0 max-w-full">
         <StatCard
           title="Total Users"
-          value={stats?.totalUsers || 0}
+          value={stats?.totalUsers ?? 0}
           icon={<FiUsers />}
           color="blue"
         />
         <StatCard
           title="Total Experiences"
-          value={stats?.totalPosts || 0}
+          value={stats?.totalExperiences ?? stats?.totalPosts ?? 0}
           icon={<FiMap />}
           color="purple"
         />
         <StatCard
           title="Total Bookings"
-          value={stats?.totalBookings || 0}
+          value={stats?.totalBookings ?? 0}
           icon={<FiShoppingCart />}
           color="green"
         />
+        <div
+          onClick={() => onSelectTab?.("approvals")}
+          className={onSelectTab ? "cursor-pointer" : ""}
+          role={onSelectTab ? "button" : undefined}
+          tabIndex={onSelectTab ? 0 : undefined}
+        >
+          <StatCard
+            title="Pending Approvals"
+            value={stats?.pendingExperiences ?? pendingCount ?? 0}
+            icon={<FiCheckCircle />}
+            color="yellow"
+          />
+        </div>
       </div>
 
       {/* Row 1: Recent Signups & New Experiences */}
@@ -190,10 +203,10 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
               <thead>
                 <tr className="border-b border-slate-50 dark:border-neutral-800">
                   <th className="pb-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
-                    Post Title
+                    Experience Title
                   </th>
                   <th className="pb-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
-                    Creator
+                    Host
                   </th>
                   <th className="pb-4 text-left text-[10px] font-black text-slate-400 dark:text-neutral-500 uppercase tracking-widest transition-colors">
                     Status
@@ -205,26 +218,27 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
               </thead>
               <tbody>
                 {(stats?.activities?.recentExperiences || stats?.activities?.recentPosts)?.map(
-                  (post: any) => (
+                  (exp: any) => (
                     <tr
-                      key={post._id}
+                      key={exp._id || exp.id}
                       className="group hover:bg-slate-50/50 dark:hover:bg-neutral-800/30 transition-colors"
                     >
                       <td className="py-4">
                         <p className="font-bold text-slate-900 dark:text-neutral-200 text-sm group-hover:text-[#C59A2F] transition-colors">
-                          {post.title}
+                          {exp.title}
                         </p>
                         <p className="text-[9px] text-slate-400 dark:text-neutral-500 font-bold uppercase tracking-widest transition-colors">
-                          {post.postType || "Experience"}
+                          {exp.category || exp.postType || "Experience"}
                         </p>
                       </td>
                       <td className="py-4">
                         <div className="flex items-center gap-2">
                           <img
                             src={
-                              post.user?.avatar?.url ||
+                              exp.user?.avatar?.url ||
+                              exp.host?.avatar?.url ||
                               `https://ui-avatars.com/api/?background=C59A2F&color=fff&name=${encodeURIComponent(
-                                post.user?.firstname || "Host"
+                                exp.user?.firstname || exp.host?.firstname || "Host"
                               )}`
                             }
                             className="w-6 h-6 rounded-full border border-slate-100 dark:border-neutral-700 transition-colors object-cover"
@@ -234,25 +248,25 @@ export function AdminOverviewTab({ stats: propStats }: AdminOverviewTabProps) {
                             }}
                           />
                           <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400 transition-colors">
-                            {post.user?.firstname}
+                            {exp.user?.firstname || exp.host?.firstname || "Host"}
                           </span>
                         </div>
                       </td>
                       <td className="py-4">
                         <span
                           className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full transition-colors ${
-                            post.status === "active" || post.status === "approved"
+                            exp.status === "active" || exp.status === "approved"
                               ? "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400"
-                              : post.status === "pending"
+                              : exp.status === "pending"
                               ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400"
                               : "bg-slate-50 text-slate-400 dark:bg-neutral-800 dark:text-neutral-500"
                           }`}
                         >
-                          {post.status}
+                          {exp.status}
                         </span>
                       </td>
                       <td className="py-4 text-right text-[9px] font-black text-slate-300 dark:text-neutral-600 uppercase px-2 transition-colors">
-                        {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ""}
+                        {exp.createdAt ? new Date(exp.createdAt).toLocaleDateString() : ""}
                       </td>
                     </tr>
                   )

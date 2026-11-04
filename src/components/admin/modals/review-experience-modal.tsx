@@ -86,7 +86,7 @@ export function ReviewExperienceModal({
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-neutral-800/40 space-y-1">
               <span className="text-[10px] font-black uppercase text-slate-400">Category</span>
               <p className="text-sm font-black text-slate-900 dark:text-neutral-100">
-                {experience.postType || experience.category || "Trek"}
+                {experience.category || experience.postType || "Trek"}
               </p>
             </div>
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-neutral-800/40 space-y-1">
