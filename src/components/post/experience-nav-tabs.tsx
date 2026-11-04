@@ -34,7 +34,7 @@ export function ExperienceNavTabs({
   };
 
   return (
-    <div className="sticky top-16 md:top-20 z-20 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md py-2 border-b border-neutral-200/60 dark:border-neutral-800/80">
+    <div className="sticky top-16 md:top-20 z-20 bg-white dark:bg-neutral-950 py-2 border-b border-neutral-200/60 dark:border-neutral-800/80 transition-colors">
       <div className="flex items-center overflow-x-auto bg-neutral-100/90 dark:bg-neutral-900 rounded-2xl p-1.5 border border-neutral-200/80 dark:border-neutral-800 gap-1">
         {navTabs.map((tab) => {
           const active = activeNavTab === tab.id;
